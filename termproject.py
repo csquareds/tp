@@ -196,20 +196,57 @@ class Item(object):
 class Room(object):
     def __init__(self, name, floors, omen, event, item):
         self.name = name
-        self.floors = floors # eligible floors to place
+        self.floors = floors # eligible floors to place, list
         self.omen = omen # does it have omen? boolean
         self.event = event # does it have event? boolean
         self.item = item # does it have item? boolean
 
 # ROOMS, omen event item
 Abandoned = Room('Abandoned Room', [Ground, Basement], True, False, False)
-Bloody = Room('Bloody Room', [Upper, Basement], False, False, True)
+Attic = Room('Attic', [Upper], False, True, False)
+Balcony = Room('Balcony', [Ground], True, False, False)
+Ballroom = Room('Ballroom', [Ground], False, True, False)
+Creaky = Room('Creaky Hallway', [Upper, Ground, Basement], False, False, False)
+Crypt = Room('Crypt', [Basement], False, True, False)
+Bloody = Room('Bloody Room', [Upper, Ground], False, False, True)
 Chapel = Room('Chapel', [Upper, Ground], False, True, False)
 Vault = Room('Vault', [Upper, Basement], False, False, True)
 Collapsed = Room('Collapsed Room', [Upper, Ground], False, False, False)
-Crypt = Room('Crypt', [Basement], False, True, False)
 Dining = Room('Dining Room', [Ground], True, False, False)
 Furnace = Room('Furnace Room', [Basement], True, False, False)
+Graveyard = Room('Graveyard', [Ground], False, True, False)
+Gym = Room('Gymnasium', [Upper, Basement], True, False, False)
+Operating = Room('Operating Laboratory', [Upper, Basement], False, False, False)
+Organ = Room('Organ Room', [Upper, Ground, Basement], False, True, False)
+Store = Room('Storeroom', [Upper, Basement], False, False, True)
+Tower = Room('Tower', [Upper], False, True, False)
+Catacombs = Room('Catacombs', [Basement], True, False, False)
+Dusty = Room('Dusty Hallway', [Upper, Ground, Basement], False, False, False)
+Kitchen = Room('Kitchen', [Ground, Basement], True, False, False)
+Junk = Room('Junk', [Upper, Ground, Basement], True, False, False)
+Larder = Room('Larder', [Basement], False, False, True)
+Patio = Room('Patio', [Ground], False, True, False)
+Pentagram = Room('Pentagram Chamber', [Basement], True, False, False)
+Research = Room('Research Laboratory', [Upper, Basement], False, True, False)
+Underground = Room('Underground Lake', [Basement], False, True, False)
+Vault = Room('Vault', [Upper, Basement], False, False, True) # two items
+Chasm = Room('Chasm', [Basement], False, False, False)
+Coal = Room('Coal Chute', [Ground], False, False, False)
+Collapsed = Room('Collapsed Room', [Upper, Ground], False, False, False)
+Charred = Room('Charred Room', [Upper, Ground], True, False, False)
+Conservatory = Room('Conservatory', [Upper, Ground], False, True, False)
+Gallery = Room('Gallery', [Upper], True, False, False)
+Game = Room('Game Room', [Upper, Ground, Basement], False, True, False)
+Gardens = Room('Gardens', [Ground], False, True, False)
+Library = Room('Library', [Upper, Ground], False, True, False)
+Master = Room('Master Bedroom', [Upper], True, False, False)
+Mystic = Room('Mystic Elevator', [Upper, Ground, Basement], False, False, False)
+Servant = Room("Servants' Quarters", [Upper, Basement], True, False, False)
+StairsBasement = Room('Stairs from Basement', [Basement], False, False, False)
+Statuary = Room('Statuary Corridor', [Upper, Ground, Basement], False, True, False)
+Wine = Room('Wine Cellar', [Basement], False, False, True)
+Bedroom = Room('Bedroom', [Upper], False, True, False)
+
 
 # OMENS
 Skull = Omen('Skull', 'A skull cracked, and missing teeth')
@@ -255,7 +292,7 @@ Lights = Event("Lights Out", "Your flashlight goes out. Don't worry, someone els
 Jonah = Event("Jonah's Turn", "Two boys are playing with a wooden top.") # not finished
 Meant = Event("It is Meant to Be", "You collapse to the floor, visions of future events pouring through your head.")
 Mirror = Event("Image in the Mirror", "There is an old mirror in this room") # not finished?
-OtherMirror = Event("Image in the Mirror", "You then hand an item through the mirror.") # not finished too duality
+OtherMirror = Event("Image in the Mirror", "You then hand an item through the mirror.") # not finished too, duality
 Shriek = Event("Hideous Shriek", "It starts like a whisper, but ends in a soul-rending shriek.")
 Hanged = Event("Hanged Men", "A breeze chills the room. Before you, three men hang from frayed ropes. They stare at you with cold, dead eyes. The trio swing silently, then fade into dust that falls to the ground. You start to choke.")
 Groundskeeper = Event("Groundskeeper", "You turn to see a man in groundskeeper clothing. He raises his shovel and charges. Inches from your face, he disappears, leaving muddy footprints, and nothing more.")
@@ -301,22 +338,18 @@ def appStarted(app):
     app.mode = 'start'
     app.haunt = 0
     app.hauntDie = [0, 0, 1, 1, 2, 2] # 8 dice
-    app.rows = 10
-    app.cols = 10
-    app.margin = 5
+    app.rows = 4
+    app.cols = 3
+    app.message = None
+    app.margin = 50
+    app.players = 0
     app.haunt = False
-    #app.die = [1, 2, 3, 4, 5, 6]
-    '''
-    app.rooms = [Abandoned, Attic, Balcony, Ballroom, Basement_Landing(s), 
-        Bedroom, Bloody, Catacombs, Chapel, Charred_Room, Chasm, Coal_Chute, 
-        Collapsed, Conservatory, Creaky_Hallway, Crypt, Dining, 
-        Dusty_Hallway, Entrance_Hall(s), Foyer(s), Furnace_Room, Gallery, Game_Room, 
-        Gardens, Grand_Staircase(s), Graveyard, Gymnasium, Junk_Room, Kitchen, 
-        Larder, Library, Master_Bedroom, Mystic_Elevator, Operating_Laboratory, 
-        Organ_Room, Patio, Pentagram_Chamber, Research_Laboratory, Servants_Quarters, 
-        Stairs_from_Bedroom, Statuary_Corridor, Storeroom, Tower, Underground_Lake, 
-        Upper_Landing(s), Vault, Wine_Cellar]
-    '''
+    app.rooms = [Abandoned, Attic, Balcony, Ballroom, Bedroom, Bloody, Catacombs, 
+        Chapel, Charred, Chasm, Coal, Collapsed, Conservatory, Creaky, Crypt, 
+        Dining, Dusty, Furnace, Gallery, Game, Gardens, Graveyard, Gym, Junk, 
+        Kitchen, Larder, Library, Master, Mystic, Operating, Organ, Patio, 
+        Pentagram, Research, Servant, StairsBasement, Statuary, Store, Tower, 
+            Underground, Vault, Wine]
     app.omens = [Skull, Bite, Book, Crystal, Dog, Girl, Holy, 
                 Madman, Mask, Medallion, Ring, Spear, Spirit]
     app.events = [Whoops, What, Webs, Walls, Voice, Lost, Beckoning, Spider, 
@@ -343,10 +376,29 @@ def mouseMoved(app, event):
 def mouseDragged(app, event):
     print(f'mouseDragged at {(event.x, event.y)}')
 
-def keyPressed(app,event):
+def set_keyPressed(app,event):
     #print(event.key)
     if event.key == 'r':
+        app.mode = 'start'
         appStarted(app)
+    if event.key == '2':
+        app.mode = 'characters'
+        app.players = 2
+    elif event.key == '3':
+        app.mode = 'characters'
+        app.players = 3
+    elif event.key == '4':
+        app.mode = 'characters'
+        app.players = 4
+    elif event.key == '5':
+        app.mode = 'characters'
+        app.players = 5
+    elif event.key == '6':
+        app.mode = 'characters'
+        app.players = 6
+    elif (event.key == '1' or event.key == '7' or event.key == '8' 
+        or event.key == '9' or event.key == '0'):
+        app.message = 'Not valid number of players, please choose again.'
 
 #def timerFired(app):
 #    pass
@@ -362,11 +414,36 @@ def rollDice(app, player, trait):
 def start_redrawAll(app, canvas):
     font = 'Arial 26 bold'
     canvas.create_text(app.width//2, 150, text='Betrayal at House on the Hill', font=font)
-    canvas.create_text(app.width/2, 200, text='Start Screen', font=font)
-    canvas.create_text(app.width/2, 250, text='Yay', font=font)
+    canvas.create_text(app.width//2, app.height-100, text='Click the screen to begin or click any key to begin playing', font=font)
 
-def redrawAll(app, canvas):
+def set_redrawAll(app, canvas):
+    font = 'Arial 26 bold'
+    canvas.create_text(app.width//2, 150, text='How many players?', font=font)
+    canvas.create_text(app.width//2, 200, text='Enter number:', font=font)
+    canvas.create_text(app.width//2, app.height-200, text=app.message, font=font)
+    canvas.create_text(app.width//2, app.height-100, text='2  3  4  5  6', font=font)
+
+def board_redrawAll(app,canvas):
     drawGrid(app,canvas)
+
+def characters_redrawAll(app, canvas):
+    font = 'Arial 26 bold'
+    canvas.create_text(app.width//2, 25, text='C H O O S E   Y O U R   C H A R A C T E R', font=font)
+    canvas.create_text(app.width//2, app.height-25, text=f'Players: {app.players}', font=font)
+    drawGrid(app,canvas)
+
+def characters_keyPressed(app,event):
+    if event.key == 'r':
+        app.mode = 'start'
+
+def start_keyPressed(app, event):
+    if event.key == 'r':
+        app.mode = 'start'
+    else:
+        app.mode = 'set'
+
+def start_mousePressed(app, event):
+    app.mode = 'set'
 
 def getCellBounds(app,row,col):
     width = app.width - (2 * app.margin)
@@ -377,14 +454,14 @@ def getCellBounds(app,row,col):
     y0 = cellHeight * row + app.margin
     x1 = cellWidth * (col+1) + app.margin
     y1 = cellHeight * (row+1) + app.margin
-    return x0,y0,x1,y1
+    return x0, y0, x1, y1
 
-# grid for now
+# characters grid
 def drawGrid(app,canvas):
     for row in range(app.rows):
         for col in range(app.cols):
-            x0,y0,x1,y1 = getCellBounds(app,row,col)
-            canvas.create_rectangle(x0,y0,x1,y1)
+            x0,y0,x1,y1 = getCellBounds(app, row, col)
+            canvas.create_rectangle(x0, y0, x1, y1)
 
 #def drawRoom(app,canvas):
 #    canvas.create_rectangle()
