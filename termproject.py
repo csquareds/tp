@@ -1,8 +1,8 @@
 # CATHERINE CAI 15-112 TERM PROJECT
 # SPRING 2021
 
-# Based on the board game, Betrayal at House on
-# the Hill, published by Avalon Hill in 2004. 
+# Based on the board game, Betrayal at House on the Hill, published by Avalon 
+# Hill in 2004. 
 
 # Players all begin as allies exploring a haunted house filled 
 # with dangers, traps, items, and omens. As players journey to new parts of the 
@@ -17,6 +17,9 @@
 # https://media.wizards.com/2018/downloads/rules/betrayal_rules.pdf
 # https://startyourmeeples.com/2018/09/28/betrayal-at-house-on-the-hill-characters-a-closer-inspection/
 # https://startyourmeeples.com/2019/07/09/betrayal-at-house-on-the-hill-rooms-a-strategy-in-9-graphs/
+
+# Images
+# https://i0.wp.com/fantasy-hive.co.uk/wp-content/uploads/2018/06/betrayal-house-cover-image.jpg?fit=620%2C420&ssl=1
 
 from cmu_112_graphics import *
 import random, string, math, time
@@ -336,13 +339,22 @@ Adrenaline = Item("Adrenaline Shot", "A syringe containing a strange fluorescent
 
 def appStarted(app):
     app.mode = 'start'
-    app.haunt = 0
+    app.image = app.loadImage('bahoth.jpeg') # start screen image
+    app.haunt = 0 # haunt count
     app.hauntDie = [0, 0, 1, 1, 2, 2] # 8 dice
     app.rows = 4
     app.cols = 3
     app.message = None
     app.margin = 50
     app.players = 0
+    app.selected = None
+    app.player1 = None
+    app.player2 = None
+    app.player3 = None
+    app.player4 = None
+    app.player5 = None
+    app.player6 = None
+    app.characters = [Brandon, Flash, Heather, Jenny, Longfellow, Missy, Ox, Peter, Rhinehardt, Vivian, Zoe, Zostra]
     app.haunt = False
     app.rooms = [Abandoned, Attic, Balcony, Ballroom, Bedroom, Bloody, Catacombs, 
         Chapel, Charred, Chasm, Coal, Collapsed, Conservatory, Creaky, Crypt, 
@@ -415,13 +427,14 @@ def start_redrawAll(app, canvas):
     font = 'Arial 26 bold'
     canvas.create_text(app.width//2, 150, text='Betrayal at House on the Hill', font=font)
     canvas.create_text(app.width//2, app.height-100, text='Click the screen to begin or click any key to begin playing', font=font)
+    canvas.create_image(app.width//2,app.height//2, image=ImageTk.PhotoImage(app.image))
 
 def set_redrawAll(app, canvas):
     font = 'Arial 26 bold'
     canvas.create_text(app.width//2, 150, text='How many players?', font=font)
     canvas.create_text(app.width//2, 200, text='Enter number:', font=font)
     canvas.create_text(app.width//2, app.height-200, text=app.message, font=font)
-    canvas.create_text(app.width//2, app.height-100, text='2  3  4  5  6', font=font)
+    canvas.create_text(app.width//2, app.height-100, text='2   3   4   5   6', font=font)
 
 def board_redrawAll(app,canvas):
     drawGrid(app,canvas)
@@ -435,10 +448,19 @@ def characters_redrawAll(app, canvas):
 def characters_keyPressed(app,event):
     if event.key == 'r':
         app.mode = 'start'
+        appStarted(app)
+
+def characters_mousePressed(app,event):
+    app.mode = 'character'
+
+def character_redrawAll(app,canvas):
+    font = 'Arial 26 bold'
+    #canvas.create_text(app.width//2, 25, text=app.selected.name, font=font)
 
 def start_keyPressed(app, event):
     if event.key == 'r':
         app.mode = 'start'
+        appStarted(app)
     else:
         app.mode = 'set'
 
