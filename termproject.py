@@ -343,25 +343,23 @@ def appStarted(app):
     app.image = app.loadImage('bahoth.jpeg') # start screen image
     app.haunt = 0 # haunt count
     app.hauntDie = [0, 0, 1, 1, 2, 2] # 8 dice
-    app.rows = 3
-    app.cols = 4
     app.message = None
-    app.margin = 50
-    app.marginY = 100
-    app.players = 0
-    app.selection = (-1,-1) # row and col of character grid
+    setCharacter(app)
+    app.players = 0 # total number of players
+    app.characterSelection = (-1,-1) # row and col of character grid
     app.selected = None # actual character/player instance
-    app.player1 = None
-    app.player2 = None
-    app.player3 = None
-    app.player4 = None
-    app.player5 = None
-    app.player6 = None
-    app.currentPlayer = app.player1
+    app.player1 = 'Player 1'
+    app.player2 = 'Player 2'
+    app.player3 = 'Player 3'
+    app.player4 = 'Player 4'
+    app.player5 = 'Player 5'
+    app.player6 = 'Player 6'
     app.playerList = [app.player1, app.player2, app.player3, app.player4, app.player5, app.player6]
     #app.playerListCopy = [app.player1, app.player2, app.player3, app.player4, app.player5, app.player6]
-    app.characters = [ [Brandon, Flash, Heather, Jenny], [Longfellow, Missy, Ox, Peter], [Rhinehardt, Vivian, Zoe, Zostra] ]
-    #app.characters = [ [Brandon, Flash, Heather], [Jenny, Longfellow, Missy], [Ox, Peter, Rhinehardt], [Vivian, Zoe, Zostra] ]
+    app.index = 0
+    app.currentPlayer = app.playerList[app.index]
+    app.characters = [ [Brandon, Flash, Heather, Jenny], [Longfellow, Missy, Ox, Peter], [Rhinehardt, Vivian, Zoe, Zostra] ] # 4 by 3
+    #app.characters = [ [Brandon, Flash, Heather], [Jenny, Longfellow, Missy], [Ox, Peter, Rhinehardt], [Vivian, Zoe, Zostra] ] # 3 by 4
     app.haunt = False
     app.rooms = [Abandoned, Attic, Balcony, Ballroom, Bedroom, Bloody, Catacombs, 
         Chapel, Charred, Chasm, Coal, Collapsed, Conservatory, Creaky, Crypt, 
@@ -369,6 +367,9 @@ def appStarted(app):
         Kitchen, Larder, Library, Master, Mystic, Operating, Organ, Patio, 
         Pentagram, Research, Servant, StairsBasement, Statuary, Store, Tower, 
             Underground, Vault, Wine]
+    setBasement(app)
+    setGround(app)
+    setUpper(app)
     app.omens = [Skull, Bite, Book, Crystal, Dog, Girl, Holy, 
                 Madman, Mask, Medallion, Ring, Spear, Spirit]
     app.events = [Whoops, What, Webs, Walls, Voice, Lost, Beckoning, Spider, 
@@ -384,17 +385,29 @@ def appStarted(app):
     #                Vivian, Missy, Rhinehardt, Vivian, Heather, Peter]
     app.gameOver = False
 
-def board_mousePressed(app,event):
-    print(f'mousePressed at {(event,x, event.y)}')
+def setCharacter(app):
+    app.characterRows = 3
+    app.characterCols = 4
+    app.marginX = 50
+    app.marginY = 200
 
-def board_mouseReleased(app, event):
-    print(f'mouseReleased at {(event.x, event.y)}')
+def setBasement(app):
+    app.basementRows = 5
+    app.basementCols = 5
+    app.basementX = 100 # basement marginX
+    app.basementY = 100 # basement marginY
 
-def board_mouseMoved(app, event):
-    print(f'mouseMoved at {(event.x, event.y)}')
+def setGround(app):
+    app.groundRows = 5
+    app.groundCols = 8
+    app.groundX = 100 # ground marginX
+    app.groundY = 50 # ground marginY
 
-def board_mouseDragged(app, event):
-    print(f'mouseDragged at {(event.x, event.y)}')
+def setUpper(app):
+    app.upperRows = 5
+    app.upperCols = 5
+    app.upperX = 100 # upper marginX
+    app.upperY = 100 # upper marginY
 
 def set_keyPressed(app,event):
     #newList = []
@@ -422,8 +435,6 @@ def set_keyPressed(app,event):
     elif event.key not in string.digits:
         app.message = 'Not valid input'
     else:
-    #elif (event.key == '1' or event.key == '7' or event.key == '8' 
-    #    or event.key == '9' or event.key == '0'):
         app.message = 'Not valid number of players, please choose again.'
     
     #if app.players != 0:
@@ -454,13 +465,40 @@ def set_redrawAll(app, canvas):
     canvas.create_text(app.width//2, app.height-200, text=app.message, font=font)
     canvas.create_text(app.width//2, app.height-100, text='2   3   4   5   6', font=font)
 
-def board_redrawAll(app,canvas):
-    drawGrid(app,canvas)
+def ground_mousePressed(app,event):
+    print(f'mousePressed at {(event,x, event.y)}')
+
+def ground_mouseReleased(app, event):
+    print(f'mouseReleased at {(event.x, event.y)}')
+
+def ground_mouseMoved(app, event):
+    print(f'mouseMoved at {(event.x, event.y)}')
+
+def ground_mouseDragged(app, event):
+    print(f'mouseDragged at {(event.x, event.y)}')
+
+def ground_redrawAll(app,canvas):
+    drawGround(app,canvas)
+
+def basement_mousePressed(app,event):
+    print(f'mousePressed at {(event,x, event.y)}')
+
+def basement_mouseReleased(app, event):
+    print(f'mouseReleased at {(event.x, event.y)}')
+
+def basement_mouseMoved(app, event):
+    print(f'mouseMoved at {(event.x, event.y)}')
+
+def basement_mouseDragged(app, event):
+    print(f'mouseDragged at {(event.x, event.y)}')
+
+def basement_redrawAll(app,canvas):
+    drawBasement(app,canvas)
 
 def characters_redrawAll(app, canvas):
     font = 'Arial 26 bold'
     canvas.create_text(app.width//2, 25, text='C H O O S E   Y O U R   C H A R A C T E R', font=font)
-    canvas.create_text(app.width//2, app.height-25, text=f'Current Player: {app.currentPlayer}        Players: {app.players}', font=font)
+    canvas.create_text(app.width//2, app.height-25, text=f'Current Player: {app.currentPlayer}                Players: {app.players}', font=font)
     drawCharacterGrid(app,canvas)
 
 def characters_keyPressed(app,event):
@@ -474,36 +512,38 @@ def characters_keyPressed(app,event):
         #app.playerList = app.player
 
 def characters_mousePressed(app,event):
-    (row, col) = getCell(app, event.x, event.y)
-    if app.selection == (row,col):
-        app.selection = (-1,-1)
+    rows = app.characterRows
+    cols = app.characterCols
+    (row, col) = getCell(app, event.x, event.y, rows, cols, app.marginX, app.marginY)
+    if app.characterSelection == (row,col):
+        app.characterselection = (-1,-1)
         app.selected = None
     else:
-        app.selection = (row,col)
-        if app.selection == (-1,-1): # avoid indexing issues,
+        app.characterSelection = (row,col)
+        if app.characterSelection == (-1,-1): # avoid indexing issues,
             app.selected = None # since it would be set to last value, Zostra
         else:
             app.selected = app.characters[row][col]
             #print(app.selected.name)
             app.mode = 'character'
 
-def getCell(app,x,y): # modeled after grid cell click, https://www.cs.cmu.edu/~112/notes/notes-animations-part2.html
-    if not inGrid(app, x, y):
+def getCell(app,x,y,rows,cols,marginX,marginY): # modeled after grid cell click, https://www.cs.cmu.edu/~112/notes/notes-animations-part2.html
+    if not inGrid(app, x, y, app.marginX, app.marginY):
         return (-1, -1)
     
-    gridWidth = app.width - 2*app.margin
-    gridHeight = app.height - 2*app.marginY
-    cellWidth = gridWidth/app.cols
-    cellHeight = gridHeight/app.rows
+    gridWidth = app.width - 2*marginX
+    gridHeight = app.height - 2*marginY
+    cellWidth = gridWidth/cols
+    cellHeight = gridHeight/rows
 
-    row = int((y - app.marginY)/ cellHeight)
-    col = int((x - app.margin)/ cellWidth)
+    row = int((y - marginY)/ cellHeight)
+    col = int((x - marginX)/ cellWidth)
 
     return (row, col)
 
-def inGrid(app, x, y):
-    return (app.margin <= x <= app.width-app.margin and 
-                app.marginY <= y <= app.height - app.marginY)
+def inGrid(app, x, y, marginX, marginY):
+    return (marginX <= x <= app.width-marginX and 
+                marginY <= y <= app.height - marginY)
 
 def character_redrawAll(app,canvas):
     font = 'Arial 26 bold'
@@ -516,7 +556,7 @@ def character_redrawAll(app,canvas):
     canvas.create_text(app.width//10, 160, text=f'Knowledge: {app.selected.knowledge}', font=font, fill=color,anchor='w')
     canvas.create_text(app.width//10, 190, text=f'Sanity: {app.selected.sanity}', font=font, fill=color,anchor='w')
 
-    canvas.create_text(9*app.width//10, app.height-100, text='test', font=font, fill=color, anchor='e')
+    canvas.create_text(9*app.width//10, app.height-100, text='To confirm selection, press "Y"', font=font, fill=color, anchor='e')
     canvas.create_text(20, app.height-25, text=f'CURRENT PLAYER: {app.currentPlayer}', font=font, fill=color, anchor='w')
     canvas.create_text(app.width//2, app.height-25, text='Use the left or down arrow keys to go back.', font='Arial 20 bold',fill=color)
 
@@ -527,12 +567,30 @@ def character_keyPressed(app, event):
     elif event.key == 'Down' or event.key == 'Left':
         app.mode = 'characters' # back to characters grid
         app.selected = None # reset selected character
+    elif event.key == 'Right':
+        app.mode = 'ground'
+
+    '''
+    index = app.index
+    while index < app.players:
+    #for player in range(app.players):
+        if event.key == 'y':
+            #app.playerList[index] = app.selected.name
+            index += 1
+            if 0 <= index <= app.players:
+                app.playerList[app.index] = app.selected
+                app.index += 1
+            print(app.playerList)
+    '''
+    #    app.playerList[app.index] = app.selected.name
+    #    if app.index < app.players:
+    #        app.index += 1
 
 def character_mousePressed(app, event):
     pass
 
 def start_keyPressed(app, event):
-    print(event.key)
+    #print(event.key)
     if event.key == 'r':
         app.mode = 'start'
         appStarted(app)
@@ -543,26 +601,50 @@ def start_mousePressed(app, event):
     app.mode = 'set'
 
 # cell bounds for characters grid
-def getCellBounds(app,row,col):
-    width = app.width - (2 * app.margin)
-    height = app.height - (2 * app.marginY)
-    cellWidth = width//app.cols
-    cellHeight = height//app.rows
-    x0 = cellWidth * col + app.margin
-    y0 = cellHeight * row + app.marginY
-    x1 = cellWidth * (col+1) + app.margin
-    y1 = cellHeight * (row+1) + app.marginY
+def getCellBounds(app, row, col, rows, cols, marginX, marginY):
+    width = app.width - (2 * marginX)
+    height = app.height - (2 * marginY)
+    cellWidth = width//cols
+    cellHeight = height//rows
+    x0 = cellWidth * col + marginX
+    y0 = cellHeight * row + marginY
+    x1 = cellWidth * (col+1) + marginX
+    y1 = cellHeight * (row+1) + marginY
     return x0, y0, x1, y1
 
 # characters grid
 def drawCharacterGrid(app,canvas):
-    for row in range(app.rows):
-        for col in range(app.cols):
+    rows = app.characterRows
+    cols = app.characterCols
+    for row in range(app.characterRows):
+        for col in range(app.characterCols):
+            x0,y0,x1,y1 = getCellBounds(app, row, col, rows, cols, app.marginX, app.marginY)
+            canvas.create_rectangle(x0, y0, x1, y1)
+
+# ground floor board
+def drawGround(app,canvas):
+    for row in range(app.groundRows):
+        for col in range(app.groundCols):
+            x0,y0,x1,y1 = getCellBounds(app, row, col, app.groundRows, app.groundCols, app.groundX, app.groundY)
+            canvas.create_rectangle(x0, y0, x1, y1)
+
+# basement floor board
+def drawBasement(app,canvas):
+    for row in range(app.basementRows):
+        for col in range(app.basementCols):
+            x0,y0,x1,y1 = getCellBounds(app, row, col)
+            canvas.create_rectangle(x0, y0, x1, y1)
+
+# upper floor board
+def drawUpper(app,canvas):
+    for row in range(app.upperRows):
+        for col in range(app.upperCols):
             x0,y0,x1,y1 = getCellBounds(app, row, col)
             canvas.create_rectangle(x0, y0, x1, y1)
 
 def drawRoom(app,canvas):
     x0,y0,x1,y1 = 1,2,3,4
-    canvas.create_rectangle(x0,y0,x1,y1,fill='black')
+    canvas.create_rectangle(x0,y0,x1,y1,fill='brown')
+
 
 runApp(width=1440, height=775)
