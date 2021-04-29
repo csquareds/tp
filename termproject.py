@@ -344,22 +344,8 @@ def appStarted(app):
     app.image = app.loadImage('bahoth.jpeg') # start screen image
     app.haunt = 0 # haunt count
     app.hauntDie = [0, 0, 1, 1, 2, 2] # 8 dice
-    app.message = None
+    setCharacters(app)
     setCharacter(app)
-    app.players = 0 # total number of players
-    app.player1 = 'Player 1'
-    app.player2 = 'Player 2'
-    app.player3 = 'Player 3'
-    app.player4 = 'Player 4'
-    app.player5 = 'Player 5'
-    app.player6 = 'Player 6'
-    app.playerList = [app.player1, app.player2, app.player3, app.player4, app.player5, app.player6]
-    #app.playerListCopy = [app.player1, app.player2, app.player3, app.player4, app.player5, app.player6]
-    app.index = 0
-    app.currentPlayer = app.playerList[app.index]
-    app.characters = [ [Brandon, Flash, Heather, Jenny], [Longfellow, Missy, Ox, Peter], [Rhinehardt, Vivian, Zoe, Zostra] ] # 4 by 3
-    #app.characters = [ [Brandon, Flash, Heather], [Jenny, Longfellow, Missy], [Ox, Peter, Rhinehardt], [Vivian, Zoe, Zostra] ] # 3 by 4
-    #app.characterList = [Zoe, Zostra, Longfellow, Flash, Jenny, Brandon, Ox, Vivian, Missy, Rhinehardt, Vivian, Heather, Peter]
     app.haunt = False # haunt phase
     app.rooms = [Abandoned, Attic, Balcony, Ballroom, Bedroom, Bloody, Catacombs, 
         Chapel, Charred, Chasm, Coal, Collapsed, Conservatory, Creaky, Crypt, 
@@ -383,11 +369,29 @@ def appStarted(app):
             Bottle, Blood_Dagger, Bell, Axe, Armor, Angel, Amulet, Adrenaline]
     app.gameOver = False
 
+def setCharacters(app):
+    app.message = None
+    app.players = 0 # total number of players
+    app.player1 = {'number': 1, 'character': None}
+    app.player2 = {'number': 2, 'character': None}
+    app.player3 = {'number': 3, 'character': None}
+    app.player4 = {'number': 4, 'character': None}
+    app.player5 = {'number': 5, 'character': None}
+    app.player6 = {'number': 6, 'character': None}
+    #print(app.player1['number'])
+    app.playerList = [app.player1, app.player2, app.player3, app.player4, app.player5, app.player6]
+    #app.playerListCopy = [app.player1, app.player2, app.player3, app.player4, app.player5, app.player6]
+    app.index = 0
+    app.currentPlayer = app.playerList[app.index]
+
 def setCharacter(app):
     app.characterRows = 3
     app.characterCols = 4
     app.marginX = 50
     app.marginY = 200
+    app.characters = [ [Brandon, Flash, Heather, Jenny], [Longfellow, Missy, Ox, Peter], [Rhinehardt, Vivian, Zoe, Zostra] ] # 4 by 3
+    #app.characters = [ [Brandon, Flash, Heather], [Jenny, Longfellow, Missy], [Ox, Peter, Rhinehardt], [Vivian, Zoe, Zostra] ] # 3 by 4
+    #app.characterList = [Zoe, Zostra, Longfellow, Flash, Jenny, Brandon, Ox, Vivian, Missy, Rhinehardt, Vivian, Heather, Peter]
     app.characterSelection = (-1,-1) # row and col of character grid
     app.characterSelected = None # actual character/player instance
 
@@ -419,6 +423,17 @@ def setUpper(app):
     app.upperList = [ [Empty.name]*app.upperCols for row in range(app.upperRows)]
     app.upperList[2][4] = 'Upper Landing'
     #print(app.upperList)
+
+def currentPlayer(app):
+    total = app.players
+    current = app.index
+    nextPlayer = current + 1
+
+    if nextPlayer < total:
+        app.index = nextPlayer
+    else:
+        app.index = 0
+    return app.playerList[app.index]
 
 def rollDice(app, player, trait):
     attempt = player.trait
@@ -498,7 +513,7 @@ def characters_redrawAll(app, canvas):
     canvas.create_text(app.width//2, 40, text='C H O O S E   Y O U R   C H A R A C T E R', font='Arial 30 bold', fill='white')
     canvas.create_text(app.width//2, 70, text='Click cell to view player traits and info', font='Arial 20 bold', fill='white')
     canvas.create_text(20, app.height-25, text='Use the left or down arrow keys to go back (reset number of players).', font='Arial 15 bold',fill='white',anchor='w')
-    canvas.create_text(app.width//2, app.height-75, text=f'Current Player: {app.currentPlayer}                Players: {app.players}', font='Arial 25 bold',fill='white')
+    canvas.create_text(app.width//2, app.height-75, text=f"Current Player: Player {app.currentPlayer['number']}               Players: {app.players}", font='Arial 25 bold',fill='white')
     drawCharacterGrid(app,canvas)
 
 def characters_keyPressed(app,event):
@@ -506,10 +521,8 @@ def characters_keyPressed(app,event):
         app.mode = 'start'
         appStarted(app)
     elif event.key == 'Down' or event.key == 'Left':
-        app.message = None
         app.mode = 'set' # back to set number of players screen
-        app.players = 0 # reset number of players
-        #app.playerList = app.player
+        setCharacters(app)
 
 def characters_mousePressed(app,event):
     rows = app.characterRows
@@ -535,12 +548,12 @@ def character_redrawAll(app,canvas):
     color = 'white'
     canvas.create_text(app.width//2, 50, text=app.characterSelected.name, fill=app.characterSelected.color,font=font)
     canvas.create_text(app.width//10, 100, text=f'Might: {app.characterSelected.might}', font=font, fill=color,anchor='w')
-    canvas.create_text(app.width//10, 130, text=f'Speed: {app.characterSelected.speed}', font=font, fill=color,anchor='w')
-    canvas.create_text(app.width//10, 160, text=f'Knowledge: {app.characterSelected.knowledge}', font=font, fill=color,anchor='w')
-    canvas.create_text(app.width//10, 190, text=f'Sanity: {app.characterSelected.sanity}', font=font, fill=color,anchor='w')
+    canvas.create_text(app.width//10, 140, text=f'Speed: {app.characterSelected.speed}', font=font, fill=color,anchor='w')
+    canvas.create_text(app.width//10, 180, text=f'Knowledge: {app.characterSelected.knowledge}', font=font, fill=color,anchor='w')
+    canvas.create_text(app.width//10, 220, text=f'Sanity: {app.characterSelected.sanity}', font=font, fill=color,anchor='w')
 
     canvas.create_text(9*app.width//10, app.height-100, text='To confirm selection, press "Y"', font=font, fill=color, anchor='e')
-    canvas.create_text(20, app.height-25, text=f'CURRENT PLAYER: {app.currentPlayer}', font=font, fill=color, anchor='w')
+    canvas.create_text(20, app.height-25, text=f"CURRENT PLAYER: {app.currentPlayer['number']}", font=font, fill=color, anchor='w')
     canvas.create_text(app.width//2, app.height-25, text='Use the left or down arrow keys to go back.', font='Arial 20 bold',fill=color)
 
 def character_keyPressed(app, event):
@@ -553,8 +566,31 @@ def character_keyPressed(app, event):
         app.characterSelected = None # and selected character
     elif event.key == 'Right': # to debug rn
         app.mode = 'ground'
-
+    elif event.key == 'y':
+        if app.currentPlayer['number'] < app.players:
+            #print(app.currentPlayer['number'], app.currentPlayer['character'].name)
+            #print(app.currentPlayer['character'].name)
+            #print(app.currentPlayer['number'], app.currentPlayer['character'].name)
+            app.mode = 'characters'
+        else:
+            app.mode = 'ground'
+        app.currentPlayer['character'] = app.characterSelected
+        app.currentPlayer = currentPlayer(app)
+        print(app.playerList)
+    # app.currentPlayer['character'] == None or 
     '''
+    if app.currentPlayer['number'] < app.players:
+        if event.key == 'y':
+            app.currentPlayer['character'] = app.characterSelected
+            #print(app.currentPlayer['number'], app.currentPlayer['character'].name)
+            #print(app.currentPlayer['character'].name)
+            app.currentPlayer = currentPlayer(app)
+            #print(app.currentPlayer['number'], app.currentPlayer['character'].name)
+            app.mode = 'characters'
+    else:
+        if event.key == 'y':
+            app.mode = 'ground'
+            print(app.playerList)
     index = app.index
     while index < app.players:
     #for player in range(app.players):
@@ -566,9 +602,6 @@ def character_keyPressed(app, event):
                 app.index += 1
             print(app.playerList)
     '''
-    #    app.playerList[app.index] = app.selected.name
-    #    if app.index < app.players:
-    #        app.index += 1
 
 def character_mousePressed(app, event):
     pass
@@ -667,7 +700,7 @@ def drawCharacterGrid(app,canvas):
             x0,y0,x1,y1 = getCellBounds(app, row, col, rows, cols, app.marginX, app.marginY)
             cellWidth = x1-x0
             cellHeight = y1-y0
-            canvas.create_rectangle(x0, y0, x1, y1, fill='gray25')
+            canvas.create_rectangle(x0, y0, x1, y1, fill='dodger blue') # gray25
             canvas.create_text(x0+cellWidth//2,y0+cellHeight//2,text=app.characters[row][col].name, fill='white')
 
 # ground floor board
