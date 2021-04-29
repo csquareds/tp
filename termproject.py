@@ -250,6 +250,7 @@ StairsBasement = Room('Stairs from Basement', [Basement], False, False, False)
 Statuary = Room('Statuary Corridor', [Upper, Ground, Basement], False, True, False)
 Wine = Room('Wine Cellar', [Basement], False, False, True)
 Bedroom = Room('Bedroom', [Upper], False, True, False)
+Empty = Room('Undiscovered', [Upper, Ground, Basement], False, False, False)
 
 
 # OMENS
@@ -346,8 +347,6 @@ def appStarted(app):
     app.message = None
     setCharacter(app)
     app.players = 0 # total number of players
-    app.characterSelection = (-1,-1) # row and col of character grid
-    app.selected = None # actual character/player instance
     app.player1 = 'Player 1'
     app.player2 = 'Player 2'
     app.player3 = 'Player 3'
@@ -360,15 +359,16 @@ def appStarted(app):
     app.currentPlayer = app.playerList[app.index]
     app.characters = [ [Brandon, Flash, Heather, Jenny], [Longfellow, Missy, Ox, Peter], [Rhinehardt, Vivian, Zoe, Zostra] ] # 4 by 3
     #app.characters = [ [Brandon, Flash, Heather], [Jenny, Longfellow, Missy], [Ox, Peter, Rhinehardt], [Vivian, Zoe, Zostra] ] # 3 by 4
-    app.haunt = False
+    app.characterList = [Zoe, Zostra, Longfellow, Flash, Jenny, Brandon, Ox, Vivian, Missy, Rhinehardt, Vivian, Heather, Peter]
+    app.haunt = False # haunt phase
     app.rooms = [Abandoned, Attic, Balcony, Ballroom, Bedroom, Bloody, Catacombs, 
         Chapel, Charred, Chasm, Coal, Collapsed, Conservatory, Creaky, Crypt, 
         Dining, Dusty, Furnace, Gallery, Game, Gardens, Graveyard, Gym, Junk, 
         Kitchen, Larder, Library, Master, Mystic, Operating, Organ, Patio, 
         Pentagram, Research, Servant, StairsBasement, Statuary, Store, Tower, 
             Underground, Vault, Wine]
-    setBasement(app)
     setGround(app)
+    setBasement(app)
     setUpper(app)
     app.omens = [Skull, Bite, Book, Crystal, Dog, Girl, Holy, 
                 Madman, Mask, Medallion, Ring, Spear, Spirit]
@@ -381,8 +381,6 @@ def appStarted(app):
     app.items = [Revolver, Salts, Sacrificial_Dagger, Rabbit, Puzzle, Gloves, 
                 Music, Medical, Lucky, Idol, Healing, Dynamite, Dice, Candle, 
             Bottle, Blood_Dagger, Bell, Axe, Armor, Angel, Amulet, Adrenaline]
-    #app.players = [Zoe, Zostra, Longfellow, Flash, Jenny, Brandon, Ox,
-    #                Vivian, Missy, Rhinehardt, Vivian, Heather, Peter]
     app.gameOver = False
 
 def setCharacter(app):
@@ -390,24 +388,37 @@ def setCharacter(app):
     app.characterCols = 4
     app.marginX = 50
     app.marginY = 200
-
-def setBasement(app):
-    app.basementRows = 5
-    app.basementCols = 5
-    app.basementX = 100 # basement marginX
-    app.basementY = 100 # basement marginY
+    app.characterSelection = (-1,-1) # row and col of character grid
+    app.characterSelected = None # actual character/player instance
 
 def setGround(app):
     app.groundRows = 5
     app.groundCols = 8
     app.groundX = 100 # ground marginX
     app.groundY = 50 # ground marginY
+    app.groundList = [ [Empty.name]*app.groundCols for row in range(app.groundRows)]
+    app.groundList[2][0] = 'Entrance Hall'
+    app.groundList[2][1] = 'Foyer'
+    app.groundList[2][2] = 'Grand Staircase'
+    #print(app.groundList)
+
+def setBasement(app):
+    app.basementRows = 5
+    app.basementCols = 8
+    app.basementX = 100 # basement marginX
+    app.basementY = 50 # basement marginY
+    app.basementList = [ [Empty.name]*app.basementCols for row in range(app.basementRows)]
+    app.basementList[2][3] = 'Basement Landing'
+    #print(app.basementList)
 
 def setUpper(app):
     app.upperRows = 5
-    app.upperCols = 5
+    app.upperCols = 8
     app.upperX = 100 # upper marginX
-    app.upperY = 100 # upper marginY
+    app.upperY = 50 # upper marginY
+    app.upperList = [ [Empty.name]*app.upperCols for row in range(app.upperRows)]
+    app.upperList[2][4] = 'Upper Landing'
+    #print(app.upperList)
 
 def set_keyPressed(app,event):
     #newList = []
@@ -466,16 +477,16 @@ def set_redrawAll(app, canvas):
     canvas.create_text(app.width//2, app.height-100, text='2   3   4   5   6', font=font)
 
 def ground_mousePressed(app,event):
-    print(f'mousePressed at {(event,x, event.y)}')
+    pass
 
-def ground_mouseReleased(app, event):
-    print(f'mouseReleased at {(event.x, event.y)}')
+#def ground_mouseReleased(app, event):
+#    print(f'mouseReleased at {(event.x, event.y)}')
 
-def ground_mouseMoved(app, event):
-    print(f'mouseMoved at {(event.x, event.y)}')
+#def ground_mouseMoved(app, event):
+#    print(f'mouseMoved at {(event.x, event.y)}')
 
-def ground_mouseDragged(app, event):
-    print(f'mouseDragged at {(event.x, event.y)}')
+#def ground_mouseDragged(app, event):
+#    print(f'mouseDragged at {(event.x, event.y)}')
 
 def ground_redrawAll(app,canvas):
     drawGround(app,canvas)
@@ -483,17 +494,20 @@ def ground_redrawAll(app,canvas):
 def basement_mousePressed(app,event):
     print(f'mousePressed at {(event,x, event.y)}')
 
-def basement_mouseReleased(app, event):
+def basement_mouseReleased(app,event):
     print(f'mouseReleased at {(event.x, event.y)}')
 
-def basement_mouseMoved(app, event):
+def basement_mouseMoved(app,event):
     print(f'mouseMoved at {(event.x, event.y)}')
 
-def basement_mouseDragged(app, event):
+def basement_mouseDragged(app,event):
     print(f'mouseDragged at {(event.x, event.y)}')
 
 def basement_redrawAll(app,canvas):
     drawBasement(app,canvas)
+
+def upper_redrawAll(app,canvas):
+    drawUpper(app,canvas)
 
 def characters_redrawAll(app, canvas):
     font = 'Arial 26 bold'
@@ -516,14 +530,14 @@ def characters_mousePressed(app,event):
     cols = app.characterCols
     (row, col) = getCell(app, event.x, event.y, rows, cols, app.marginX, app.marginY)
     if app.characterSelection == (row,col):
-        app.characterselection = (-1,-1)
-        app.selected = None
+        app.characterSelection = (-1,-1)
+        app.characterSelected = None
     else:
         app.characterSelection = (row,col)
         if app.characterSelection == (-1,-1): # avoid indexing issues,
-            app.selected = None # since it would be set to last value, Zostra
+            app.characterSelected = None # since it would be set to last value, Zostra
         else:
-            app.selected = app.characters[row][col]
+            app.characterSelected = app.characters[row][col]
             #print(app.selected.name)
             app.mode = 'character'
 
@@ -550,11 +564,11 @@ def character_redrawAll(app,canvas):
     canvas.create_rectangle(0,0,app.width,app.height,fill='black')
     # TRAITS
     color = 'white'
-    canvas.create_text(app.width//2, 50, text=app.selected.name, fill=app.selected.color,font=font)
-    canvas.create_text(app.width//10, 100, text=f'Might: {app.selected.might}', font=font, fill=color,anchor='w')
-    canvas.create_text(app.width//10, 130, text=f'Speed: {app.selected.speed}', font=font, fill=color,anchor='w')
-    canvas.create_text(app.width//10, 160, text=f'Knowledge: {app.selected.knowledge}', font=font, fill=color,anchor='w')
-    canvas.create_text(app.width//10, 190, text=f'Sanity: {app.selected.sanity}', font=font, fill=color,anchor='w')
+    canvas.create_text(app.width//2, 50, text=app.characterSelected.name, fill=app.characterSelected.color,font=font)
+    canvas.create_text(app.width//10, 100, text=f'Might: {app.characterSelected.might}', font=font, fill=color,anchor='w')
+    canvas.create_text(app.width//10, 130, text=f'Speed: {app.characterSelected.speed}', font=font, fill=color,anchor='w')
+    canvas.create_text(app.width//10, 160, text=f'Knowledge: {app.characterSelected.knowledge}', font=font, fill=color,anchor='w')
+    canvas.create_text(app.width//10, 190, text=f'Sanity: {app.characterSelected.sanity}', font=font, fill=color,anchor='w')
 
     canvas.create_text(9*app.width//10, app.height-100, text='To confirm selection, press "Y"', font=font, fill=color, anchor='e')
     canvas.create_text(20, app.height-25, text=f'CURRENT PLAYER: {app.currentPlayer}', font=font, fill=color, anchor='w')
@@ -566,8 +580,9 @@ def character_keyPressed(app, event):
         appStarted(app)
     elif event.key == 'Down' or event.key == 'Left':
         app.mode = 'characters' # back to characters grid
-        app.selected = None # reset selected character
-    elif event.key == 'Right':
+        app.characterSelection = (-1,-1) # reset selected row, col
+        app.characterSelected = None # and selected character
+    elif event.key == 'Right': # to debug rn
         app.mode = 'ground'
 
     '''
@@ -626,21 +641,30 @@ def drawGround(app,canvas):
     for row in range(app.groundRows):
         for col in range(app.groundCols):
             x0,y0,x1,y1 = getCellBounds(app, row, col, app.groundRows, app.groundCols, app.groundX, app.groundY)
-            canvas.create_rectangle(x0, y0, x1, y1)
+            roomWidth = x1-x0
+            roomHeight = y1-y0
+            canvas.create_rectangle(x0, y0, x1, y1, fill='brown')
+            canvas.create_text(x0+roomWidth//2,y0+roomHeight//2,text=app.groundList[row][col], fill='white')
 
 # basement floor board
 def drawBasement(app,canvas):
     for row in range(app.basementRows):
         for col in range(app.basementCols):
             x0,y0,x1,y1 = getCellBounds(app, row, col)
+            roomWidth = x1-x0
+            roomHeight = y1-y0
             canvas.create_rectangle(x0, y0, x1, y1)
+            canvas.create_text(x0+roomWidth//2,y0+roomHeight//2,text=app.basementList[row][col])
 
 # upper floor board
 def drawUpper(app,canvas):
     for row in range(app.upperRows):
         for col in range(app.upperCols):
             x0,y0,x1,y1 = getCellBounds(app, row, col)
+            roomWidth = x1-x0
+            roomHeight = y1-y0
             canvas.create_rectangle(x0, y0, x1, y1)
+            canvas.create_text(x0+roomWidth//2,y0+roomHeight//2,text=app.upperList[row][col])
 
 def drawRoom(app,canvas):
     x0,y0,x1,y1 = 1,2,3,4
