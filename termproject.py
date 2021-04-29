@@ -136,7 +136,7 @@ Zoe = Player('Zoe Ingstrom', [0,2,2,3,3,4,4,6,7], 4, [0,4,4,4,4,5,6,8,8], 4,
             [0,1,2,3,4,4,5,5,5], 3, [0,3,4,5,5,6,6,7,8], 3, 'yellow', 8, 
             'November 5th', 'Dolls, Music')
 Zostra = Player('Madame Zostra', [0,2,3,3,4,5,5,5,6], 4, [0,2,3,3,5,5,6,6,7], 
-            3, [0,1,3,4,4,4,5,6,6], 4, [0,4,4,4,5,6,7,8,8], 3, 'blue', 37, 
+            3, [0,1,3,4,4,4,5,6,6], 4, [0,4,4,4,5,6,7,8,8], 3, 'deep sky blue', 37, 
             'December 10th', 'Astrology, Cooking, Baseball')
 Longfellow = Player('Professor Longfellow', [0,1,2,3,4,5,5,6,6], 3, 
             [0,2,2,4,4,5,5,6,6], 4, [0,4,5,5,5,5,6,7,8], 5, [0,1,3,3,4,5,5,6,7], 
@@ -145,13 +145,13 @@ Flash = Player('Darrin "Flash" Williams', [0,2,3,3,4,5,6,6,7], 3,
             [0,4,4,4,5,6,7,7,8], 5, [0,2,3,3,4,5,5,5,7], 3, [0,1,2,3,4,5,5,5,7],
             3, 'red', 20, 'June 6th', 'Track, Music, Shakespearean Literature')
 Jenny = Player('Jenny LeClerc', [0,3,4,4,4,4,5,6,8], 3, [0,2,3,4,4,4,5,6,8], 
-            4, [0,2,3,3,4,4,5,6,8], 3, [0,1,1,2,4,4,4,5,6], 5, 'purple', 21, 
+            4, [0,2,3,3,4,4,5,6,8], 3, [0,1,1,2,4,4,4,5,6], 5, 'purple1', 21, 
                 'March 4th', 'Reading, Soccer')
 Brandon = Player('Brandon Jaspers', [0,2,3,3,4,5,6,6,7], 4, [0,3,4,4,4,5,6,7,8], 
-            3, [0,1,3,3,5,5,6,6,7], 3, [0,3,3,3,4,5,6,7,8], 4, 'green', 12, 
+            3, [0,1,3,3,5,5,6,6,7], 3, [0,3,3,3,4,5,6,7,8], 4, 'green2', 12, 
                 'May 21st', 'Computers, Camping, Hockey')
 Vivian = Player('Vivian Lopez', [0,2,2,2,4,4,5,6,6], 3, [0,3,4,4,4,4,6,7,8], 
-            4, [0,4,5,5,5,5,6,6,7], 4, [0,4,4,4,5,6,7,8,8], 3, 'blue', 42, 
+            4, [0,4,5,5,5,5,6,6,7], 4, [0,4,4,4,5,6,7,8,8], 3, 'deep sky blue', 42, 
                 'January 11th', 'Old Movies, Horses')
 Missy = Player('Missy Dubourde', [0,2,3,3,3,4,5,6,7], 4, [0,3,4,5,6,6,6,7,7], 
             3, [0,2,3,4,4,5,6,6,6], 4, [0,1,2,3,4,5,5,6,7], 3, 'yellow', 9, 
@@ -161,9 +161,9 @@ Rhinehardt = Player('Father Rhinehardt', [0,1,2,2,4,4,5,5,7], 3,
                 5, 'white', 62, 'April 29th', 'Fencing, Gardening')
 Heather = Player('Heather Granville', [0,3,3,3,4,5,6,7,8], 3, 
             [0,3,3,4,5,6,6,7,8], 3, [0,2,3,3,4,5,6,7,8], 5, [0,3,3,3,4,5,6,6,6], 
-                3, 'purple', 18, 'August 2nd', 'Television, Shopping')
+                3, 'purple1', 18, 'August 2nd', 'Television, Shopping')
 Peter = Player('Peter Akimoto', [0,2,3,3,4,5,5,6,8], 3, [0,3,3,3,4,6,6,7,7], 
-            4, [0,3,4,4,5,6,7,7,8], 3, [0,3,4,4,4,5,6,6,7], 4, 'green', 13, 
+            4, [0,3,4,4,5,6,7,7,8], 3, [0,3,4,4,4,5,6,6,7], 4, 'green2', 13, 
                 'September 3rd', 'Bugs, Basketball')
 Ox = Player('Ox Bellows', [0,4,5,5,6,6,7,8,8], 3, [0,2,2,2,3,4,5,5,6], 
             5, [0,2,2,3,3,5,5,6,6], 3, [0,2,2,3,4,5,5,6,7], 3, 'red', 23, 
@@ -359,7 +359,7 @@ def appStarted(app):
     app.currentPlayer = app.playerList[app.index]
     app.characters = [ [Brandon, Flash, Heather, Jenny], [Longfellow, Missy, Ox, Peter], [Rhinehardt, Vivian, Zoe, Zostra] ] # 4 by 3
     #app.characters = [ [Brandon, Flash, Heather], [Jenny, Longfellow, Missy], [Ox, Peter, Rhinehardt], [Vivian, Zoe, Zostra] ] # 3 by 4
-    app.characterList = [Zoe, Zostra, Longfellow, Flash, Jenny, Brandon, Ox, Vivian, Missy, Rhinehardt, Vivian, Heather, Peter]
+    #app.characterList = [Zoe, Zostra, Longfellow, Flash, Jenny, Brandon, Ox, Vivian, Missy, Rhinehardt, Vivian, Heather, Peter]
     app.haunt = False # haunt phase
     app.rooms = [Abandoned, Attic, Balcony, Ballroom, Bedroom, Bloody, Catacombs, 
         Chapel, Charred, Chasm, Coal, Collapsed, Conservatory, Creaky, Crypt, 
@@ -420,6 +420,46 @@ def setUpper(app):
     app.upperList[2][4] = 'Upper Landing'
     #print(app.upperList)
 
+def rollDice(app, player, trait):
+    attempt = player.trait
+    result = 0
+    #dice = app.hauntDie * attempt
+    for i in range(attempt):
+        result += app.hauntDie[random.randint(0,5)]
+    return result
+
+# START SCREEN FUNCTIONS
+def start_redrawAll(app, canvas):
+    font = 'Arial 20 bold'
+    canvas.create_rectangle(0,0,app.width,app.height,fill='black')
+    canvas.create_text(app.width//2, app.height-100, text='Click the screen to begin or click any key to begin playing', font=font,fill='white')
+    canvas.create_text(app.width//2, app.height-50, text='Click "r" at any time to restart game',font=font,fill='white')
+    canvas.create_image(app.width//2,app.height//2, image=ImageTk.PhotoImage(app.image))
+    canvas.create_text(app.width//2, 150, text='Betrayal at House on the Hill', font='Sign\Painter 45',fill='white')
+
+def start_keyPressed(app, event):
+    #print(event.key)
+    if event.key == 'r':
+        app.mode = 'start'
+        appStarted(app)
+    else:
+        app.mode = 'set'
+
+def start_mousePressed(app, event):
+    app.mode = 'set'
+
+# PLAYERS SET FUNCTIONS
+def set_redrawAll(app, canvas):
+    font = 'Arial 26 bold'
+    color = 'white'
+    numbers = '2        3        4        5        6'
+    #players = string.digits, string.digits[2:8]
+    canvas.create_rectangle(0,0,app.width,app.height,fill='black')
+    canvas.create_text(app.width//2, 150, text='HOW MANY PLAYERS?', font='Arial 45 bold', fill=color)
+    canvas.create_text(app.width//2, 250, text='Please enter a number:', font=font, fill=color)
+    canvas.create_text(app.width//2, app.height-200, text=app.message, font=font, fill='red')
+    canvas.create_text(app.width//2, app.height-100, text=numbers, font=font, fill=color)
+
 def set_keyPressed(app,event):
     #newList = []
     #for player in app.playerList:
@@ -452,67 +492,13 @@ def set_keyPressed(app,event):
     #    app.playerList = app.playerList[0:app.players]
     #    print(app.playerList)
 
-def rollDice(app, player, trait):
-    attempt = player.trait
-    result = 0
-    #dice = app.hauntDie * attempt
-    for i in range(attempt):
-        result += app.hauntDie[random.randint(0,5)]
-    return result
-
-def start_redrawAll(app, canvas):
-    font = 'Helvetica 20 bold'
-    canvas.create_rectangle(0,0,app.width,app.height,fill='black')
-    canvas.create_text(app.width//2, app.height-100, text='Click the screen to begin or click any key to begin playing', font=font,fill='white')
-    canvas.create_text(app.width//2, app.height-50, text='Click "r" at any time to restart game',font=font,fill='white')
-    canvas.create_image(app.width//2,app.height//2, image=ImageTk.PhotoImage(app.image))
-    canvas.create_text(app.width//2, 150, text='Betrayal at House on the Hill', font='Sign\Painter 45',fill='white')
-
-def set_redrawAll(app, canvas):
-    font = 'Arial 26 bold'
-    #players = string.digits, string.digits[2:8]
-    canvas.create_text(app.width//2, 150, text='How many players?', font=font)
-    canvas.create_text(app.width//2, 200, text='Enter number:', font=font)
-    canvas.create_text(app.width//2, app.height-200, text=app.message, font=font)
-    canvas.create_text(app.width//2, app.height-100, text='2   3   4   5   6', font=font)
-
-def ground_mousePressed(app,event):
-    pass
-
-#def ground_mouseReleased(app, event):
-#    print(f'mouseReleased at {(event.x, event.y)}')
-
-#def ground_mouseMoved(app, event):
-#    print(f'mouseMoved at {(event.x, event.y)}')
-
-#def ground_mouseDragged(app, event):
-#    print(f'mouseDragged at {(event.x, event.y)}')
-
-def ground_redrawAll(app,canvas):
-    drawGround(app,canvas)
-
-def basement_mousePressed(app,event):
-    print(f'mousePressed at {(event,x, event.y)}')
-
-def basement_mouseReleased(app,event):
-    print(f'mouseReleased at {(event.x, event.y)}')
-
-def basement_mouseMoved(app,event):
-    print(f'mouseMoved at {(event.x, event.y)}')
-
-def basement_mouseDragged(app,event):
-    print(f'mouseDragged at {(event.x, event.y)}')
-
-def basement_redrawAll(app,canvas):
-    drawBasement(app,canvas)
-
-def upper_redrawAll(app,canvas):
-    drawUpper(app,canvas)
-
+# CHARACTER SELECTION FUNCTION
 def characters_redrawAll(app, canvas):
-    font = 'Arial 26 bold'
-    canvas.create_text(app.width//2, 25, text='C H O O S E   Y O U R   C H A R A C T E R', font=font)
-    canvas.create_text(app.width//2, app.height-25, text=f'Current Player: {app.currentPlayer}                Players: {app.players}', font=font)
+    canvas.create_rectangle(0,0,app.width,app.height,fill='black')
+    canvas.create_text(app.width//2, 40, text='C H O O S E   Y O U R   C H A R A C T E R', font='Arial 30 bold', fill='white')
+    canvas.create_text(app.width//2, 70, text='Click cell to view player traits and info', font='Arial 20 bold', fill='white')
+    canvas.create_text(20, app.height-25, text='Use the left or down arrow keys to go back (reset number of players).', font='Arial 15 bold',fill='white',anchor='w')
+    canvas.create_text(app.width//2, app.height-75, text=f'Current Player: {app.currentPlayer}                Players: {app.players}', font='Arial 25 bold',fill='white')
     drawCharacterGrid(app,canvas)
 
 def characters_keyPressed(app,event):
@@ -541,24 +527,7 @@ def characters_mousePressed(app,event):
             #print(app.selected.name)
             app.mode = 'character'
 
-def getCell(app,x,y,rows,cols,marginX,marginY): # modeled after grid cell click, https://www.cs.cmu.edu/~112/notes/notes-animations-part2.html
-    if not inGrid(app, x, y, app.marginX, app.marginY):
-        return (-1, -1)
-    
-    gridWidth = app.width - 2*marginX
-    gridHeight = app.height - 2*marginY
-    cellWidth = gridWidth/cols
-    cellHeight = gridHeight/rows
-
-    row = int((y - marginY)/ cellHeight)
-    col = int((x - marginX)/ cellWidth)
-
-    return (row, col)
-
-def inGrid(app, x, y, marginX, marginY):
-    return (marginX <= x <= app.width-marginX and 
-                marginY <= y <= app.height - marginY)
-
+# CHARACTER FUNCTIONS
 def character_redrawAll(app,canvas):
     font = 'Arial 26 bold'
     canvas.create_rectangle(0,0,app.width,app.height,fill='black')
@@ -604,18 +573,62 @@ def character_keyPressed(app, event):
 def character_mousePressed(app, event):
     pass
 
-def start_keyPressed(app, event):
-    #print(event.key)
+# GROUND FLOOR BOARD FUNCTIONS
+def ground_redrawAll(app,canvas):
+    drawGround(app,canvas)
+
+def ground_keyPressed(app,event):
     if event.key == 'r':
         app.mode = 'start'
         appStarted(app)
-    else:
-        app.mode = 'set'
+    elif event.key == 'Right':
+        app.mode = 'upper'
+    elif event.key == 'Left':
+        app.mode = 'basement'
 
-def start_mousePressed(app, event):
-    app.mode = 'set'
+def ground_mousePressed(app,event):
+    pass
 
-# cell bounds for characters grid
+#def ground_mouseReleased(app, event):
+#    print(f'mouseReleased at {(event.x, event.y)}')
+
+#def ground_mouseMoved(app, event):
+#    print(f'mouseMoved at {(event.x, event.y)}')
+
+#def ground_mouseDragged(app, event):
+#    print(f'mouseDragged at {(event.x, event.y)}')
+
+# BASEMENT FLOOR FUNCTIONS
+def basement_redrawAll(app,canvas):
+    drawBasement(app,canvas)
+
+def basement_keyPressed(app,event):
+    if event.key == 'r':
+        app.mode = 'start'
+        appStarted(app)
+
+def basement_mousePressed(app,event):
+    print(f'mousePressed at {(event,x, event.y)}')
+
+def basement_mouseReleased(app,event):
+    print(f'mouseReleased at {(event.x, event.y)}')
+
+def basement_mouseMoved(app,event):
+    print(f'mouseMoved at {(event.x, event.y)}')
+
+def basement_mouseDragged(app,event):
+    print(f'mouseDragged at {(event.x, event.y)}')
+
+# UPPER FLOOR FUNCTIONS
+def upper_redrawAll(app,canvas):
+    drawUpper(app,canvas)
+
+def upper_keyPressed(app,event):
+    if event.key == 'r':
+        app.mode = 'start'
+        appStarted(app)
+
+# cell bounds for grids
 def getCellBounds(app, row, col, rows, cols, marginX, marginY):
     width = app.width - (2 * marginX)
     height = app.height - (2 * marginY)
@@ -627,30 +640,55 @@ def getCellBounds(app, row, col, rows, cols, marginX, marginY):
     y1 = cellHeight * (row+1) + marginY
     return x0, y0, x1, y1
 
+def getCell(app,x,y,rows,cols,marginX,marginY): # modeled after grid cell click, https://www.cs.cmu.edu/~112/notes/notes-animations-part2.html
+    if not inGrid(app, x, y, app.marginX, app.marginY):
+        return (-1, -1)
+    
+    gridWidth = app.width - 2*marginX
+    gridHeight = app.height - 2*marginY
+    cellWidth = gridWidth/cols
+    cellHeight = gridHeight/rows
+
+    row = int((y - marginY)/ cellHeight)
+    col = int((x - marginX)/ cellWidth)
+
+    return (row, col)
+
+def inGrid(app, x, y, marginX, marginY):
+    return (marginX <= x <= app.width-marginX and 
+                marginY <= y <= app.height - marginY)
+
 # characters grid
 def drawCharacterGrid(app,canvas):
     rows = app.characterRows
     cols = app.characterCols
-    for row in range(app.characterRows):
-        for col in range(app.characterCols):
+    for row in range(rows):
+        for col in range(cols):
             x0,y0,x1,y1 = getCellBounds(app, row, col, rows, cols, app.marginX, app.marginY)
-            canvas.create_rectangle(x0, y0, x1, y1)
+            cellWidth = x1-x0
+            cellHeight = y1-y0
+            canvas.create_rectangle(x0, y0, x1, y1, fill='gray25')
+            canvas.create_text(x0+cellWidth//2,y0+cellHeight//2,text=app.characters[row][col].name, fill='white')
 
 # ground floor board
 def drawGround(app,canvas):
-    for row in range(app.groundRows):
-        for col in range(app.groundCols):
-            x0,y0,x1,y1 = getCellBounds(app, row, col, app.groundRows, app.groundCols, app.groundX, app.groundY)
+    rows = app.groundRows
+    cols = app.groundCols
+    for row in range(rows):
+        for col in range(cols):
+            x0,y0,x1,y1 = getCellBounds(app, row, col, rows, cols, app.groundX, app.groundY)
             roomWidth = x1-x0
             roomHeight = y1-y0
-            canvas.create_rectangle(x0, y0, x1, y1, fill='brown')
+            canvas.create_rectangle(x0, y0, x1, y1, fill='saddle brown')
             canvas.create_text(x0+roomWidth//2,y0+roomHeight//2,text=app.groundList[row][col], fill='white')
 
 # basement floor board
 def drawBasement(app,canvas):
-    for row in range(app.basementRows):
-        for col in range(app.basementCols):
-            x0,y0,x1,y1 = getCellBounds(app, row, col)
+    rows = app.basementRows
+    cols = app.basementCols
+    for row in range(rows):
+        for col in range(cols):
+            x0,y0,x1,y1 = getCellBounds(app, row, col, rows, cols, app.basementX, app.basementY)
             roomWidth = x1-x0
             roomHeight = y1-y0
             canvas.create_rectangle(x0, y0, x1, y1)
@@ -658,17 +696,14 @@ def drawBasement(app,canvas):
 
 # upper floor board
 def drawUpper(app,canvas):
-    for row in range(app.upperRows):
-        for col in range(app.upperCols):
-            x0,y0,x1,y1 = getCellBounds(app, row, col)
+    rows = app.upperRows
+    cols = app.upperCols
+    for row in range(rows):
+        for col in range(cols):
+            x0,y0,x1,y1 = getCellBounds(app, row, col, rows, cols, app.upperX, app.upperY)
             roomWidth = x1-x0
             roomHeight = y1-y0
             canvas.create_rectangle(x0, y0, x1, y1)
             canvas.create_text(x0+roomWidth//2,y0+roomHeight//2,text=app.upperList[row][col])
-
-def drawRoom(app,canvas):
-    x0,y0,x1,y1 = 1,2,3,4
-    canvas.create_rectangle(x0,y0,x1,y1,fill='brown')
-
 
 runApp(width=1440, height=775)
