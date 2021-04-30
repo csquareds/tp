@@ -2,7 +2,7 @@
 # SPRING 2021
 
 # Based on the board game, Betrayal at House on the Hill, published by Avalon 
-# Hill in 2004. 
+# Hill in 2004.
 
 # Players all begin as allies exploring a haunted house filled 
 # with dangers, traps, items, and omens. As players journey to new parts of the 
@@ -23,50 +23,7 @@
 
 from cmu_112_graphics import *
 import random, string, math, time
-from dataclasses import make_dataclass
-#import tpclasses import *
-
-class Player(object):
-    def __init__(self, name, traitList, traitIndex, color, age, birthday, hobbies):
-        # TRAITS
-        self.traitList = traitList # dictionary of trait lists
-        self.traitIndex = traitIndex # dictionary of trait indexes
-        self.might = traitList['might'][traitIndex['might']] # actual values
-        self.speed = traitList['speed'][traitIndex['speed']]
-        self.knowledge = traitList['knowledge'][traitIndex['knowledge']]
-        self.sanity = traitList['sanity'][traitIndex['sanity']]
-
-        # INFO/CHARACTERISTICS
-        self.name = name
-        self.color = color
-        self.age = age
-        self.birthday = birthday
-        self.hobbies = hobbies
-        self.status = True # alive, not dead
-        self.role = True # explorer/hero, not traitor
-    
-    # example: traitValue = self.might, trait = 'might'
-    def changeTrait(self, traitValue, trait, change):
-        index = self.traitIndex[trait]
-        index += change
-        if not app.haunt:
-            if 0 <= index <= 8:
-                self.traitIndex[trait] += change
-                traitValue = traitList[self.traitIndex[trait]]
-            else:
-                index -= change
-        else:
-            if index <= 0:
-                self.status = False
-            elif index <= 8:
-                self.traitIndex[trait] += change
-                traitValue = traitList[self.traitIndex[trait]]
-            else:
-                index -= change
-
-    def attemptRole(self, trait):
-        if trait == "might":
-            dice = self.might
+from tpclasses import *
 
 # PLAYERS, note 0 is death
 def setPlayers(app):
@@ -85,202 +42,183 @@ def setPlayers(app):
 # Player template
 #Player = Player('name', {mightList, speedList, knowledgeList, sanityList}, {mightIndex, speedIndex, knowledgeIndex, sanityIndex}, color, age, birthday, hobbies)
 
-class Floor(object):
-    def __init__(self,name):
-        self.name = name
-        self.rooms = []
-
 # FLOORS
-Ground = Floor('Ground Level')
-Basement = Floor('Basement')
-Upper = Floor('Upper Level')
+def setFloors(app):
+    app.Ground = Floor('Ground Level')
+    app.Basement = Floor('Basement')
+    app.Upper = Floor('Upper Level')
 
-class Omen(object):
-    def __init__(self, name, description):
-        self.name = name
-        self.description = description
-
-class Event(object):
-    def __init__(self, name, description):
-        self.name = name
-        self.description = description
-
-class Item(object):
-    def __init__(self, name, description):
-        self.name = name
-        self.description = description
-
-class Room(object):
-    def __init__(self, name, floors, omen, event, item):
-        self.name = name
-        self.floors = floors # eligible floors to place, list
-        self.omen = omen # does it have omen? boolean
-        self.event = event # does it have event? boolean
-        self.item = item # does it have item? boolean
-
-# ROOMS, omen event item
-Abandoned = Room('Abandoned Room', [Ground, Basement], True, False, False)
-Attic = Room('Attic', [Upper], False, True, False)
-Balcony = Room('Balcony', [Ground], True, False, False)
-Ballroom = Room('Ballroom', [Ground], False, True, False)
-Creaky = Room('Creaky Hallway', [Upper, Ground, Basement], False, False, False)
-Crypt = Room('Crypt', [Basement], False, True, False)
-Bloody = Room('Bloody Room', [Upper, Ground], False, False, True)
-Chapel = Room('Chapel', [Upper, Ground], False, True, False)
-Vault = Room('Vault', [Upper, Basement], False, False, True)
-Collapsed = Room('Collapsed Room', [Upper, Ground], False, False, False)
-Dining = Room('Dining Room', [Ground], True, False, False)
-Furnace = Room('Furnace Room', [Basement], True, False, False)
-Graveyard = Room('Graveyard', [Ground], False, True, False)
-Gym = Room('Gymnasium', [Upper, Basement], True, False, False)
-Operating = Room('Operating Laboratory', [Upper, Basement], False, False, False)
-Organ = Room('Organ Room', [Upper, Ground, Basement], False, True, False)
-Store = Room('Storeroom', [Upper, Basement], False, False, True)
-Tower = Room('Tower', [Upper], False, True, False)
-Catacombs = Room('Catacombs', [Basement], True, False, False)
-Dusty = Room('Dusty Hallway', [Upper, Ground, Basement], False, False, False)
-Kitchen = Room('Kitchen', [Ground, Basement], True, False, False)
-Junk = Room('Junk', [Upper, Ground, Basement], True, False, False)
-Larder = Room('Larder', [Basement], False, False, True)
-Patio = Room('Patio', [Ground], False, True, False)
-Pentagram = Room('Pentagram Chamber', [Basement], True, False, False)
-Research = Room('Research Laboratory', [Upper, Basement], False, True, False)
-Underground = Room('Underground Lake', [Basement], False, True, False)
-Vault = Room('Vault', [Upper, Basement], False, False, True) # two items
-Chasm = Room('Chasm', [Basement], False, False, False)
-Coal = Room('Coal Chute', [Ground], False, False, False)
-Collapsed = Room('Collapsed Room', [Upper, Ground], False, False, False)
-Charred = Room('Charred Room', [Upper, Ground], True, False, False)
-Conservatory = Room('Conservatory', [Upper, Ground], False, True, False)
-Gallery = Room('Gallery', [Upper], True, False, False)
-Game = Room('Game Room', [Upper, Ground, Basement], False, True, False)
-Gardens = Room('Gardens', [Ground], False, True, False)
-Library = Room('Library', [Upper, Ground], False, True, False)
-Master = Room('Master Bedroom', [Upper], True, False, False)
-Mystic = Room('Mystic Elevator', [Upper, Ground, Basement], False, False, False)
-Servant = Room("Servants' Quarters", [Upper, Basement], True, False, False)
-StairsBasement = Room('Stairs from Basement', [Basement], False, False, False)
-Statuary = Room('Statuary Corridor', [Upper, Ground, Basement], False, True, False)
-Wine = Room('Wine Cellar', [Basement], False, False, True)
-Bedroom = Room('Bedroom', [Upper], False, True, False)
-Empty = Room('Undiscovered', [Upper, Ground, Basement], False, False, False)
-
+# ROOMS, does it have: omen event item
+def setRooms(app):
+    app.Abandoned = Room('Abandoned Room', [app.Ground, app.Basement], True, False, False)
+    app.Attic = Room('Attic', [app.Upper], False, True, False)
+    app.Balcony = Room('Balcony', [app.Ground], True, False, False)
+    app.Ballroom = Room('Ballroom', [app.Ground], False, True, False)
+    app.Creaky = Room('Creaky Hallway', [app.Upper, app.Ground, app.Basement], False, False, False)
+    app.Crypt = Room('Crypt', [app.Basement], False, True, False)
+    app.Bloody = Room('Bloody Room', [app.Upper, app.Ground], False, False, True)
+    app.Chapel = Room('Chapel', [app.Upper, app.Ground], False, True, False)
+    app.Vault = Room('Vault', [app.Upper, app.Basement], False, False, True)
+    app.Collapsed = Room('Collapsed Room', [app.Upper, app.Ground], False, False, False)
+    app.Dining = Room('Dining Room', [app.Ground], True, False, False)
+    app.Furnace = Room('Furnace Room', [app.Basement], True, False, False)
+    app.Graveyard = Room('Graveyard', [app.Ground], False, True, False)
+    app.Gym = Room('Gymnasium', [app.Upper, app.Basement], True, False, False)
+    app.Operating = Room('Operating Laboratory', [app.Upper, app.Basement], False, False, False)
+    app.Organ = Room('Organ Room', [app.Upper, app.Ground, app.Basement], False, True, False)
+    app.Store = Room('Storeroom', [app.Upper, app.Basement], False, False, True)
+    app.Tower = Room('Tower', [app.Upper], False, True, False)
+    app.Catacombs = Room('Catacombs', [app.Basement], True, False, False)
+    app.Dusty = Room('Dusty Hallway', [app.Upper, app.Ground, app.Basement], False, False, False)
+    app.Kitchen = Room('Kitchen', [app.Ground, app.Basement], True, False, False)
+    app.Junk = Room('Junk', [app.Upper, app.Ground, app.Basement], True, False, False)
+    app.Larder = Room('Larder', [app.Basement], False, False, True)
+    app.Patio = Room('Patio', [app.Ground], False, True, False)
+    app.Pentagram = Room('Pentagram Chamber', [app.Basement], True, False, False)
+    app.Research = Room('Research Laboratory', [app.Upper, app.Basement], False, True, False)
+    app.Underground = Room('Underground Lake', [app.Basement], False, True, False)
+    app.Vault = Room('Vault', [app.Upper, app.Basement], False, False, True) # two items
+    app.Chasm = Room('Chasm', [app.Basement], False, False, False)
+    app.Coal = Room('Coal Chute', [app.Ground], False, False, False)
+    app.Collapsed = Room('Collapsed Room', [app.Upper, app.Ground], False, False, False)
+    app.Charred = Room('Charred Room', [app.Upper, app.Ground], True, False, False)
+    app.Conservatory = Room('Conservatory', [app.Upper, app.Ground], False, True, False)
+    app.Gallery = Room('Gallery', [app.Upper], True, False, False)
+    app.Game = Room('Game Room', [app.Upper, app.Ground, app.Basement], False, True, False)
+    app.Gardens = Room('Gardens', [app.Ground], False, True, False)
+    app.Library = Room('Library', [app.Upper, app.Ground], False, True, False)
+    app.Master = Room('Master Bedroom', [app.Upper], True, False, False)
+    app.Mystic = Room('Mystic Elevator', [app.Upper, app.Ground, app.Basement], False, False, False)
+    app.Servant = Room("Servants' Quarters", [app.Upper, app.Basement], True, False, False)
+    app.StairsBasement = Room('Stairs from Basement', [app.Basement], False, False, False)
+    app.Statuary = Room('Statuary Corridor', [app.Upper, app.Ground, app.Basement], False, True, False)
+    app.Wine = Room('Wine Cellar', [app.Basement], False, False, True)
+    app.Bedroom = Room('Bedroom', [app.Upper], False, True, False)
+    app.Empty = Room('Undiscovered', [app.Upper, app.Ground, app.Basement], False, False, False)
 
 # OMENS
-Skull = Omen('Skull', 'A skull cracked, and missing teeth')
-Bite = Omen('Bite', 'A growl, the scent of death. Pain. Darkness. Gone.')
-Book = Omen('Book', 'A diary or lab notes? Ancient script or modern ravings?')
-Crystal = Omen('Crystal Ball', 'Hazy images appear in the glass.')
-Dog = Omen('Dog', 'COMPANION This mangy dog seems friendly. At least you hope it is.')
-Girl = Omen('Girl', 'COMPANION A girl. Trapped. Alone. You free her!')
-Holy = Omen('Holy Symbol', 'A symbol of calm in an unsettling world.')
-Madman = Omen('Madman', 'COMPANION A raving, frothing madman.')
-Mask = Omen('Mask', 'A somber mask to hide your intentions.')
-Medallion = Omen('Medallion', 'A medallion inscribed with a pentagram.')
-Ring = Omen('Ring', 'A battered ring with an incomprehensible inscription.')
-Spear = Omen('Spear', 'WEAPON A weapon pulsing with power.')
-Spirit = Omen('Spirit Board', 'A board with letters and numbers to call the dead.')
+def setOmens(app):
+    app.Skull = Omen('Skull', 'A skull cracked, and missing teeth')
+    app.Bite = Omen('Bite', 'A growl, the scent of death. Pain. Darkness. Gone.')
+    app.Book = Omen('Book', 'A diary or lab notes? Ancient script or modern ravings?')
+    app.Crystal = Omen('Crystal Ball', 'Hazy images appear in the glass.')
+    app.Dog = Omen('Dog', 'COMPANION This mangy dog seems friendly. At least you hope it is.')
+    app.Girl = Omen('Girl', 'COMPANION A girl. Trapped. Alone. You free her!')
+    app.Holy = Omen('Holy Symbol', 'A symbol of calm in an unsettling world.')
+    app.Madman = Omen('Madman', 'COMPANION A raving, frothing madman.')
+    app.Mask = Omen('Mask', 'A somber mask to hide your intentions.')
+    app.Medallion = Omen('Medallion', 'A medallion inscribed with a pentagram.')
+    app.Ring = Omen('Ring', 'A battered ring with an incomprehensible inscription.')
+    app.Spear = Omen('Spear', 'WEAPON A weapon pulsing with power.')
+    app.Spirit = Omen('Spirit Board', 'A board with letters and numbers to call the dead.')
 
 # EVENTS
-Whoops = Event("Whoops!", "You feel a body under your foot. Before you can leap away from it, you've knocked over. A giggling voice runs away from you.")
-What = Event("What the...?", "As you look back the way you came, you see... nothing. Just empty and mist where a room used to be.")
-Webs = Event("Webs", "Casually, you reach up to brush some webs aside... but they won't brush away. They cling.")
-Walls = Event("Walls", "This room is warm. Flesh-like walls pulse with a steady heartbeat. Your own heart beats with the rhythm of the house. You are drawn into the walls... and emerge somewhere else.")
-Voice = Event("The Voice", '"I am under the floor, buried under the floor..." The voice whispers once, then is gone.')
-Lost = Event("The Lost One", "A woman wearing a Civil War dress beckons to you. You fall into a trance.")
-Beckoning = Event("The Beckoning", "Outside. You must get outside. Fly to freedom!")
-Spider = Event("Spider", "A spider the size of a fist lands on your shoulder... and crawls into your hair.")
-Slimy = Event("Something Slimy", "What's around your ankle? A bug? A tentacle? A dead hand clawing?")
-Hidden = Event("Something Hidden", "There's something odd about this room, but what? It's tickling the back of your mind.")
-Smoke = Event("Smoke", "Smoke billows around you. You cough, wiping away tears.")
-Skeletons = Event("Skeletons", "Mother and child, still embracing.")
-Silence = Event("Silence", "Underground, everything goes silent. Even the sound of breathing is gone.")
-Wind = Event("Shrieking Wind", "The wind picks up, a slow crescendo to a screeching howl.")
-Stairs = Event("Secret Stairs", "A horrible creaking sound echoes around you. You've discovered a secret stairwell.")
-Passage = Event("Secret Passage", "A section of the wall slides away. Behind it, a moldy tunnel awaits.")
-Rotten = Event("Rotten", "The smell in this room, it's horrible. Smells like death, like blood. A slaughterhouse smell.")
-Wall = Event("Revolving Wall", "The wall spins to another place.")
-Possession = Event("Possession", "A shadow separates from the wall. As you stand in shock, and shadow surrounds you and chills you to the core.")
-Phone = Event("Phone Call", "A phone rings in the room. You feel compelled to answer it.")
-Night = Event("Night View", "You see a vision of a ghostly couple walking the grounds, silently strolling in their wedding best.")
-Mystic = Event("Mystic Slide", "The floor falls from under you.")
-Mists = Event("Mists from the Walls", "Mists pour out from the walls. There are faces in the mist, human and... inhuman.")
-Safe = Event("Locked Safe", "Behind a portrait is a wall safe. It is trapped, of course.")
-Lights = Event("Lights Out", "Your flashlight goes out. Don't worry, someone else has batteries.")
-Jonah = Event("Jonah's Turn", "Two boys are playing with a wooden top.") # not finished
-Meant = Event("It is Meant to Be", "You collapse to the floor, visions of future events pouring through your head.")
-Mirror = Event("Image in the Mirror", "There is an old mirror in this room") # not finished?
-OtherMirror = Event("Image in the Mirror", "You then hand an item through the mirror.") # not finished too, duality
-Shriek = Event("Hideous Shriek", "It starts like a whisper, but ends in a soul-rending shriek.")
-Hanged = Event("Hanged Men", "A breeze chills the room. Before you, three men hang from frayed ropes. They stare at you with cold, dead eyes. The trio swing silently, then fade into dust that falls to the ground. You start to choke.")
-Groundskeeper = Event("Groundskeeper", "You turn to see a man in groundskeeper clothing. He raises his shovel and charges. Inches from your face, he disappears, leaving muddy footprints, and nothing more.")
-Grave = Event("Grave Dirt", "This room is covered in a thick layer of dirt. You cough as it gets on your skin and in your lungs.")
-Funeral = Event("Funeral", "You see an open coffin. You're inside it.")
-Footsteps = Event("Footsteps", "The floorboards slowly creak. Dust rises. Footprints appear on the dirty floor. And then, as they reach you, they are gone.")
-Drip = Event("Drip... Drip... Drip...", "A rhythmic sound that needles at your brain.")
-Sounds = Event("Disquieting Sounds", "A baby's cry, lost and abandoned. A scream. The crack of breaking glass. Then silence.")
-Debris = Event("Debris", "Plaster falls from the walls and ceiling.")
-Puppet = Event("Creepy Puppet", "You see one of those dolls that give you the willies. It jumps at you with a tiny spear.")
-Crawlies = Event("Creepy Crawlies", "A thousand bugs spill out on your skin, under your clothes, and in your hair.")
-Closet = Event("Closet Door", "That closet door is open... just a crack. There must be something inside.")
-Burning = Event("Burning Man", "A man on fire runs through the room. His skin bubbles and cracks, falling away from him and leaving a fiery skull that clatters to the ground, bounces, rolls, and disappears.")
-Vision = Event("Bloody Vision", "The walls of this room are damp with blood. The blood drips from the ceiling, down the walls, over the furniture, and onto your shoes. In a blink, it is gone.")
-Angry = Event("Angry Being", "It emerges from the slime on the wall next to you.")
-Hope = Event("A Moment of Hope", "Something feels strangely right about this room. Something is resisting the evil of the house.")
+def setEvents(app):
+    app.Whoops = Event("Whoops!", "You feel a body under your foot. Before you can leap away from it, you've knocked over. A giggling voice runs away from you.")
+    app.What = Event("What the...?", "As you look back the way you came, you see... nothing. Just empty and mist where a room used to be.")
+    app.Webs = Event("Webs", "Casually, you reach up to brush some webs aside... but they won't brush away. They cling.")
+    app.Walls = Event("Walls", "This room is warm. Flesh-like walls pulse with a steady heartbeat. Your own heart beats with the rhythm of the house. You are drawn into the walls... and emerge somewhere else.")
+    app.Voice = Event("The Voice", '"I am under the floor, buried under the floor..." The voice whispers once, then is gone.')
+    app.Lost = Event("The Lost One", "A woman wearing a Civil War dress beckons to you. You fall into a trance.")
+    app.Beckoning = Event("The Beckoning", "Outside. You must get outside. Fly to freedom!")
+    app.Spider = Event("Spider", "A spider the size of a fist lands on your shoulder... and crawls into your hair.")
+    app.Slimy = Event("Something Slimy", "What's around your ankle? A bug? A tentacle? A dead hand clawing?")
+    app.Hidden = Event("Something Hidden", "There's something odd about this room, but what? It's tickling the back of your mind.")
+    app.Smoke = Event("Smoke", "Smoke billows around you. You cough, wiping away tears.")
+    app.Skeletons = Event("Skeletons", "Mother and child, still embracing.")
+    app.Silence = Event("Silence", "Underground, everything goes silent. Even the sound of breathing is gone.")
+    app.Wind = Event("Shrieking Wind", "The wind picks up, a slow crescendo to a screeching howl.")
+    app.Stairs = Event("Secret Stairs", "A horrible creaking sound echoes around you. You've discovered a secret stairwell.")
+    app.Passage = Event("Secret Passage", "A section of the wall slides away. Behind it, a moldy tunnel awaits.")
+    app.Rotten = Event("Rotten", "The smell in this room, it's horrible. Smells like death, like blood. A slaughterhouse smell.")
+    app.Wall = Event("Revolving Wall", "The wall spins to another place.")
+    app.Possession = Event("Possession", "A shadow separates from the wall. As you stand in shock, and shadow surrounds you and chills you to the core.")
+    app.Phone = Event("Phone Call", "A phone rings in the room. You feel compelled to answer it.")
+    app.Night = Event("Night View", "You see a vision of a ghostly couple walking the grounds, silently strolling in their wedding best.")
+    app.Mystic = Event("Mystic Slide", "The floor falls from under you.")
+    app.Mists = Event("Mists from the Walls", "Mists pour out from the walls. There are faces in the mist, human and... inhuman.")
+    app.Safe = Event("Locked Safe", "Behind a portrait is a wall safe. It is trapped, of course.")
+    app.Lights = Event("Lights Out", "Your flashlight goes out. Don't worry, someone else has batteries.")
+    app.Jonah = Event("Jonah's Turn", "Two boys are playing with a wooden top.") # not finished
+    app.Meant = Event("It is Meant to Be", "You collapse to the floor, visions of future events pouring through your head.")
+    app.Mirror = Event("Image in the Mirror", "There is an old mirror in this room") # not finished?
+    app.OtherMirror = Event("Image in the Mirror", "You then hand an item through the mirror.") # not finished too, duality
+    app.Shriek = Event("Hideous Shriek", "It starts like a whisper, but ends in a soul-rending shriek.")
+    app.Hanged = Event("Hanged Men", "A breeze chills the room. Before you, three men hang from frayed ropes. They stare at you with cold, dead eyes. The trio swing silently, then fade into dust that falls to the ground. You start to choke.")
+    app.Groundskeeper = Event("Groundskeeper", "You turn to see a man in groundskeeper clothing. He raises his shovel and charges. Inches from your face, he disappears, leaving muddy footprints, and nothing more.")
+    app.Grave = Event("Grave Dirt", "This room is covered in a thick layer of dirt. You cough as it gets on your skin and in your lungs.")
+    app.Funeral = Event("Funeral", "You see an open coffin. You're inside it.")
+    app.Footsteps = Event("Footsteps", "The floorboards slowly creak. Dust rises. Footprints appear on the dirty floor. And then, as they reach you, they are gone.")
+    app.Drip = Event("Drip... Drip... Drip...", "A rhythmic sound that needles at your brain.")
+    app.Sounds = Event("Disquieting Sounds", "A baby's cry, lost and abandoned. A scream. The crack of breaking glass. Then silence.")
+    app.Debris = Event("Debris", "Plaster falls from the walls and ceiling.")
+    app.Puppet = Event("Creepy Puppet", "You see one of those dolls that give you the willies. It jumps at you with a tiny spear.")
+    app.Crawlies = Event("Creepy Crawlies", "A thousand bugs spill out on your skin, under your clothes, and in your hair.")
+    app.Closet = Event("Closet Door", "That closet door is open... just a crack. There must be something inside.")
+    app.Burning = Event("Burning Man", "A man on fire runs through the room. His skin bubbles and cracks, falling away from him and leaving a fiery skull that clatters to the ground, bounces, rolls, and disappears.")
+    app.Vision = Event("Bloody Vision", "The walls of this room are damp with blood. The blood drips from the ceiling, down the walls, over the furniture, and onto your shoes. In a blink, it is gone.")
+    app.Angry = Event("Angry Being", "It emerges from the slime on the wall next to you.")
+    app.Hope = Event("A Moment of Hope", "Something feels strangely right about this room. Something is resisting the evil of the house.")
 
 # ITEMS
-Revolver = Item("Revolver", "WEAPON An old potent looking weapon.")
-Salts = Item("Smelling Salts", "Whew, that's a lungful.")
-Sacrificial_Dagger = Item("Sacrificial Dagger", "WEAPON A twisted shard of iron covered in mysterious symbols and stained with blood.")
-Rabbit = Item("Rabbit's Foot", "Not so lucky for the rabbit.")
-Puzzle = Item("Puzzle Box", "There must be a way to open it.")
-Gloves = Item("Pickpoket's Gloves", "Helping yourself has never seemed so easy.")
-Music = Item("Music Box", "A hand-crafted antique. It plays a haunting melody that gets stuck in your head.")
-Medical = Item("Medical Kit", "A doctor's bag, depleted in some critical resources.")
-Lucky = Item("Lucky Stone", "A smooth, ordinary-looking rock. You sense it will bring you good fortune.")
-Idol = Item("Idol", "Perhaps it's chosen you for some greater purpose. Like human sacrifice.")
-Healing = Item("Healing Salve", "A sticky paste in a shallow bowl.")
-Dynamite = Item("Dynamite", "The fuse isn't lit... yet")
-Dice = Item("Dark Dice", "Are you feeling lucky?")
-Candle = Item("Candle", "It makes the shadows move— at least, you hope it's doing that.")
-Bottle = Item("Bottle", "An opaque vial containing a black liquid.")
-Blood_Dagger = Item("Blood Dagger", "WEAPON A nasty weapon. Needles and tubes extend from the handle... and plunge right into your veins.")
-Bell = Item("Bell", "A brass bell that makes a resonant clang.")
-Axe = Item("Axe", "WEAPON Very sharp.")
-Armor = Item("Armor", "It's just prop armor from a Renaissance fair, but it's still metal.")
-Angel = Item("Angel Feather", "A perfect feather fluttering in your hand.")
-Amulet = Item("Amulet of the Ages", "Ancient silver and inlaid gems, inscribed with blessings.")
-Adrenaline = Item("Adrenaline Shot", "A syringe containing a strange fluorescent liquid.")
+def setItems(app):
+    app.Revolver = Item("Revolver", "WEAPON An old potent looking weapon.")
+    app.Salts = Item("Smelling Salts", "Whew, that's a lungful.")
+    app.Sacrificial_Dagger = Item("Sacrificial Dagger", "WEAPON A twisted shard of iron covered in mysterious symbols and stained with blood.")
+    app.Rabbit = Item("Rabbit's Foot", "Not so lucky for the rabbit.")
+    app.Puzzle = Item("Puzzle Box", "There must be a way to open it.")
+    app.Gloves = Item("Pickpoket's Gloves", "Helping yourself has never seemed so easy.")
+    app.Music = Item("Music Box", "A hand-crafted antique. It plays a haunting melody that gets stuck in your head.")
+    app.Medical = Item("Medical Kit", "A doctor's bag, depleted in some critical resources.")
+    app.Lucky = Item("Lucky Stone", "A smooth, ordinary-looking rock. You sense it will bring you good fortune.")
+    app.Idol = Item("Idol", "Perhaps it's chosen you for some greater purpose. Like human sacrifice.")
+    app.Healing = Item("Healing Salve", "A sticky paste in a shallow bowl.")
+    app.Dynamite = Item("Dynamite", "The fuse isn't lit... yet")
+    app.Dice = Item("Dark Dice", "Are you feeling lucky?")
+    app.Candle = Item("Candle", "It makes the shadows move— at least, you hope it's doing that.")
+    app.Bottle = Item("Bottle", "An opaque vial containing a black liquid.")
+    app.Blood_Dagger = Item("Blood Dagger", "WEAPON A nasty weapon. Needles and tubes extend from the handle... and plunge right into your veins.")
+    app.Bell = Item("Bell", "A brass bell that makes a resonant clang.")
+    app.Axe = Item("Axe", "WEAPON Very sharp.")
+    app.Armor = Item("Armor", "It's just prop armor from a Renaissance fair, but it's still metal.")
+    app.Angel = Item("Angel Feather", "A perfect feather fluttering in your hand.")
+    app.Amulet = Item("Amulet of the Ages", "Ancient silver and inlaid gems, inscribed with blessings.")
+    app.Adrenaline = Item("Adrenaline Shot", "A syringe containing a strange fluorescent liquid.")
 
 def appStarted(app):
     app.mode = 'start'
     app.image = app.loadImage('bahoth.jpeg') # start screen image
     app.haunt = 0 # haunt count
     app.hauntDie = [0, 0, 1, 1, 2, 2] # 8 dice
+    setFloors(app)
+    setRooms(app)
+    setOmens(app)
+    setEvents(app)
+    setItems(app)
     setPlayers(app)
     setCharacters(app)
     setCharacter(app)
-    app.haunt = False # haunt phase
-    app.rooms = [Abandoned, Attic, Balcony, Ballroom, Bedroom, Bloody, Catacombs, 
-        Chapel, Charred, Chasm, Coal, Collapsed, Conservatory, Creaky, Crypt, 
-        Dining, Dusty, Furnace, Gallery, Game, Gardens, Graveyard, Gym, Junk, 
-        Kitchen, Larder, Library, Master, Mystic, Operating, Organ, Patio, 
-        Pentagram, Research, Servant, StairsBasement, Statuary, Store, Tower, 
-            Underground, Vault, Wine]
     setGround(app)
     setBasement(app)
     setUpper(app)
-    app.omens = [Skull, Bite, Book, Crystal, Dog, Girl, Holy, 
-                Madman, Mask, Medallion, Ring, Spear, Spirit]
-    app.events = [Whoops, What, Webs, Walls, Voice, Lost, Beckoning, Spider, 
-            Slimy, Hidden, Smoke, Skeletons, Silence, Wind, Stairs, Passage, 
-            Rotten, Wall, Possession, Phone, Night, Mystic, Mists, Safe, Lights, 
-            Jonah, Meant, Mirror, OtherMirror, Shriek, Hanged, Groundskeeper, 
-            Grave, Funeral, Footsteps, Drip, Sounds, Debris, Puppet, Crawlies, 
-                Closet, Burning, Vision, Angry, Hope]
-    app.items = [Revolver, Salts, Sacrificial_Dagger, Rabbit, Puzzle, Gloves, 
-                Music, Medical, Lucky, Idol, Healing, Dynamite, Dice, Candle, 
-            Bottle, Blood_Dagger, Bell, Axe, Armor, Angel, Amulet, Adrenaline]
+    app.haunt = False # haunt phase
+    app.rooms = [app.Abandoned, app.Attic, app.Balcony, app.Ballroom, app.Bedroom, app.Bloody, app.Catacombs, 
+        app.Chapel, app.Charred, app.Chasm, app.Coal, app.Collapsed, app.Conservatory, app.Creaky, app.Crypt, 
+        app.Dining, app.Dusty, app.Furnace, app.Gallery, app.Game, app.Gardens, app.Graveyard, app.Gym, app.Junk, 
+        app.Kitchen, app.Larder, app.Library, app.Master, app.Mystic, app.Operating, app.Organ, app.Patio, 
+        app.Pentagram, app.Research, app.Servant, app.StairsBasement, app.Statuary, app.Store, app.Tower, 
+            app.Underground, app.Vault, app.Wine]
+    app.omens = [app.Skull, app.Bite, app.Book, app.Crystal, app.Dog, app.Girl, app.Holy, 
+                app.Madman, app.Mask, app.Medallion, app.Ring, app.Spear, app.Spirit]
+    app.events = [app.Whoops, app.What, app.Webs, app.Walls, app.Voice, app.Lost, app.Beckoning, app.Spider, 
+            app.Slimy, app.Hidden, app.Smoke, app.Skeletons, app.Silence, app.Wind, app.Stairs, app.Passage, 
+            app.Rotten, app.Wall, app.Possession, app.Phone, app.Night, app.Mystic, app.Mists, app.Safe, app.Lights, 
+            app.Jonah, app.Meant, app.Mirror, app.OtherMirror, app.Shriek, app.Hanged, app.Groundskeeper, 
+            app.Grave, app.Funeral, app.Footsteps, app.Drip, app.Sounds, app.Debris, app.Puppet, app.Crawlies, 
+                app.Closet, app.Burning, app.Vision, app.Angry, app.Hope]
+    app.items = [app.Revolver, app.Salts, app.Sacrificial_Dagger, app.Rabbit, app.Puzzle, app.Gloves, 
+                app.Music, app.Medical, app.Lucky, app.Idol, app.Healing, app.Dynamite, app.Dice, app.Candle, 
+            app.Bottle, app.Blood_Dagger, app.Bell, app.Axe, app.Armor, app.Angel, app.Amulet, app.Adrenaline]
     app.gameOver = False
 
 def setCharacters(app):
@@ -314,7 +252,7 @@ def setGround(app):
     app.groundCols = 8
     app.groundX = 100 # ground marginX
     app.groundY = 50 # ground marginY
-    app.groundList = [ [Empty.name]*app.groundCols for row in range(app.groundRows)]
+    app.groundList = [ [app.Empty.name]*app.groundCols for row in range(app.groundRows)]
     app.groundList[2][0] = 'Entrance Hall'
     app.groundList[2][1] = 'Foyer'
     app.groundList[2][2] = 'Grand Staircase'
@@ -332,7 +270,7 @@ def setBasement(app):
     app.basementCols = 8
     app.basementX = 100 # basement marginX
     app.basementY = 50 # basement marginY
-    app.basementList = [ [Empty.name]*app.basementCols for row in range(app.basementRows)]
+    app.basementList = [ [app.Empty.name]*app.basementCols for row in range(app.basementRows)]
     app.basementList[2][3] = 'Basement Landing'
     #print(app.basementList)
 
@@ -341,7 +279,7 @@ def setUpper(app):
     app.upperCols = 8
     app.upperX = 100 # upper marginX
     app.upperY = 50 # upper marginY
-    app.upperList = [ [Empty.name]*app.upperCols for row in range(app.upperRows)]
+    app.upperList = [ [app.Empty.name]*app.upperCols for row in range(app.upperRows)]
     app.upperList[2][4] = 'Upper Landing'
     #print(app.upperList)
 
