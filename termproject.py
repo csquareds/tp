@@ -24,23 +24,23 @@
 from cmu_112_graphics import *
 import random, string, math, time
 from dataclasses import make_dataclass
+#import tpclasses import *
 
 class Player(object):
-    def __init__(self, name, mightList, mightIndex, speedList, speedIndex, 
-                    knowledgeList, knowledgeIndex, sanityList, sanityIndex, 
-                        color, age, birthday, hobbies):
+    def __init__(self, name, traits, color, age, birthday, hobbies):
         # TRAITS
-        self.mightList = mightList # list of trait values
-        self.mightIndex = mightIndex # index number of list
+        self.traits = traits
+        self.mightList = self.traits['mightList'] # list of trait values
+        self.mightIndex = self.traits['mightIndex'] # index number of list
         self.might = self.mightList[self.mightIndex] # actual value
-        self.speedList = speedList
-        self.speedIndex = speedIndex
+        self.speedList = self.traits['speedList']
+        self.speedIndex = self.traits['speedIndex']
         self.speed = self.speedList[self.speedIndex]
-        self.knowledgeList = knowledgeList
-        self.knowledgeIndex = knowledgeIndex
+        self.knowledgeList = self.traits['knowledgeList']
+        self.knowledgeIndex = self.traits['knowledgeIndex']
         self.knowledge = self.knowledgeList[self.knowledgeIndex]
-        self.sanityList = sanityList
-        self.sanityIndex = sanityIndex
+        self.sanityList = self.traits['sanityList']
+        self.sanityIndex = self.traits['sanityIndex']
         self.sanity = self.sanityList[self.sanityIndex]
 
         # INFO/CHARACTERISTICS
@@ -52,125 +52,45 @@ class Player(object):
         self.status = True # alive, not dead
         self.role = True # explorer/hero, not traitor
     
-    def changeTrait(self, trait, change):
-        if trait == "might":
-            index = self.mightIndex
-            index += change
-            if not app.haunt:
-                if 0 <= index <= 8:
-                    self.mightIndex += change
-                    self.might = self.mightList[self.mightIndex]
-                else:
-                    index -= change
+    def changeTrait(self, trait, traitIndex, traitList, change):
+        index = traitIndex
+        index += change
+        if not app.haunt:
+            if 0 <= index <= 8:
+                traitIndex += change
+                trait = traitList[traitIndex]
             else:
-                if index <= 0:
-                    self.status = False
-                elif index <= 8:
-                    self.mightIndex += change
-                    self.might = self.mightList[self.mightIndex]
-                else:
-                    index -= change
-
-        elif trait == "speed":
-            index = self.speedIndex
-            index += change
-            if not app.haunt:
-                if 0 <= index <= 8:
-                    self.speedIndex += change
-                    self.speed = self.speedList[self.speedIndex]
-                else:
-                    index -= change
-            else:
-                if index <= 0:
-                    self.status = False
-                elif index <= 8:
-                    self.speedIndex += change
-                    self.speed = self.speedList[self.speedIndex]
-                else:
-                    index -= change
-
-        elif trait == "knowledge":
-            index = self.knowledgeIndex
-            index += change
-            if not app.haunt:
-                if 0 <= index <= 8:
-                    self.knowledgeIndex += change
-                    self.knowledge = self.knowledgeList[self.knowledgeIndex]
-                else:
-                    index -= change
-            else:
-                if index <= 0:
-                    self.status = False
-                elif index <= 8:
-                    self.knowledgeIndex += change
-                    self.knowledge = self.knowledgeList[self.knowledgeIndex]
-                else:
-                    index -= change
-
-        elif trait == "sanity":
-            index = self.sanityIndex
-            index += change
-            if not app.haunt:
-                if 0 <= index <= 8:
-                    self.sanityIndex += change
-                    self.sanity = self.sanityList[self.sanityIndex]
-                else:
-                    index -= change
-            else:
-                if index <= 0:
-                    self.status = False
-                elif index <= 8:
-                    self.sanityIndex += change
-                    self.sanity = self.sanityList[self.sanityIndex]
-                else:
-                    index -= change
+                index -= change
         else:
-            return None
+            if index <= 0:
+                self.status = False
+            elif index <= 8:
+                traitIndex += change
+                trait = traitList[traitIndex]
+            else:
+                index -= change
 
     def attemptRole(self, trait):
         if trait == "might":
             dice = self.might
 
 # PLAYERS, note 0 is death
-Zoe = Player('Zoe Ingstrom', [0,2,2,3,3,4,4,6,7], 4, [0,4,4,4,4,5,6,8,8], 4,
-            [0,1,2,3,4,4,5,5,5], 3, [0,3,4,5,5,6,6,7,8], 3, 'yellow', 8, 
-            'November 5th', 'Dolls, Music')
-Zostra = Player('Madame Zostra', [0,2,3,3,4,5,5,5,6], 4, [0,2,3,3,5,5,6,6,7], 
-            3, [0,1,3,4,4,4,5,6,6], 4, [0,4,4,4,5,6,7,8,8], 3, 'deep sky blue', 37, 
-            'December 10th', 'Astrology, Cooking, Baseball')
-Longfellow = Player('Professor Longfellow', [0,1,2,3,4,5,5,6,6], 3, 
-            [0,2,2,4,4,5,5,6,6], 4, [0,4,5,5,5,5,6,7,8], 5, [0,1,3,3,4,5,5,6,7], 
-            3, 'white', 57, 'July 27th', 'Gaelic Music, Drama, Fine Wines')
-Flash = Player('Darrin "Flash" Williams', [0,2,3,3,4,5,6,6,7], 3, 
-            [0,4,4,4,5,6,7,7,8], 5, [0,2,3,3,4,5,5,5,7], 3, [0,1,2,3,4,5,5,5,7],
-            3, 'red', 20, 'June 6th', 'Track, Music, Shakespearean Literature')
-Jenny = Player('Jenny LeClerc', [0,3,4,4,4,4,5,6,8], 3, [0,2,3,4,4,4,5,6,8], 
-            4, [0,2,3,3,4,4,5,6,8], 3, [0,1,1,2,4,4,4,5,6], 5, 'purple1', 21, 
-                'March 4th', 'Reading, Soccer')
-Brandon = Player('Brandon Jaspers', [0,2,3,3,4,5,6,6,7], 4, [0,3,4,4,4,5,6,7,8], 
-            3, [0,1,3,3,5,5,6,6,7], 3, [0,3,3,3,4,5,6,7,8], 4, 'green2', 12, 
-                'May 21st', 'Computers, Camping, Hockey')
-Vivian = Player('Vivian Lopez', [0,2,2,2,4,4,5,6,6], 3, [0,3,4,4,4,4,6,7,8], 
-            4, [0,4,5,5,5,5,6,6,7], 4, [0,4,4,4,5,6,7,8,8], 3, 'deep sky blue', 42, 
-                'January 11th', 'Old Movies, Horses')
-Missy = Player('Missy Dubourde', [0,2,3,3,3,4,5,6,7], 4, [0,3,4,5,6,6,6,7,7], 
-            3, [0,2,3,4,4,5,6,6,6], 4, [0,1,2,3,4,5,5,6,7], 3, 'yellow', 9, 
-                'February 14th', 'Swimming, Medicine')
-Rhinehardt = Player('Father Rhinehardt', [0,1,2,2,4,4,5,5,7], 3, 
-            [0,2,3,3,4,5,6,7,7], 3, [0,1,3,3,4,5,6,6,8], 4, [0,3,4,5,5,6,7,7,8], 
-                5, 'white', 62, 'April 29th', 'Fencing, Gardening')
-Heather = Player('Heather Granville', [0,3,3,3,4,5,6,7,8], 3, 
-            [0,3,3,4,5,6,6,7,8], 3, [0,2,3,3,4,5,6,7,8], 5, [0,3,3,3,4,5,6,6,6], 
-                3, 'purple1', 18, 'August 2nd', 'Television, Shopping')
-Peter = Player('Peter Akimoto', [0,2,3,3,4,5,5,6,8], 3, [0,3,3,3,4,6,6,7,7], 
-            4, [0,3,4,4,5,6,7,7,8], 3, [0,3,4,4,4,5,6,6,7], 4, 'green2', 13, 
-                'September 3rd', 'Bugs, Basketball')
-Ox = Player('Ox Bellows', [0,4,5,5,6,6,7,8,8], 3, [0,2,2,2,3,4,5,5,6], 
-            5, [0,2,2,3,3,5,5,6,6], 3, [0,2,2,3,4,5,5,6,7], 3, 'red', 23, 
-                'October 18th', 'Football, Shiny Objects')
+def setPlayers(app):
+    app.Zoe = Player('Zoe Ingstrom', {'mightList': [0,2,2,3,3,4,4,6,7], 'mightIndex': 4, 'speedList': [0,4,4,4,4,5,6,8,8], 'speedIndex': 4, 'knowledgeList': [0,1,2,3,4,4,5,5,5], 'knowledgeIndex': 3, 'sanityList': [0,3,4,5,5,6,6,7,8], 'sanityIndex': 3}, 'yellow', 8, 'November 5th', 'Dolls, Music')
+    app.Zostra = Player('Madame Zostra', {'mightList': [0,2,3,3,4,5,5,5,6], 'mightIndex': 4, 'speedList': [0,2,3,3,5,5,6,6,7], 'speedIndex': 3, 'knowledgeList': [0,1,3,4,4,4,5,6,6], 'knowledgeIndex': 4, 'sanityList': [0,4,4,4,5,6,7,8,8], 'sanityIndex': 3}, 'deep sky blue', 37, 'December 10th', 'Astrology, Cooking, Baseball')
+    app.Longfellow = Player('Professor Longfellow', {'mightList': [0,1,2,3,4,5,5,6,6], 'mightIndex': 3, 'speedList': [0,2,2,4,4,5,5,6,6], 'speedIndex': 4, 'knowledgeList': [0,4,5,5,5,5,6,7,8], 'knowledgeIndex': 5, 'sanityList': [0,1,3,3,4,5,5,6,7], 'sanityIndex': 3}, 'white', 57, 'July 27th', 'Gaelic Music, Drama, Fine Wines')
+    app.Flash = Player('Darrin "Flash" Williams', {'mightList': [0,2,3,3,4,5,6,6,7], 'mightIndex': 3, 'speedList': [0,4,4,4,5,6,7,7,8], 'speedIndex': 5, 'knowledgeList': [0,2,3,3,4,5,5,5,7], 'knowledgeIndex': 3, 'sanityList': [0,1,2,3,4,5,5,5,7], 'sanityIndex': 3}, 'red', 20, 'June 6th', 'Track, Music, Shakespearean Literature')
+    app.Jenny = Player('Jenny LeClerc', {'mightList': [0,3,4,4,4,4,5,6,8], 'mightIndex': 3, 'speedList': [0,2,3,4,4,4,5,6,8], 'speedIndex': 4, 'knowledgeList': [0,2,3,3,4,4,5,6,8], 'knowledgeIndex': 3, 'sanityList': [0,1,1,2,4,4,4,5,6], 'sanityIndex': 5}, 'purple1', 21, 'March 4th', 'Reading, Soccer')
+    app.Brandon = Player('Brandon Jaspers', {'mightList': [0,2,3,3,4,5,6,6,7], 'mightIndex': 4, 'speedList': [0,3,4,4,4,5,6,7,8], 'speedIndex': 3, 'knowledgeList': [0,1,3,3,5,5,6,6,7], 'knowledgeIndex': 3, 'sanityList': [0,3,3,3,4,5,6,7,8], 'sanityIndex': 4}, 'green2', 12, 'May 21st', 'Computers, Camping, Hockey')
+    app.Vivian = Player('Vivian Lopez', {'mightList': [0,2,2,2,4,4,5,6,6], 'mightIndex': 3, 'speedList': [0,3,4,4,4,4,6,7,8], 'speedIndex': 4, 'knowledgeList': [0,4,5,5,5,5,6,6,7], 'knowledgeIndex': 4, 'sanityList': [0,4,4,4,5,6,7,8,8], 'sanityIndex': 3}, 'deep sky blue', 42, 'January 11th', 'Old Movies, Horses')
+    app.Missy = Player('Missy Dubourde', {'mightList': [0,2,3,3,3,4,5,6,7], 'mightIndex': 4, 'speedList': [0,3,4,5,6,6,6,7,7], 'speedIndex': 3, 'knowledgeList': [0,2,3,4,4,5,6,6,6], 'knowledgeIndex': 4, 'sanityList': [0,1,2,3,4,5,5,6,7], 'sanityIndex': 3}, 'yellow', 9, 'February 14th', 'Swimming, Medicine')
+    app.Rhinehardt = Player('Father Rhinehardt', {'mightList': [0,1,2,2,4,4,5,5,7], 'mightIndex': 3, 'speedList': [0,2,3,3,4,5,6,7,7], 'speedIndex': 3, 'knowledgeList': [0,1,3,3,4,5,6,6,8], 'knowledgeIndex': 4, 'sanityList': [0,3,4,5,5,6,7,7,8], 'sanityIndex': 5}, 'white', 62, 'April 29th', 'Fencing, Gardening')
+    app.Heather = Player('Heather Granville', {'mightList': [0,3,3,3,4,5,6,7,8], 'mightIndex': 3, 'speedList': [0,3,3,4,5,6,6,7,8], 'speedIndex': 3, 'knowledgeList': [0,2,3,3,4,5,6,7,8], 'knowledgeIndex': 5, 'sanityList': [0,3,3,3,4,5,6,6,6], 'sanityIndex': 3}, 'purple1', 18, 'August 2nd', 'Television, Shopping')
+    app.Peter = Player('Peter Akimoto', {'mightList': [0,2,3,3,4,5,5,6,8], 'mightIndex': 3, 'speedList': [0,3,3,3,4,6,6,7,7], 'speedIndex': 4, 'knowledgeList': [0,3,4,4,5,6,7,7,8], 'knowledgeIndex': 3, 'sanityList': [0,3,4,4,4,5,6,6,7], 'sanityIndex': 4}, 'green2', 13, 'September 3rd', 'Bugs, Basketball')
+    app.Ox = Player('Ox Bellows', {'mightList': [0,4,5,5,6,6,7,8,8], 'mightIndex': 3, 'speedList': [0,2,2,2,3,4,5,5,6], 'speedIndex': 5, 'knowledgeList': [0,2,2,3,3,5,5,6,6], 'knowledgeIndex': 3, 'sanityList': [0,2,2,3,4,5,5,6,7], 'sanityIndex': 3}, 'red', 23, 'October 18th', 'Football, Shiny Objects')
 
 # Player template
-#Player = Player('name', mightlist, mightIndex, speedlist, speedIndex, knowledgelist, knowledgeIndex, sanitylist, sanityIndex, color, age, birthday, hobbies)
+#Player = Player('name', {mightlist, mightIndex, speedlist, speedIndex, knowledgelist, knowledgeIndex, sanitylist, sanityIndex}, color, age, birthday, hobbies)
 
 class Floor(object):
     def __init__(self,name):
@@ -344,6 +264,7 @@ def appStarted(app):
     app.image = app.loadImage('bahoth.jpeg') # start screen image
     app.haunt = 0 # haunt count
     app.hauntDie = [0, 0, 1, 1, 2, 2] # 8 dice
+    setPlayers(app)
     setCharacters(app)
     setCharacter(app)
     app.haunt = False # haunt phase
@@ -389,7 +310,7 @@ def setCharacter(app):
     app.characterCols = 4
     app.marginX = 50
     app.marginY = 200
-    app.characters = [ [Brandon, Flash, Heather, Jenny], [Longfellow, Missy, Ox, Peter], [Rhinehardt, Vivian, Zoe, Zostra] ] # 4 by 3
+    app.characters = [ [app.Brandon, app.Flash, app.Heather, app.Jenny], [app.Longfellow, app.Missy, app.Ox, app.Peter], [app.Rhinehardt, app.Vivian, app.Zoe, app.Zostra] ] # 4 by 3
     #app.characters = [ [Brandon, Flash, Heather], [Jenny, Longfellow, Missy], [Ox, Peter, Rhinehardt], [Vivian, Zoe, Zostra] ] # 3 by 4
     #app.characterList = [Zoe, Zostra, Longfellow, Flash, Jenny, Brandon, Ox, Vivian, Missy, Rhinehardt, Vivian, Heather, Peter]
     app.characterSelection = (-1,-1) # row and col of character grid
@@ -404,6 +325,13 @@ def setGround(app):
     app.groundList[2][0] = 'Entrance Hall'
     app.groundList[2][1] = 'Foyer'
     app.groundList[2][2] = 'Grand Staircase'
+    app.player1position = (0,0)
+    app.player2position = (0,0)
+    app.player3position = (0,0)
+    app.player4position = (0,0)
+    app.player5position = (0,0)
+    app.player6position = (0,0)
+
     #print(app.groundList)
 
 def setBasement(app):
@@ -510,7 +438,7 @@ def set_keyPressed(app,event):
 # CHARACTER SELECTION FUNCTION
 def characters_redrawAll(app, canvas):
     canvas.create_rectangle(0,0,app.width,app.height,fill='black')
-    canvas.create_text(app.width//2, 40, text='C H O O S E   Y O U R   C H A R A C T E R', font='Arial 30 bold', fill='white')
+    canvas.create_text(app.width//2, 40, text='C H O O S E    Y O U R    C H A R A C T E R', font='Arial 30 bold', fill='white')
     canvas.create_text(app.width//2, 70, text='Click cell to view player traits and info', font='Arial 20 bold', fill='white')
     canvas.create_text(20, app.height-25, text='Use the left or down arrow keys to go back (reset number of players).', font='Arial 15 bold',fill='white',anchor='w')
     canvas.create_text(app.width//2, app.height-75, text=f"Current Player: Player {app.currentPlayer['number']}               Players: {app.players}", font='Arial 25 bold',fill='white')
@@ -576,32 +504,6 @@ def character_keyPressed(app, event):
             app.mode = 'ground'
         app.currentPlayer['character'] = app.characterSelected
         app.currentPlayer = currentPlayer(app)
-        print(app.playerList)
-    # app.currentPlayer['character'] == None or 
-    '''
-    if app.currentPlayer['number'] < app.players:
-        if event.key == 'y':
-            app.currentPlayer['character'] = app.characterSelected
-            #print(app.currentPlayer['number'], app.currentPlayer['character'].name)
-            #print(app.currentPlayer['character'].name)
-            app.currentPlayer = currentPlayer(app)
-            #print(app.currentPlayer['number'], app.currentPlayer['character'].name)
-            app.mode = 'characters'
-    else:
-        if event.key == 'y':
-            app.mode = 'ground'
-            print(app.playerList)
-    index = app.index
-    while index < app.players:
-    #for player in range(app.players):
-        if event.key == 'y':
-            #app.playerList[index] = app.selected.name
-            index += 1
-            if 0 <= index <= app.players:
-                app.playerList[app.index] = app.selected
-                app.index += 1
-            print(app.playerList)
-    '''
 
 def character_mousePressed(app, event):
     pass
@@ -707,6 +609,7 @@ def drawCharacterGrid(app,canvas):
 def drawGround(app,canvas):
     rows = app.groundRows
     cols = app.groundCols
+    canvas.create_rectangle(0,0,app.width,app.height,fill='black')
     for row in range(rows):
         for col in range(cols):
             x0,y0,x1,y1 = getCellBounds(app, row, col, rows, cols, app.groundX, app.groundY)
@@ -719,6 +622,7 @@ def drawGround(app,canvas):
 def drawBasement(app,canvas):
     rows = app.basementRows
     cols = app.basementCols
+    canvas.create_rectangle(0,0,app.width,app.height,fill='black')
     for row in range(rows):
         for col in range(cols):
             x0,y0,x1,y1 = getCellBounds(app, row, col, rows, cols, app.basementX, app.basementY)
@@ -731,6 +635,7 @@ def drawBasement(app,canvas):
 def drawUpper(app,canvas):
     rows = app.upperRows
     cols = app.upperCols
+    canvas.create_rectangle(0,0,app.width,app.height,fill='black')
     for row in range(rows):
         for col in range(cols):
             x0,y0,x1,y1 = getCellBounds(app, row, col, rows, cols, app.upperX, app.upperY)
