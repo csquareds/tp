@@ -209,6 +209,81 @@ def setUp(app): # general setup: rooms, omens, events, items
                 app.Music, app.Medical, app.Lucky, app.Idol, app.Healing, app.Dynamite, app.Dice, app.Candle, 
             app.Bottle, app.Blood_Dagger, app.Bell, app.Axe, app.Armor, app.Angel, app.Amulet, app.Adrenaline]
 
+def setHaunt(app):
+    app.heroText1 = ['You’ve finally figured out what the cramped handwriting in that old journal stated:',
+    '“I, Ebenezer Slocum, have found the means to force Death itself to appear before me. I,',
+    'have prepared to challenge Death, and I will defeat it! Through study, I have enhanced my mind to its',
+    'keenest. Oh, Death will not be proud this night!” Looking around, you notice a figure slumped at a',
+    'chessboard. As you touch the figure, it crumbles to dust. Looks as if Ebenezer wasn’t quite as prepared',
+    'as he thought. Across the table, you see a dark, shadowy figure appear. The figure beckons toward',
+    'one of you and points to the table. An ebony and ivory chess set sits between the two of you.',
+    'You hope you’re better than Ebenezer was.']
+    app.heroText2 = ['What You Know About the Bad Guys: Death has challenged you to a chess game.',
+     'If there is no one in the room to play against Death at the',
+    'beginning of Death’s turn, you forfeit the chess game and lose.']
+    app.heroText3 = ['You Win When ...',
+    '... you checkmate Death by rolling a higher result',
+    'than it does on a Knowledge roll. Once during each',
+    'of Death’s turns, one of the heroes can attempt this',
+    'roll while in the same room.']
+    app.heroText4 = ['How to Beat Death',
+    'Some items in the house can help you get a higher result on a Knowledge roll than Death can:',
+    '• Explorers can pick up Holy Seal tokens. If you pick up a Holy Seal, you can attempt a',
+    'Sanity roll of 4+ to break it. You can only break one Holy Seal during your turn. Each time an',
+    'explorer breaks a Holy Seal, Death rolls one fewer dice on its subsequent Knowledge rolls. If',
+    'there are only three or four players, it rolls two fewer dice instead.',
+    '• The Book contains chess strategies. The explorer who has it can add one die (maximum',
+    'eight dice) to Knowledge rolls attempted while playing chess against Death.']
+    app.heroText5 = ['Special Attack Rules',
+    'Death can’t attack or be affected in any way other than by being beaten at chess.',
+    'Death does not slow your movement.']
+    app.heroText6 = ['If You Win ...',
+    '“Checkmate.” Death stares fixedly at his King, then starts',
+    'crumbling into dust. Death smiles, and you feel your hair turn white.',
+    '“Until next time,” Death responds ....']
+    app.traitorText1 = ['You know what those fools are reading in Uncle Ebenezer’s journal: “I, Ebenezer Slocum,',
+    'have found the means to force Death itself to appear before me. I have prepared to challenge Death,',
+    'and I will defeat it! I have studied and enhanced my mind to its keenest. Oh, Death will not be proud',
+    'this night!” Well, that old geezer’s bones are still sitting by the chess set. You doubt these fools',
+    'can do any better. Beat Death?! Indeed! Just in case, you’ll do what you can to make sure none',
+    'of them win this game. After all, you can’t stand the thought of anyone being smarter than you,',
+    'and there’s no way you could beat Death at chess!']
+    app.traitorText2 = ['Right Now',
+    'Your character is still in the game but has turned traitor. Put the Death token (light green)',
+    'in a room with a hero of your choice. Put the five Holy Seal tokens (pentagonal) in the',
+    'following rooms, either now or when they are discovered: the Vault, the Crypt,',
+    'the Research Laboratory, the Operating Laboratory, and the Game Room. Tell the heroes',
+    'that there are five Holy Seals, but don’t tell them which undiscovered rooms have them.']
+    app.traitorText3 = ['What You Know About the Heroes',
+    'One of them will try to beat Death in a game of chess. They’ll use the',
+    'Holy Seals to help. If they beat Death even once, you will lose.',
+    'You Win When ...',
+    '... all of the heroes are dead. You also win if there is no explorer',
+    'in the room with Death at the beginning of the monster’s turn.',
+    '(If no one is there, the heroes forfeit their game of chess.)']
+    app.traitorText4 = ['Death Must Do This On Its Turn',
+    'During its turn, Death plays against the explorer in the room with the highest Knowledge.',
+    'Both attempt Knowledge rolls. Death has a Knowledge of 8, and it cheats. After its first roll,',
+    'it rerolls any blank dice. (For example, if Death rolls 8 dice, and 2 of them have no successes,',
+    'those two dice are “blank dice.” Those two blank dice are then rerolled, but only once.)',
+    'Death and its opponent then compare results. If the result is a tie, nothing happens.',
+    'If Death rolls a higher result, it captures a piece:',
+    '• If Death wins by 1 or 2, it takes a pawn and each hero loses 1 Sanity.',
+    '• If Death wins by 3 or 4, it takes a significant piece and each hero loses 1 Might.',
+    '• If Death wins by 5 or more, it grimly intones the word “check.”',
+    'Each hero loses 1 Sanity and 1 Might.']
+    app.traitorText5 = ['Special Attack Rules',
+    'Death can’t attack or be affected in any way other than by being beaten at chess.',
+    'You can’t enter the room with Death or affect a hero there in any way, such as by',
+    'using the Bell, the Revolver, or the Dynamite. (Your master doesn’t like distractions',
+    'from his game.) You can’t pick up Holy Seals, but you can steal them from the heroes.']
+    app.traitorText6 = ['If You Win ...',
+    'Ha! The fools. You knew they couldn’t beat Death at his',
+    'own game. So what if you helped Death out a bit. The important thing is they’re dead',
+    'and gone, and you’re still here.',
+    'Checkmate.']
+    #app.Checkmate = Haunt('Checkmate',{'traitor': heroText1, 'hero': heroText2})
+
 def appStarted(app):
     app.mode = 'start'
     app.image = app.loadImage('bahoth.jpeg') # start screen image
@@ -229,13 +304,14 @@ def appStarted(app):
     setUpper(app)
     setDiceRoll(app)
     setCard(app)
+    setHaunt(app)
     app.floorLists = {'ground':app.groundList, 'basement':app.basementList, 'upper':app.upperList}
     app.gameOver = False
 
 def setCharacters(app):
     app.message = None
     app.players = 0 # total number of players
-    app.player1 = {'number': 1, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'} # starting floor positions, current floor
+    app.player1 = {'number': 1, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'} # starting floor positions, current floor, all start on ground floor
     app.player2 = {'number': 2, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'}
     app.player3 = {'number': 3, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'}
     app.player4 = {'number': 4, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'}
@@ -384,7 +460,7 @@ def hauntRoll(app):
         app.result += app.roll
     if app.result < app.hauntCount:
         app.haunt = True
-        app.mode = 'haunt'
+        app.mode = 'hauntIntro'
     else:
         app.hauntCount += 1
         
@@ -402,6 +478,8 @@ def start_keyPressed(app, event):
     if event.key == 'r':
         app.mode = 'start'
         appStarted(app)
+    elif event.key == '1':
+        app.mode = 'hauntIntro'
     else:
         app.mode = 'set'
 
@@ -561,13 +639,13 @@ def ground_keyPressed(app,event):
                 app.Ground.rooms.add(room)
                 if room.omen:
                     if not app.haunt:
-                        app.rollType = 'omen'
+                        app.rollType = 'omen' # set roll type to omen, in order for hauntroll
                         app.type = 'omen'
-                        app.mode = 'card'
+                        app.mode = 'card' # set screen to view omen information
                         app.currentOmen = random.choice(app.omens)
                         while app.currentOmen in app.omenSet:
                             app.currentOmen = random.choice(app.omens)
-                            app.omenSet.add(app.currentOmen)
+                        app.omenSet.add(app.currentOmen)
                         app.currentCard = app.currentOmen
                 elif room.event:
                     pass
@@ -628,11 +706,16 @@ def basement_keyPressed(app,event):
                 #if app.Ground not in room.floors:
                 #    pass
                 app.basementList[selectedRow][selectedCol] = room.name # set new room name / discover new room!
-                if room.omen:
+                if room.omen: # if newly discovered room has omen
                     if not app.haunt:
-                        app.rollType = 'omen'
-                        app.mode = 'card'
-                        #hauntRoll(app)
+                        app.rollType = 'omen' # set roll type to omen, in order for hauntroll
+                        app.type = 'omen'
+                        app.mode = 'card' # set screen to view omen information
+                        app.currentOmen = random.choice(app.omens)
+                        while app.currentOmen in app.omenSet:
+                            app.currentOmen = random.choice(app.omens)
+                        app.omenSet.add(app.currentOmen)
+                        app.currentCard = app.currentOmen
                 elif room.event:
                     pass
                 elif room.item:
@@ -686,8 +769,13 @@ def upper_keyPressed(app,event):
                 if room.omen:
                     if not app.haunt:
                         app.rollType = 'omen'
+                        app.type = 'omen'
                         app.mode = 'card'
-                        #hauntRoll(app)
+                        app.currentOmen = random.choice(app.omens)
+                        while app.currentOmen in app.omenSet:
+                            app.currentOmen = random.choice(app.omens)
+                            app.omenSet.add(app.currentOmen)
+                        app.currentCard = app.currentOmen
                     else:
                         app.rollType = 'normal'
                         app.mode = 'rollDice'
@@ -745,11 +833,11 @@ def rollDice_keyPressed(app,event):
 def card_redrawAll(app,canvas):
     drawCard(app,canvas)
 
-def card_mousePressed(app,canvas):
+def card_mousePressed(app,event):
     if app.type == 'omen':
         app.mode = 'rollDice'
 
-def card_keyPressed(app,canvas):
+def card_keyPressed(app,event):
     if event.key == 'r':
         app.mode = 'start'
         appStarted(app)
@@ -760,10 +848,10 @@ def card_keyPressed(app,canvas):
 def hauntIntro_redrawAll(app,canvas):
     drawHauntIntro(app,canvas)
 
-def hauntIntro_mousePressed(app,canvas):
+def hauntIntro_mousePressed(app,event):
     app.mode = 'hauntTraitor'
 
-def hauntIntro_keyPressed(app,canvas):
+def hauntIntro_keyPressed(app,event):
     if event.key == 'r':
         app.mode = 'start'
         appStarted(app)
@@ -772,10 +860,10 @@ def hauntIntro_keyPressed(app,canvas):
 def hauntTraitor_redrawAll(app,canvas):
     drawHauntTraitor(app,canvas)
 
-def hauntTraitor_mousePressed(app,canvas):
+def hauntTraitor_mousePressed(app,event):
     app.mode = 'hauntHeroes'
 
-def hauntTraitor_keyPressed(app,canvas):
+def hauntTraitor_keyPressed(app,event):
     if event.key == 'r':
         app.mode = 'start'
         appStarted(app)
@@ -784,10 +872,10 @@ def hauntTraitor_keyPressed(app,canvas):
 def hauntHeroes_redrawAll(app,canvas):
     drawHauntHeroes(app,canvas)
 
-def hauntHeroes_mousePressed(app,canvas):
+def hauntHeroes_mousePressed(app,event):
     app.mode = app.currentPlayer['current']
 
-def hauntHeroes_keyPressed(app,canvas):
+def hauntHeroes_keyPressed(app,event):
     if event.key == 'r':
         app.mode = 'start'
         appStarted(app)
@@ -969,13 +1057,61 @@ def drawHauntIntro(app,canvas):
 def drawHauntTraitor(app,canvas):
     canvas.create_rectangle(0,0,app.width,app.height,fill='black')
     canvas.create_text(app.width//2, 50, text='You are the TRAITOR!',font='Arial 30 bold',fill='white')
-    canvas.create_text(app.width//2, app.height//4, text='You are trying to defeat the heroes.', font='Arial 26 bold', fill='white')
-    canvas.create_text(app.width//2, app.height-75, text='Click to view the HEROES screen. ONLY the heroes may view this information.',font='Arial 24 bold',fill='white')
+    canvas.create_text(app.width//2, 80, text='You are trying to defeat the heroes.', font='Arial 26 bold', fill='white')
+    canvas.create_text(app.width//2, app.height-50, text='Click to view the HEROES screen. ONLY the heroes may view this information.',font='Arial 24 bold',fill='white')
+
+    for i in range(len(app.traitorText1)):
+        canvas.create_text(40, app.height*(i+2)//35 + app.height//10, 
+            text=app.traitorText1[i], font="Arial 14 bold",fill='white', anchor='w')
+
+    for i in range(len(app.traitorText2)):
+        canvas.create_text(40, app.height*(i+2)//35 + app.height*4//10, 
+            text=app.traitorText2[i], font="Arial 14 bold",fill='white', anchor='w')
+    
+    for i in range(len(app.traitorText3)):
+        canvas.create_text(40, app.height*(i+2)//35 + app.height*6//10, 
+            text=app.traitorText3[i], font="Arial 14 bold",fill='white', anchor='w')
+    
+    for i in range(len(app.traitorText4)):
+        canvas.create_text(app.width//2 + 60, app.height*(i+2)//35 + app.height//10, 
+            text=app.traitorText4[i], font="Arial 14 bold",fill='white', anchor='w')
+    
+    for i in range(len(app.traitorText5)):
+        canvas.create_text(app.width//2 + 60, app.height*(i+2)//35 + app.height*4//10, 
+            text=app.traitorText5[i], font="Arial 14 bold",fill='white', anchor='w')
+    
+    for i in range(len(app.traitorText6)):
+        canvas.create_text(app.width//2 + 60, app.height*(i+2)//35 + app.height*6//10, 
+            text=app.traitorText6[i], font="Arial 14 bold",fill='white', anchor='w')
 
 def drawHauntHeroes(app,canvas):
     canvas.create_rectangle(0,0,app.width,app.height,fill='black')
     canvas.create_text(app.width//2, 50, text='You are the HEROES!',font='Arial 30 bold',fill='white')
-    canvas.create_text(app.width//2, app.height//4, text='You are all trying to defeat the traitor.', font='Arial 26 bold', fill='white')
-    canvas.create_text(app.width//2, app.height-75, text="Click to return to the first player's current floor.",font='Arial 24 bold',fill='white')
+    canvas.create_text(app.width//2, 80, text='You are all trying to defeat the traitor.', font='Arial 26 bold', fill='white')
+    canvas.create_text(app.width//2, app.height-50, text="Click to return to the first player's current floor.",font='Arial 24 bold',fill='white')
+    
+    for i in range(len(app.heroText1)):
+        canvas.create_text(40, app.height*(i+2)//35 + app.height//10, 
+            text=app.heroText1[i], font="Arial 14 bold",fill='white', anchor='w')
+
+    for i in range(len(app.heroText2)):
+        canvas.create_text(40, app.height*(i+2)//35 + app.height*4//10, 
+            text=app.heroText2[i], font="Arial 14 bold",fill='white', anchor='w')
+    
+    for i in range(len(app.heroText3)):
+        canvas.create_text(40, app.height*(i+2)//35 + app.height*6//10, 
+            text=app.heroText3[i], font="Arial 14 bold",fill='white', anchor='w')
+    
+    for i in range(len(app.heroText4)):
+        canvas.create_text(app.width//2 + 60, app.height*(i+2)//35 + app.height//10, 
+            text=app.heroText4[i], font="Arial 14 bold",fill='white', anchor='w')
+    
+    for i in range(len(app.heroText5)):
+        canvas.create_text(app.width//2 + 60, app.height*(i+2)//35 + app.height*4//10, 
+            text=app.heroText5[i], font="Arial 14 bold",fill='white', anchor='w')
+    
+    for i in range(len(app.heroText6)):
+        canvas.create_text(app.width//2 + 60, app.height*(i+2)//35 + app.height*6//10, 
+            text=app.heroText6[i], font="Arial 14 bold",fill='white', anchor='w')
 
 runApp(width=1440, height=775)
