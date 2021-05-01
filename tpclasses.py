@@ -58,8 +58,9 @@ class Player(object):
                 index -= change
 
 class Floor(object):
-    def __init__(self,name):
+    def __init__(self,name,floor):
         self.name = name
+        self.floor = floor
         self.rooms = []
 
 class Omen(object):
