@@ -44,12 +44,17 @@ def setPlayers(app):
 
 # FLOORS
 def setFloors(app):
-    app.Ground = Floor('Ground Level')
-    app.Basement = Floor('Basement')
-    app.Upper = Floor('Upper Level')
+    app.Ground = Floor('Ground Level','ground')
+    app.Basement = Floor('Basement','basement')
+    app.Upper = Floor('Upper Level','upper')
 
 # ROOMS, does it have: omen event item
 def setRooms(app):
+    app.Entrance = Room('Entrance Hall', [app.Ground], False, False, False)
+    app.Foyer = Room('Foyer', [app.Ground], False, False, False)
+    app.Grand = Room('Grand Stairs', [app.Ground], False, False, False)
+    app.Basement_Landing = Room('Basement Landing', [app.Basement], False, False, False)
+    app.Upper_Landing = Room('Upper Landing', [app.Upper], False, False, False)
     app.Abandoned = Room('Abandoned Room', [app.Ground, app.Basement], True, False, False)
     app.Attic = Room('Attic', [app.Upper], False, True, False)
     app.Balcony = Room('Balcony', [app.Ground], True, False, False)
@@ -223,6 +228,7 @@ def appStarted(app):
     setBasement(app)
     setUpper(app)
     setDiceRoll(app)
+    app.floorLists = {'ground':app.groundList, 'basement':app.basementList, 'upper':app.upperList}
     app.gameOver = False
 
 def setCharacters(app):
@@ -246,6 +252,8 @@ def setCharacter(app):
     app.characters = [ [app.Brandon, app.Flash, app.Heather, app.Jenny], [app.Longfellow, app.Missy, app.Ox, app.Peter], [app.Rhinehardt, app.Vivian, app.Zoe, app.Zostra] ] # 4 by 3
     app.characterSelection = (-1,-1) # row and col of character grid
     app.characterSelected = None # actual character/player instance
+    app.selectedCharacters = set()
+    app.invalidCharacterMessage = None
 
 def setGround(app):
     app.groundRows = 5
@@ -301,6 +309,27 @@ def currentPlayer(app):
         app.index = 0
     return app.playerList[app.index]
 
+def validMoveHelper(app, floor, player, rows, cols, row, col):
+    directions = [(-1,0), (1,0), (0,1), (0,-1)]
+    currentFloor = app.currentPlayer['current']
+    currentRow,currentCol = app.currentPlayer[floor]
+    totalRows,totalCols = rows,cols
+    potentialRow,potentialCol = row, col
+    
+    if currentFloor != floor:
+        return False
+
+    for drow,dcol in directions:
+        nextToRow = potentialRow + drow
+        nextToCol = potentialCol + dcol
+        if ((nextToRow < 0) or (nextToRow >= totalRows) or
+           (nextToCol < 0) or (nextToCol >= totalCols)):
+           nextToRow = potentialRow - drow
+           nextToCol = potentialCol - dcol
+        elif app.floorLists[floor][nextToRow][nextToCol] != 'Undiscovered':
+            return True
+    return False
+
 def validMove(app, floor, player, rows, cols, row, col):
     currentPlayer = app.currentPlayer['character']
     moves = currentPlayer.speed
@@ -311,13 +340,15 @@ def validMove(app, floor, player, rows, cols, row, col):
     rowDifference = abs(potentialRow - currentRow)
     colDifference = abs(potentialCol - currentCol)
     totalMoves = rowDifference + colDifference
+    validMoveHelp = validMoveHelper(app, floor, player, rows, cols, row, col)
     
-    if 0 <= potentialRow <= totalRows and 0 <= potentialCol <= totalCols and totalMoves <= moves:
+    if (0 <= potentialRow <= totalRows and 0 <= potentialCol <= totalCols and 
+            totalMoves <= moves and validMoveHelp):
         return True
     else:
         return False
 
-def rollDice(app, player, trait, target): # for example, trait = self.might
+def rollDice(app, trait, target): # for example, trait = self.might
     attempt = trait
     app.result = 0
 
@@ -439,6 +470,7 @@ def characters_mousePressed(app,event):
             app.characterSelected = None # since it would be set to last value, Zostra
         else:
             app.characterSelected = app.characters[row][col]
+            app.invalidCharacterMessage = None
             #print(app.selected.name)
             app.mode = 'character'
 
@@ -461,6 +493,9 @@ def character_redrawAll(app,canvas):
     canvas.create_text(20, app.height-25, text=f"CURRENT PLAYER: {app.currentPlayer['number']}", font=font, fill=color, anchor='w')
     canvas.create_text(app.width//2, app.height-25, text='Use the left or down arrow keys to go back.', font='Arial 20 bold',fill=color)
 
+    if app.invalidCharacterMessage != None:
+        canvas.create_text(app.width//2, app.height-125, text=app.invalidCharacterMessage,font=font,fill='red')
+
 def character_keyPressed(app, event):
     if event.key == 'r':
         app.mode = 'start'
@@ -472,17 +507,18 @@ def character_keyPressed(app, event):
     elif event.key == 'Right': # to debug rn
         app.mode = 'ground'
     elif event.key == 'y':
-        if app.currentPlayer['number'] < app.players:
-            #print(app.currentPlayer['number'], app.currentPlayer['character'].name)
-            #print(app.currentPlayer['character'].name)
-            #print(app.currentPlayer['number'], app.currentPlayer['character'].name)
-            app.mode = 'characters'
+        if app.characterSelected not in app.selectedCharacters:
+            if app.currentPlayer['number'] < app.players:
+                app.mode = 'characters'
+            else:
+                app.mode = 'ground'
+            app.selectedCharacters.add(app.characterSelected)
+            app.currentPlayer['character'] = app.characterSelected
+            app.currentPlayer = currentPlayer(app)
+            app.characterSelection = (-1,-1)# reset selected row, col
+            app.characterSelected = None # and selected character
         else:
-            app.mode = 'ground'
-        app.currentPlayer['character'] = app.characterSelected
-        app.currentPlayer = currentPlayer(app)
-        app.characterSelection = (-1,-1)# reset selected row, col
-        app.characterSelected = None # and selected character
+            app.invalidCharacterMessage = 'Character has already been chosen, please go back and choose another character.'
 
 def character_mousePressed(app, event):
     pass
@@ -501,26 +537,37 @@ def ground_keyPressed(app,event):
         app.mode = 'start'
         appStarted(app)
     elif event.key == 'Right':
+        #app.currentPlayer['current'] = app.Upper.floor
         app.mode = 'upper'
     elif event.key == 'Left':
+        #app.currentPlayer['current'] = app.Basement.floor
         app.mode = 'basement'
     elif event.key == 'c':
-        if validMove(app, 'ground', app.currentPlayer, rows, cols, selectedRow, selectedCol) and app.groundList[selectedRow][selectedCol] == 'Undiscovered':
-            num = random.randint(0,41)
-            app.groundList[selectedRow][selectedCol] = app.rooms[num].name # set new room name / discover new room!
-            if app.rooms[num].omen:
-                if not app.haunt:
-                    app.rollType = 'omen'
-                    app.mode = 'rollDice'
-                    #hauntRoll(app)
-            elif app.rooms[num].event:
-                print(app.rooms[num].name)
-            elif app.rooms[num].item:
-                print(app.rooms[num].name)
+        if validMove(app, 'ground', app.currentPlayer, rows, cols, selectedRow, selectedCol):
+            if app.groundList[selectedRow][selectedCol] == 'Undiscovered':
+                room = random.choice(app.rooms)
+                while app.Ground not in room.floors:
+                    room = random.choice(app.rooms)
+                #if app.Ground not in room.floors:
+                #    pass
+                app.groundList[selectedRow][selectedCol] = room.name # set new room name / discover new room!
+                if room.omen:
+                    if not app.haunt:
+                        app.rollType = 'omen'
+                        app.mode = 'rollDice'
+                        #hauntRoll(app)
+                elif room.event:
+                    print(room.name)
+                elif room.item:
+                    print(room.name)
+            elif app.groundList[selectedRow][selectedCol] == 'Grand Staircase':
+                app.currentPlayer['current'] = 'upper'
+                app.mode = 'upper'
             app.currentPlayer['ground'] = (selectedRow, selectedCol) # set player's new position
             app.groundSelection = (-1,-1)
             app.groundSelected = None
             app.currentPlayer = currentPlayer(app) # next player's turn
+            app.mode = app.currentPlayer['current']
 
 def ground_mousePressed(app,event):
     rows, cols = app.groundRows, app.groundCols
@@ -539,15 +586,6 @@ def ground_mousePressed(app,event):
     #print(app.groundSelection)
     #print(app.groundSelected)
 
-#def ground_mouseReleased(app, event):
-#    print(f'mouseReleased at {(event.x, event.y)}')
-
-#def ground_mouseMoved(app, event):
-#    print(f'mouseMoved at {(event.x, event.y)}')
-
-#def ground_mouseDragged(app, event):
-#    print(f'mouseDragged at {(event.x, event.y)}')
-
 # BASEMENT FLOOR FUNCTIONS
 def basement_redrawAll(app,canvas):
     drawBasement(app,canvas)
@@ -562,16 +600,33 @@ def basement_keyPressed(app,event):
         app.mode = 'start'
         appStarted(app)
     elif event.key == 'Right':
+        #app.currentPlayer['current'] = app.Ground.floor
         app.mode = 'ground'
     #elif event.key == 'Left':
     #    app.mode = 'upper'
     elif event.key == 'c':
-        if validMove(app, 'basement', app.currentPlayer, rows, cols, selectedRow, selectedCol) and app.basementList[selectedRow][selectedCol] == 'Undiscovered':
-            app.basementList[selectedRow][selectedCol] = app.rooms[random.randint(0,41)].name # set new room name / discover new room!
+        if validMove(app, 'basement', app.currentPlayer, rows, cols, selectedRow, selectedCol):
+            if app.basementList[selectedRow][selectedCol] == 'Undiscovered':
+                room = random.choice(app.rooms)
+                while app.Basement not in room.floors:
+                    room = random.choice(app.rooms)
+                #if app.Ground not in room.floors:
+                #    pass
+                app.basementList[selectedRow][selectedCol] = room.name # set new room name / discover new room!
+                if room.omen:
+                    if not app.haunt:
+                        app.rollType = 'omen'
+                        app.mode = 'rollDice'
+                        #hauntRoll(app)
+                elif room.event:
+                    print(room.name)
+                elif room.item:
+                    print(room.name)
             app.currentPlayer['basement'] = (selectedRow, selectedCol) # set player's new position
             app.basementSelection = (-1,-1)
             app.basementSelected = None
             app.currentPlayer = currentPlayer(app) # next player's turn
+            app.mode = app.currentPlayer['current']
 
 def basement_mousePressed(app,event):
     rows, cols = app.basementRows, app.basementCols
@@ -585,18 +640,6 @@ def basement_mousePressed(app,event):
             app.basementSelected = None # since it would be set to last value
         else:
             app.basementSelected = app.basementList[row][col]
-
-def basement_mouseReleased(app,event):
-    pass
-    #print(f'mouseReleased at {(event.x, event.y)}')
-
-def basement_mouseMoved(app,event):
-    pass
-    #print(f'mouseMoved at {(event.x, event.y)}')
-
-def basement_mouseDragged(app,event):
-    pass
-    #print(f'mouseDragged at {(event.x, event.y)}')
 
 # UPPER FLOOR FUNCTIONS
 def upper_redrawAll(app,canvas):
@@ -614,14 +657,34 @@ def upper_keyPressed(app,event):
     #elif event.key == 'Right':
     #    app.mode = 'basement'
     elif event.key == 'Left':
+        #app.currentPlayer['current'] = app.Ground.floor
         app.mode = 'ground'
     elif event.key == 'c':
-        if validMove(app, 'upper', app.currentPlayer, rows, cols, selectedRow, selectedCol) and app.upperList[selectedRow][selectedCol] == 'Undiscovered':
-            app.upperList[selectedRow][selectedCol] = app.rooms[random.randint(0,41)].name # set new room name / discover new room!
+        if validMove(app, 'upper', app.currentPlayer, rows, cols, selectedRow, selectedCol):
+            if app.upperList[selectedRow][selectedCol] == 'Undiscovered':
+                room = random.choice(app.rooms)
+                while app.Upper not in room.floors:
+                    room = random.choice(app.rooms)
+                #if app.Ground not in room.floors:
+                #    pass
+                app.upperList[selectedRow][selectedCol] = room.name # set new room name / discover new room!
+                if room.omen:
+                    if not app.haunt:
+                        app.rollType = 'omen'
+                        app.mode = 'rollDice'
+                        #hauntRoll(app)
+                elif room.event:
+                    print(room.name)
+                elif room.item:
+                    print(room.name)
+            elif app.upperList[selectedRow][selectedCol] == 'Upper Landing':
+                app.currentPlayer['current'] = 'ground'
+                app.mode = 'ground'
             app.currentPlayer['upper'] = (selectedRow, selectedCol) # set player's new position
             app.upperSelection = (-1,-1)
             app.upperSelected = None
             app.currentPlayer = currentPlayer(app) # next player's turn
+            app.mode = app.currentPlayer['current']
 
 def upper_mousePressed(app,event):
     rows, cols = app.upperRows, app.upperCols
@@ -642,6 +705,17 @@ def rollDice_redrawAll(app,canvas):
 def rollDice_mousePressed(app,event):
     if app.rollType == 'omen':
         hauntRoll(app)
+        app.rollType = None
+    elif app.rollType == 'normal':
+        rollDice(app, trait, target) # for example, trait = self.might
+        app.rollType = None
+    else:
+        app.roll = None
+        app.die = [0, 0, 1, 1, 2, 2] # 8 dice
+        app.dice = [app.roll, app.roll, app.roll, app.roll, app.roll, app.roll, app.roll, app.roll]
+        app.rollType = None
+        app.result = 0
+        app.mode = app.currentPlayer['current']
 
 def rollDice_keyPressed(app,event):
     if event.key == 'r':
@@ -753,7 +827,7 @@ def drawUpper(app,canvas):
             roomHeight = y1-y0
             room = app.upperList[row][col]
             if room == 'Undiscovered':
-                color = 'white'
+                color = 'black'
             else:
                 color = 'blue'
             if row == selectedRow and col == selectedCol:
@@ -780,7 +854,8 @@ def informationText(app,canvas):
 def drawDice(app,canvas):
     canvas.create_rectangle(0,0,app.width,app.height,fill='black')
     canvas.create_text(app.width//2, 50, text=f'Roll Total: {app.result}, Target (what you need to roll): {app.target}',font='Arial 24 bold',fill='white')
-
+    canvas.create_text(app.width//2, app.height-75, text='Click anywhere to roll. Click again to end turn.',font='Arial 24 bold',fill='white')
+    
     y0 = app.height//10
     y1 = app.height * 9//10
     lines = 4 # numbers per line
@@ -801,5 +876,8 @@ def drawDice(app,canvas):
         
         if dice[i] != None:
             canvas.create_text(cx,cy,text=dice[i],font="Arial 30")
+
+def drawCard(app,canvas): # omen, event, item
+    return 42
 
 runApp(width=1440, height=775)
