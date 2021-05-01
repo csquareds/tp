@@ -39,6 +39,7 @@ def setPlayers(app):
     app.Heather = Player('Heather Granville', {'might': [0,3,3,3,4,5,6,7,8], 'speed': [0,3,3,4,5,6,6,7,8], 'knowledge': [0,2,3,3,4,5,6,7,8], 'sanity': [0,3,3,3,4,5,6,6,6]}, {'might': 3, 'speed': 3, 'knowledge': 5, 'sanity': 3}, 'purple1', 18, 'August 2nd', 'Television, Shopping')
     app.Peter = Player('Peter Akimoto', {'might': [0,2,3,3,4,5,5,6,8], 'speed': [0,3,3,3,4,6,6,7,7], 'knowledge': [0,3,4,4,5,6,7,7,8], 'sanity': [0,3,4,4,4,5,6,6,7]}, {'might': 3, 'speed': 4,  'knowledge': 3, 'sanity': 4}, 'green2', 13, 'September 3rd', 'Bugs, Basketball')
     app.Ox = Player('Ox Bellows', {'might': [0,4,5,5,6,6,7,8,8], 'speed': [0,2,2,2,3,4,5,5,6], 'knowledge': [0,2,2,3,3,5,5,6,6], 'sanity': [0,2,2,3,4,5,5,6,7]}, {'might': 3,  'speed': 5,  'knowledge': 3, 'sanity': 3}, 'red', 23, 'October 18th', 'Football, Shiny Objects')
+    app.Death = ('Death', {'might':[1,1,1,1,1,1,1,1,1], 'speed':[0,0,0,0,0,0,0,0,0],'knowledge':[0,1,2,3,4,5,6,7,8], 'sanity': [1,1,1,1,1,1,1,1,1]}, {'might': 8, 'speed': 8, 'knowledge': 8, 'sanity': 8}, 'gray25', 'Beginning of time', 'Chess')
 # Player template
 #Player = Player('name', {mightList, speedList, knowledgeList, sanityList}, {mightIndex, speedIndex, knowledgeIndex, sanityIndex}, color, age, birthday, hobbies)
 
@@ -209,7 +210,7 @@ def setUp(app): # general setup: rooms, omens, events, items
                 app.Music, app.Medical, app.Lucky, app.Idol, app.Healing, app.Dynamite, app.Dice, app.Candle, 
             app.Bottle, app.Blood_Dagger, app.Bell, app.Axe, app.Armor, app.Angel, app.Amulet, app.Adrenaline]
 
-def setHaunt(app):
+def setHaunt(app): # maybe another file, especially for more haunts
     app.heroText1 = ['You’ve finally figured out what the cramped handwriting in that old journal stated:',
     '“I, Ebenezer Slocum, have found the means to force Death itself to appear before me. I,',
     'have prepared to challenge Death, and I will defeat it! Through study, I have enhanced my mind to its',
@@ -241,11 +242,11 @@ def setHaunt(app):
     '“Checkmate.” Death stares fixedly at his King, then starts',
     'crumbling into dust. Death smiles, and you feel your hair turn white.',
     '“Until next time,” Death responds ....']
-    app.traitorText1 = ['You know what those fools are reading in Uncle Ebenezer’s journal: “I, Ebenezer Slocum,',
-    'have found the means to force Death itself to appear before me. I have prepared to challenge Death,',
-    'and I will defeat it! I have studied and enhanced my mind to its keenest. Oh, Death will not be proud',
-    'this night!” Well, that old geezer’s bones are still sitting by the chess set. You doubt these fools',
-    'can do any better. Beat Death?! Indeed! Just in case, you’ll do what you can to make sure none',
+    app.traitorText1 = ['You know what those fools are reading in Uncle Ebenezer’s journal: “I, Ebenezer',
+    'Slocum, have found the means to force Death itself to appear before me. I have prepared to challenge',
+    'Death, and I will defeat it! I have studied and enhanced my mind to its keenest. Oh, Death will not',
+    'be proud this night!” Well, that old geezer’s bones are still sitting by the chess set. You doubt these',
+    'fools can do any better. Beat Death?! Indeed! Just in case, you’ll do what you can to make sure none',
     'of them win this game. After all, you can’t stand the thought of anyone being smarter than you,',
     'and there’s no way you could beat Death at chess!']
     app.traitorText2 = ['Right Now',
@@ -270,8 +271,7 @@ def setHaunt(app):
     'If Death rolls a higher result, it captures a piece:',
     '• If Death wins by 1 or 2, it takes a pawn and each hero loses 1 Sanity.',
     '• If Death wins by 3 or 4, it takes a significant piece and each hero loses 1 Might.',
-    '• If Death wins by 5 or more, it grimly intones the word “check.”',
-    'Each hero loses 1 Sanity and 1 Might.']
+    '• If Death wins by 5 or more, it grimly intones the word “check.” Each hero loses 1 Sanity and 1 Might.']
     app.traitorText5 = ['Special Attack Rules',
     'Death can’t attack or be affected in any way other than by being beaten at chess.',
     'You can’t enter the room with Death or affect a hero there in any way, such as by',
@@ -282,7 +282,7 @@ def setHaunt(app):
     'own game. So what if you helped Death out a bit. The important thing is they’re dead',
     'and gone, and you’re still here.',
     'Checkmate.']
-    #app.Checkmate = Haunt('Checkmate',{'traitor': heroText1, 'hero': heroText2})
+    #app.Checkmate = Haunt('Checkmate',{'traitor': traitorText1, 'hero': heroText1}) # when multiple haunts
 
 def appStarted(app):
     app.mode = 'start'
@@ -317,7 +317,8 @@ def setCharacters(app):
     app.player4 = {'number': 4, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'}
     app.player5 = {'number': 5, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'}
     app.player6 = {'number': 6, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'}
-    app.playerList = [app.player1, app.player2, app.player3, app.player4, app.player5, app.player6]
+    app.player7 = {'number': 7, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'} # for monster/ghost/haunt
+    app.playerList = [app.player1, app.player2, app.player3, app.player4, app.player5, app.player6, app.player7]
     app.index = 0
     app.currentPlayer = app.playerList[app.index]
 
@@ -460,6 +461,17 @@ def hauntRoll(app):
         app.result += app.roll
     if app.result < app.hauntCount:
         app.haunt = True
+        app.playerList[app.players]['character'] = app.Death
+        bestKnowledge = None
+        bestPlayer = None
+        for i in range(app.players):
+            player = app.playerList[i]['character']
+            knowledge = app.playerList[i]['character'].knowledge
+            if bestKnowledge == None or knowledge > bestKnowledge:
+                bestKnowledge = knowledge
+                bestPlayer = player
+        bestPlayer['character'].role = False # player with highest knowledge is now traitor
+
         app.mode = 'hauntIntro'
     else:
         app.hauntCount += 1
@@ -633,7 +645,7 @@ def ground_keyPressed(app,event):
         if validMove(app, 'ground', app.currentPlayer, rows, cols, selectedRow, selectedCol):
             if app.groundList[selectedRow][selectedCol] == 'Undiscovered':
                 room = random.choice(app.rooms)
-                while app.Ground not in room.floors and room not in app.Ground.rooms:
+                while app.Ground not in room.floors and room in app.Ground.rooms:
                     room = random.choice(app.rooms)
                 app.groundList[selectedRow][selectedCol] = room.name # set new room name / discover new room!
                 app.Ground.rooms.add(room)
@@ -643,16 +655,37 @@ def ground_keyPressed(app,event):
                         app.type = 'omen'
                         app.mode = 'card' # set screen to view omen information
                         app.currentOmen = random.choice(app.omens)
+                        while app.currentOmen in app.omenSet: # if omen already in set, choose another random omen
+                            app.currentOmen = random.choice(app.omens)
+                        app.omenSet.add(app.currentOmen)
+                        app.currentCard = app.currentOmen
+                    else:
+                        app.rollType = 'normal' # set roll type to omen, in order for hauntroll
+                        app.type = 'omen'
+                        app.mode = 'card' # set screen to view omen information
+                        app.currentOmen = random.choice(app.omens)
                         while app.currentOmen in app.omenSet:
                             app.currentOmen = random.choice(app.omens)
                         app.omenSet.add(app.currentOmen)
                         app.currentCard = app.currentOmen
                 elif room.event:
-                    pass
-                    print(room.name)
+                    app.rollType = 'normal'
+                    app.type = 'event'
+                    app.mode = 'card' # set screen to view event information
+                    app.currentEvent = random.choice(app.events)
+                    while app.currentEvent in app.eventSet:
+                        app.currentEvent = random.choice(app.events)
+                    app.eventSet.add(app.currentEvent)
+                    app.currentCard = app.currentEvent
                 elif room.item:
-                    pass
-                    print(room.name)
+                    app.rollType = 'normal'
+                    app.type = 'item'
+                    app.mode = 'card' # set screen to view item information
+                    app.currentItem = random.choice(app.items)
+                    while app.currentItem in app.itemSet:
+                        app.currentItem = random.choice(app.items)
+                    app.itemSet.add(app.currentItem)
+                    app.currentCard = app.currentItem
             elif app.groundList[selectedRow][selectedCol] == 'Grand Staircase':
                 app.currentPlayer['current'] = 'upper'
                 app.mode = 'upper'
@@ -660,6 +693,11 @@ def ground_keyPressed(app,event):
             app.currentPlayer = currentPlayer(app) # next player's turn
             app.groundSelection = (-1,-1)
             app.groundSelected = None
+        elif not app.haunt:
+            if app.currentPlayer['character'] == app.Death:
+                if app.currentPlayer['ground'] == (0,2) and app.currentPlayer['basement'] == (2,4) and app.currentPlayer['upper'] == (2,4): # if death's room has not been set and
+                    if app.groundList[selectedRow][selectedCol] not in ['Entrance Hall','Foyer','Grand Staircase']: # if position is not one of the setup rooms, set
+                        app.groundList[selectedRow][selectedCol] == "Death's Chess Room" # selected row and col position to death's chess room
             #app.mode = app.currentPlayer['current']
 
 def ground_mousePressed(app,event):
@@ -701,14 +739,22 @@ def basement_keyPressed(app,event):
         if validMove(app, 'basement', app.currentPlayer, rows, cols, selectedRow, selectedCol):
             if app.basementList[selectedRow][selectedCol] == 'Undiscovered':
                 room = random.choice(app.rooms)
-                while app.Basement not in room.floors:
+                while app.Basement not in room.floors and room in app.Basement.rooms:
                     room = random.choice(app.rooms)
-                #if app.Ground not in room.floors:
-                #    pass
                 app.basementList[selectedRow][selectedCol] = room.name # set new room name / discover new room!
-                if room.omen: # if newly discovered room has omen
+                app.Basement.rooms.add(room)
+                if room.omen:
                     if not app.haunt:
                         app.rollType = 'omen' # set roll type to omen, in order for hauntroll
+                        app.type = 'omen'
+                        app.mode = 'card' # set screen to view omen information
+                        app.currentOmen = random.choice(app.omens)
+                        while app.currentOmen in app.omenSet: # if omen already in set, choose another random omen
+                            app.currentOmen = random.choice(app.omens)
+                        app.omenSet.add(app.currentOmen)
+                        app.currentCard = app.currentOmen
+                    else:
+                        app.rollType = 'normal' # set roll type to omen, in order for hauntroll
                         app.type = 'omen'
                         app.mode = 'card' # set screen to view omen information
                         app.currentOmen = random.choice(app.omens)
@@ -717,9 +763,23 @@ def basement_keyPressed(app,event):
                         app.omenSet.add(app.currentOmen)
                         app.currentCard = app.currentOmen
                 elif room.event:
-                    pass
+                    app.rollType = 'normal'
+                    app.type = 'event'
+                    app.mode = 'card' # set screen to view event information
+                    app.currentEvent = random.choice(app.events)
+                    while app.currentEvent in app.eventSet:
+                        app.currentEvent = random.choice(app.events)
+                    app.eventSet.add(app.currentEvent)
+                    app.currentCard = app.currentEvent
                 elif room.item:
-                    pass
+                    app.rollType = 'normal'
+                    app.type = 'item'
+                    app.mode = 'card' # set screen to view item information
+                    app.currentItem = random.choice(app.items)
+                    while app.currentItem in app.itemSet:
+                        app.currentItem = random.choice(app.items)
+                    app.itemSet.add(app.currentItem)
+                    app.currentCard = app.currentItem
             app.currentPlayer['basement'] = (selectedRow, selectedCol) # set player's new position
             app.basementSelection = (-1,-1)
             app.basementSelected = None
@@ -761,28 +821,47 @@ def upper_keyPressed(app,event):
         if validMove(app, 'upper', app.currentPlayer, rows, cols, selectedRow, selectedCol):
             if app.upperList[selectedRow][selectedCol] == 'Undiscovered':
                 room = random.choice(app.rooms)
-                while app.Upper not in room.floors:
+                while app.Upper not in room.floors and room in app.Upper.rooms:
                     room = random.choice(app.rooms)
-                #if app.Ground not in room.floors:
-                #    pass
                 app.upperList[selectedRow][selectedCol] = room.name # set new room name / discover new room!
+                app.Upper.rooms.add(room)
                 if room.omen:
                     if not app.haunt:
-                        app.rollType = 'omen'
+                        app.rollType = 'omen' # set roll type to omen, in order for hauntroll
                         app.type = 'omen'
-                        app.mode = 'card'
+                        app.mode = 'card' # set screen to view omen information
+                        app.currentOmen = random.choice(app.omens)
+                        while app.currentOmen in app.omenSet: # if omen already in set, choose another random omen
+                            app.currentOmen = random.choice(app.omens)
+                        app.omenSet.add(app.currentOmen)
+                        app.currentCard = app.currentOmen
+                    else:
+                        app.rollType = 'normal' # set roll type to omen, in order for hauntroll
+                        app.type = 'omen'
+                        app.mode = 'card' # set screen to view omen information
                         app.currentOmen = random.choice(app.omens)
                         while app.currentOmen in app.omenSet:
                             app.currentOmen = random.choice(app.omens)
-                            app.omenSet.add(app.currentOmen)
+                        app.omenSet.add(app.currentOmen)
                         app.currentCard = app.currentOmen
-                    else:
-                        app.rollType = 'normal'
-                        app.mode = 'rollDice'
                 elif room.event:
-                    print(room.name)
+                    app.rollType = 'normal'
+                    app.type = 'event'
+                    app.mode = 'card' # set screen to view event information
+                    app.currentEvent = random.choice(app.events)
+                    while app.currentEvent in app.eventSet:
+                        app.currentEvent = random.choice(app.events)
+                    app.eventSet.add(app.currentEvent)
+                    app.currentCard = app.currentEvent
                 elif room.item:
-                    print(room.name)
+                    app.rollType = 'normal'
+                    app.type = 'item'
+                    app.mode = 'card' # set screen to view item information
+                    app.currentItem = random.choice(app.items)
+                    while app.currentItem in app.itemSet:
+                        app.currentItem = random.choice(app.items)
+                    app.itemSet.add(app.currentItem)
+                    app.currentCard = app.currentItem
             elif app.upperList[selectedRow][selectedCol] == 'Upper Landing':
                 app.currentPlayer['current'] = 'ground'
                 app.mode = 'ground'
@@ -805,6 +884,13 @@ def upper_mousePressed(app,event):
         else:
             app.upperSelected = app.upperList[row][col]
 
+def angryBeing(currentPlayer):
+    player = currentPlayer['character']
+    trait = currentPlayer.speed
+    target = 5
+    change = 1
+    return trait, 'currentPlayer.speed', target, change
+
 # ROLL DICE FUNCTIONS
 def rollDice_redrawAll(app,canvas):
     drawDice(app,canvas)
@@ -814,7 +900,13 @@ def rollDice_mousePressed(app,event):
         hauntRoll(app)
         app.rollType = None
     elif app.rollType == 'normal':
-        rollDice(app, trait, target) # for example, trait = self.might
+        if app.type == 'event':
+            if app.currentItem == app.Angry:
+                traitValue, trait, target, change = angryBeing(app.currentPlayer)
+                if rollDice(app, trait, target): # for example, trait = self.might
+                    app.currentPlayer['character'].changeTrait(traitValue, trait, 1, app.haunt)
+                else:
+                    app.currentPlayer['character'].changeTrait(traitValue, trait, -1, app.haunt)
         app.rollType = None
     else:
         app.roll = None
@@ -836,6 +928,10 @@ def card_redrawAll(app,canvas):
 def card_mousePressed(app,event):
     if app.type == 'omen':
         app.mode = 'rollDice'
+    elif app.type == 'event':
+        app.mode = 'rollDice'
+    elif app.type == 'item':
+        app.mode = app.currentPlayer['current']
 
 def card_keyPressed(app,event):
     if event.key == 'r':
@@ -867,6 +963,8 @@ def hauntTraitor_keyPressed(app,event):
     if event.key == 'r':
         app.mode = 'start'
         appStarted(app)
+    elif event.key == 'Right' or event.key == 'Up':
+        app.mode = 'hauntHeroes'
 
 # HAUNT HEROES FUNCTIONS
 def hauntHeroes_redrawAll(app,canvas):
@@ -879,6 +977,8 @@ def hauntHeroes_keyPressed(app,event):
     if event.key == 'r':
         app.mode = 'start'
         appStarted(app)
+    elif event.key == 'Left' or event.key == 'Down':
+        app.mode = 'hauntTraitor'
 
 # cell bounds for grids
 def getCellBounds(app, row, col, rows, cols, marginX, marginY):
@@ -1046,7 +1146,7 @@ def drawCard(app,canvas): # omen, event, item
     canvas.create_text(app.width//2, 50, text=text,font='Arial 30 bold',fill='white')
     canvas.create_text(app.width//2, app.height//4, text=app.currentCard.name, font='Arial 26 bold', fill='white')
     canvas.create_text(app.width//2, app.height//4+100, text=app.currentCard.description, font='Arial 20 bold', fill='white')
-    canvas.create_text(app.width//2, app.height-75, text='After you are finished reading, click to roll dice.',font='Arial 24 bold',fill='white')
+    canvas.create_text(app.width//2, app.height-75, text='After you are finished reading, click to roll dice if applicable. Else, click to return to board.',font='Arial 24 bold',fill='white')
 
 def drawHauntIntro(app,canvas):
     canvas.create_rectangle(0,0,app.width,app.height,fill='black')
@@ -1073,8 +1173,8 @@ def drawHauntTraitor(app,canvas):
             text=app.traitorText3[i], font="Arial 14 bold",fill='white', anchor='w')
     
     for i in range(len(app.traitorText4)):
-        canvas.create_text(app.width//2 + 60, app.height*(i+2)//35 + app.height//10, 
-            text=app.traitorText4[i], font="Arial 14 bold",fill='white', anchor='w')
+        canvas.create_text(app.width-20, app.height*(i+2)//35 + app.height//10, 
+            text=app.traitorText4[i], font="Arial 14 bold",fill='white', anchor='e')
     
     for i in range(len(app.traitorText5)):
         canvas.create_text(app.width//2 + 60, app.height*(i+2)//35 + app.height*4//10, 
