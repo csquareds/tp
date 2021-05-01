@@ -209,6 +209,7 @@ def appStarted(app):
     app.image = app.loadImage('bahoth.jpeg') # start screen image
     app.haunt = 0 # haunt count
     app.hauntDie = [0, 0, 1, 1, 2, 2] # 8 dice
+    app.haunt = False # haunt phase
     setFloors(app)
     setRooms(app)
     setOmens(app)
@@ -222,7 +223,6 @@ def appStarted(app):
     setGround(app)
     setBasement(app)
     setUpper(app)
-    app.haunt = False # haunt phase
     app.gameOver = False
 
 def setCharacters(app):
@@ -307,6 +307,7 @@ def currentPlayer(app):
 def validMove(app, floor, player, rows, cols, row, col):
     currentPlayer = app.currentPlayer['character']
     moves = currentPlayer.speed
+    
     currentRow,currentCol = app.currentPlayer[floor]
     totalRows,totalCols = rows,cols
     potentialRow,potentialCol = row, col
@@ -495,6 +496,7 @@ def ground_mousePressed(app,event):
             app.groundSelected = None # since it would be set to last value
         else:
             app.groundSelected = app.groundList[row][col]
+        
             #app.mode = 'character'
     #print(app.groundSelection)
     #print(app.groundSelected)
