@@ -219,7 +219,6 @@ def appStarted(app):
     setCharacters(app)
     setCharacter(app)
     setUp(app)
-    playerPositions(app)
     setGround(app)
     setBasement(app)
     setUpper(app)
@@ -228,14 +227,13 @@ def appStarted(app):
 def setCharacters(app):
     app.message = None
     app.players = 0 # total number of players
-    app.player1 = {'number': 1, 'character': None, 'ground': (2,0), 'upper': (0,0), 'basement': (0,0)} # player 1 floor positions
-    app.player2 = {'number': 2, 'character': None, 'ground': (2,0), 'upper': (0,0), 'basement': (0,0)} # player 2 floor positions
-    app.player3 = {'number': 3, 'character': None, 'ground': (2,0), 'upper': (0,0), 'basement': (0,0)} # player 3 floor positions
-    app.player4 = {'number': 4, 'character': None, 'ground': (2,0), 'upper': (0,0), 'basement': (0,0)} # player 4 floor positions
-    app.player5 = {'number': 5, 'character': None, 'ground': (2,0), 'upper': (0,0), 'basement': (0,0)} # player 5 floor positions
-    app.player6 = {'number': 6, 'character': None, 'ground': (2,0), 'upper': (0,0), 'basement': (0,0)} # player 6 floor positions
+    app.player1 = {'number': 1, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'} # player 1 floor positions, current floor
+    app.player2 = {'number': 2, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'} # player 2 floor positions, current floor
+    app.player3 = {'number': 3, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'} # player 3 floor positions, current floor
+    app.player4 = {'number': 4, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'} # player 4 floor positions, current floor
+    app.player5 = {'number': 5, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'} # player 5 floor positions, current floor
+    app.player6 = {'number': 6, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'} # player 6 floor positions, current floor
     app.playerList = [app.player1, app.player2, app.player3, app.player4, app.player5, app.player6]
-    #app.playerListCopy = [app.player1, app.player2, app.player3, app.player4, app.player5, app.player6]
     app.index = 0
     app.currentPlayer = app.playerList[app.index]
 
@@ -245,24 +243,14 @@ def setCharacter(app):
     app.marginX = 50
     app.marginY = 200
     app.characters = [ [app.Brandon, app.Flash, app.Heather, app.Jenny], [app.Longfellow, app.Missy, app.Ox, app.Peter], [app.Rhinehardt, app.Vivian, app.Zoe, app.Zostra] ] # 4 by 3
-    #app.characters = [ [app.Brandon, app.Flash, app.Heather], [app.Jenny, app.Longfellow, app.Missy], [app.Ox, app.Peter, app.Rhinehardt], [app.Vivian, app.Zoe, app.Zostra] ] # 3 by 4
-    #app.characterList = [app.Zoe, app.Zostra, app.Longfellow, app.Flash, app.Jenny, app.Brandon, app.Ox, app.Vivian, app.Missy, app.Rhinehardt, app.Vivian, app.Heather, app.Peter]
     app.characterSelection = (-1,-1) # row and col of character grid
     app.characterSelected = None # actual character/player instance
-
-def playerPositions(app):
-    app.position1 = {'ground': (2,0), 'upper': (2,4), 'basement': (2,3)} # player 1 position
-    app.position2 = {'ground': (2,0), 'upper': (2,4), 'basement': (2,3)} # player 2 position
-    app.position3 = {'ground': (2,0), 'upper': (2,4), 'basement': (2,3)} # player 3 position
-    app.position4 = {'ground': (2,0), 'upper': (2,4), 'basement': (2,3)} # player 4 position
-    app.position5 = {'ground': (2,0), 'upper': (2,4), 'basement': (2,3)} # player 5 position
-    app.position6 = {'ground': (2,0), 'upper': (2,4), 'basement': (2,3)} # player 6 position
 
 def setGround(app):
     app.groundRows = 5
     app.groundCols = 8
     app.groundX = 100 # ground marginX
-    app.groundY = 50 # ground marginY
+    app.groundY = 100 # ground marginY
     app.groundList = [ [app.Empty.name]*app.groundCols for row in range(app.groundRows)]
     app.groundList[2][0] = 'Entrance Hall'
     app.groundList[2][1] = 'Foyer'
@@ -273,11 +261,11 @@ def setGround(app):
 
 def setBasement(app):
     app.basementRows = 5
-    app.basementCols = 8
+    app.basementCols = 9
     app.basementX = 100 # basement marginX
-    app.basementY = 50 # basement marginY
+    app.basementY = 100 # basement marginY
     app.basementList = [ [app.Empty.name]*app.basementCols for row in range(app.basementRows)]
-    app.basementList[2][3] = 'Basement Landing'
+    app.basementList[2][4] = 'Basement Landing'
     app.basementSelection = (-1,-1) # row and col of basement grid
     app.basementSelected = None # selected room instance
     #print(app.basementList)
@@ -286,7 +274,7 @@ def setUpper(app):
     app.upperRows = 5
     app.upperCols = 8
     app.upperX = 100 # upper marginX
-    app.upperY = 50 # upper marginY
+    app.upperY = 100 # upper marginY
     app.upperList = [ [app.Empty.name]*app.upperCols for row in range(app.upperRows)]
     app.upperList[2][4] = 'Upper Landing'
     app.upperSelection = (-1,-1) # row and col of upper grid
@@ -320,15 +308,16 @@ def validMove(app, floor, player, rows, cols, row, col):
     else:
         return False
 
-    #print(currentPlayer.name, trait)
-
-def rollDice(app, player, trait):
-    attempt = player.trait
+def rollDice(app, player, trait, target): # for example, trait = self.might
+    attempt = trait
     result = 0
-    #dice = app.hauntDie * attempt
+
     for i in range(attempt):
         result += app.hauntDie[random.randint(0,5)]
-    return result
+    if result < target:
+        return False
+    else:
+        return True
 
 # START SCREEN FUNCTIONS
 def start_redrawAll(app, canvas):
@@ -337,7 +326,7 @@ def start_redrawAll(app, canvas):
     canvas.create_text(app.width//2, app.height-100, text='Click the screen to begin or click any key to begin playing', font=font,fill='white')
     canvas.create_text(app.width//2, app.height-50, text='Click "r" at any time to restart game',font=font,fill='white')
     canvas.create_image(app.width//2,app.height//2, image=ImageTk.PhotoImage(app.image))
-    canvas.create_text(app.width//2, 150, text='Betrayal at House on the Hill', font='Sign\Painter 45',fill='white')
+    canvas.create_text(app.width//2, 140, text='Betrayal at House on the Hill', font='Sign\Painter 70',fill='white')
 
 def start_keyPressed(app, event):
     #print(event.key)
@@ -439,8 +428,9 @@ def character_redrawAll(app,canvas):
     canvas.create_text(app.width//10, 140, text=f'Speed: {app.characterSelected.speed}', font=font, fill=color,anchor='w')
     canvas.create_text(app.width//10, 180, text=f'Knowledge: {app.characterSelected.knowledge}', font=font, fill=color,anchor='w')
     canvas.create_text(app.width//10, 220, text=f'Sanity: {app.characterSelected.sanity}', font=font, fill=color,anchor='w')
-
+    
     # OTHER
+    canvas.create_text(app.width//2, app.height-200, text="Note: SPEED is how many floor tiles you may move.", font=font, fill=color)
     canvas.create_text(9*app.width//10, app.height-100, text='To confirm selection, press "Y"', font=font, fill=color, anchor='e')
     canvas.create_text(20, app.height-25, text=f"CURRENT PLAYER: {app.currentPlayer['number']}", font=font, fill=color, anchor='w')
     canvas.create_text(app.width//2, app.height-25, text='Use the left or down arrow keys to go back.', font='Arial 20 bold',fill=color)
@@ -474,8 +464,13 @@ def character_mousePressed(app, event):
 # GROUND FLOOR BOARD FUNCTIONS
 def ground_redrawAll(app,canvas):
     drawGround(app,canvas)
-
+    canvas.create_text(20, 25, text='GROUND FLOOR',font='Arial 20 bold',fill='white', anchor='w')
+    currentPlayerText(app,canvas)
+    
 def ground_keyPressed(app,event):
+    rows, cols = app.groundRows, app.groundCols
+    selectedRow, selectedCol = app.groundSelection
+
     if event.key == 'r':
         app.mode = 'start'
         appStarted(app)
@@ -483,6 +478,21 @@ def ground_keyPressed(app,event):
         app.mode = 'upper'
     elif event.key == 'Left':
         app.mode = 'basement'
+    elif event.key == 'c':
+        if validMove(app, 'ground', app.currentPlayer, rows, cols, selectedRow, selectedCol) and app.groundList[selectedRow][selectedCol] == 'Undiscovered':
+            num = random.randint(0,41)
+            app.groundList[selectedRow][selectedCol] = app.rooms[num].name # set new room name / discover new room!
+            if app.rooms[num].omen:
+                print(num)
+                print(app.rooms[num].name)
+            elif app.rooms[num].event:
+                print(app.room[num].name)
+            elif app.room[num].item:
+                print(app.room[num].name)
+            app.currentPlayer['ground'] = (selectedRow, selectedCol) # set player's new position
+            app.groundSelection = (-1,-1)
+            app.groundSelected = None
+            app.currentPlayer = currentPlayer(app) # next player's turn
 
 def ground_mousePressed(app,event):
     rows, cols = app.groundRows, app.groundCols
@@ -513,11 +523,27 @@ def ground_mousePressed(app,event):
 # BASEMENT FLOOR FUNCTIONS
 def basement_redrawAll(app,canvas):
     drawBasement(app,canvas)
-
+    canvas.create_text(20, 25, text='BASEMENT',font='Arial 20 bold',fill='white', anchor='w')
+    currentPlayerText(app,canvas)
+    
 def basement_keyPressed(app,event):
+    rows, cols = app.basementRows, app.basementCols
+    selectedRow, selectedCol = app.basementSelection
+
     if event.key == 'r':
         app.mode = 'start'
         appStarted(app)
+    elif event.key == 'Right':
+        app.mode = 'ground'
+    #elif event.key == 'Left':
+    #    app.mode = 'upper'
+    elif event.key == 'c':
+        if validMove(app, 'basement', app.currentPlayer, rows, cols, selectedRow, selectedCol) and app.basementList[selectedRow][selectedCol] == 'Undiscovered':
+            app.basementList[selectedRow][selectedCol] = app.rooms[random.randint(0,41)].name # set new room name / discover new room!
+            app.currentPlayer['basement'] = (selectedRow, selectedCol) # set player's new position
+            app.basementSelection = (-1,-1)
+            app.basementSelected = None
+            app.currentPlayer = currentPlayer(app) # next player's turn
 
 def basement_mousePressed(app,event):
     rows, cols = app.basementRows, app.basementCols
@@ -547,11 +573,27 @@ def basement_mouseDragged(app,event):
 # UPPER FLOOR FUNCTIONS
 def upper_redrawAll(app,canvas):
     drawUpper(app,canvas)
+    canvas.create_text(20, 25, text='UPPER FLOOR',font='Arial 20 bold',fill='white',anchor='w')
+    currentPlayerText(app,canvas)
 
 def upper_keyPressed(app,event):
+    rows, cols = app.upperRows, app.upperCols
+    selectedRow, selectedCol = app.upperSelection
+
     if event.key == 'r':
         app.mode = 'start'
         appStarted(app)
+    #elif event.key == 'Right':
+    #    app.mode = 'basement'
+    elif event.key == 'Left':
+        app.mode = 'ground'
+    elif event.key == 'c':
+        if validMove(app, 'upper', app.currentPlayer, rows, cols, selectedRow, selectedCol) and app.upperList[selectedRow][selectedCol] == 'Undiscovered':
+            app.upperList[selectedRow][selectedCol] = app.rooms[random.randint(0,41)].name # set new room name / discover new room!
+            app.currentPlayer['upper'] = (selectedRow, selectedCol) # set player's new position
+            app.upperSelection = (-1,-1)
+            app.upperSelected = None
+            app.currentPlayer = currentPlayer(app) # next player's turn
 
 def upper_mousePressed(app,event):
     rows, cols = app.upperRows, app.upperCols
@@ -683,5 +725,14 @@ def drawUpper(app,canvas):
             else:
                 canvas.create_rectangle(x0, y0, x1, y1,fill='burlywood')
             canvas.create_text(x0+roomWidth//2,y0+roomHeight//2,text=room,fill=color)
+
+def currentPlayerText(app,canvas):
+    font = 'Arial 18 bold'
+    color = 'white'
+    #canvas.create_text(20, app.height-25, text=f"CURRENT PLAYER: {app.currentPlayer['number']}, CHARACTER: {app.currentPlayer['character'].name}, PLAYER SPEED: {app.currentPlayer['character'].speed}", 
+    #        font=font, fill=color, anchor='w')
+    canvas.create_text(app.width//2, app.height-25, text=f"CURRENT PLAYER: {app.currentPlayer['number']}, CHARACTER: {app.currentPlayer['character'].name}, PLAYER SPEED: {app.currentPlayer['character'].speed}", 
+            font=font, fill=color)
+    canvas.create_text(app.width-20, 25, text='Red denotes invalid moves, while green denotes valid moves. To confirm position, press "C".',font=font, fill=color, anchor='e')
 
 runApp(width=1440, height=775)
