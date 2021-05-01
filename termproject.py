@@ -135,7 +135,7 @@ def setEvents(app):
     app.Possession = Event("Possession", "A shadow separates from the wall. As you stand in shock, and shadow surrounds you and chills you to the core.")
     app.Phone = Event("Phone Call", "A phone rings in the room. You feel compelled to answer it.")
     app.Night = Event("Night View", "You see a vision of a ghostly couple walking the grounds, silently strolling in their wedding best.")
-    app.Mystic = Event("Mystic Slide", "The floor falls from under you.")
+    app.Slide = Event("Mystic Slide", "The floor falls from under you.")
     app.Mists = Event("Mists from the Walls", "Mists pour out from the walls. There are faces in the mist, human and... inhuman.")
     app.Safe = Event("Locked Safe", "Behind a portrait is a wall safe. It is trapped, of course.")
     app.Lights = Event("Lights Out", "Your flashlight goes out. Don't worry, someone else has batteries.")
@@ -196,7 +196,7 @@ def setUp(app): # general setup: rooms, omens, events, items
                 app.Madman, app.Mask, app.Medallion, app.Ring, app.Spear, app.Spirit]
     app.events = [app.Whoops, app.What, app.Webs, app.Walls, app.Voice, app.Lost, app.Beckoning, app.Spider, 
             app.Slimy, app.Hidden, app.Smoke, app.Skeletons, app.Silence, app.Wind, app.Stairs, app.Passage, 
-            app.Rotten, app.Wall, app.Possession, app.Phone, app.Night, app.Mystic, app.Mists, app.Safe, app.Lights, 
+            app.Rotten, app.Wall, app.Possession, app.Phone, app.Night, app.Slide, app.Mists, app.Safe, app.Lights, 
             app.Jonah, app.Meant, app.Mirror, app.OtherMirror, app.Shriek, app.Hanged, app.Groundskeeper, 
             app.Grave, app.Funeral, app.Footsteps, app.Drip, app.Sounds, app.Debris, app.Puppet, app.Crawlies, 
                 app.Closet, app.Burning, app.Vision, app.Angry, app.Hope]
@@ -207,7 +207,8 @@ def setUp(app): # general setup: rooms, omens, events, items
 def appStarted(app):
     app.mode = 'start'
     app.image = app.loadImage('bahoth.jpeg') # start screen image
-    app.haunt = 0 # haunt count
+    app.hauntCount = 0 # haunt count
+    app.omenCount = 0
     app.hauntDie = [0, 0, 1, 1, 2, 2] # 8 dice
     app.haunt = False # haunt phase
     setFloors(app)
@@ -319,6 +320,16 @@ def rollDice(app, player, trait, target): # for example, trait = self.might
     else:
         return True
 
+def hauntRoll(app):
+    result = 0
+    app.omenCount += 1
+    for i in range(6):
+        result += app.hauntDie[random.randint(0,5)]
+    if result < app.hauntCount:
+        app.haunt = True
+    else:
+        app.hauntCount += 1
+        
 # START SCREEN FUNCTIONS
 def start_redrawAll(app, canvas):
     font = 'Arial 20 bold'
@@ -465,7 +476,7 @@ def character_mousePressed(app, event):
 def ground_redrawAll(app,canvas):
     drawGround(app,canvas)
     canvas.create_text(20, 25, text='GROUND FLOOR',font='Arial 20 bold',fill='white', anchor='w')
-    currentPlayerText(app,canvas)
+    informationText(app,canvas)
     
 def ground_keyPressed(app,event):
     rows, cols = app.groundRows, app.groundCols
@@ -483,12 +494,12 @@ def ground_keyPressed(app,event):
             num = random.randint(0,41)
             app.groundList[selectedRow][selectedCol] = app.rooms[num].name # set new room name / discover new room!
             if app.rooms[num].omen:
-                print(num)
-                print(app.rooms[num].name)
+                if not app.haunt:
+                    hauntRoll(app)
             elif app.rooms[num].event:
-                print(app.room[num].name)
-            elif app.room[num].item:
-                print(app.room[num].name)
+                print(app.rooms[num].name)
+            elif app.rooms[num].item:
+                print(app.rooms[num].name)
             app.currentPlayer['ground'] = (selectedRow, selectedCol) # set player's new position
             app.groundSelection = (-1,-1)
             app.groundSelected = None
@@ -524,7 +535,7 @@ def ground_mousePressed(app,event):
 def basement_redrawAll(app,canvas):
     drawBasement(app,canvas)
     canvas.create_text(20, 25, text='BASEMENT',font='Arial 20 bold',fill='white', anchor='w')
-    currentPlayerText(app,canvas)
+    informationText(app,canvas)
     
 def basement_keyPressed(app,event):
     rows, cols = app.basementRows, app.basementCols
@@ -574,7 +585,7 @@ def basement_mouseDragged(app,event):
 def upper_redrawAll(app,canvas):
     drawUpper(app,canvas)
     canvas.create_text(20, 25, text='UPPER FLOOR',font='Arial 20 bold',fill='white',anchor='w')
-    currentPlayerText(app,canvas)
+    informationText(app,canvas)
 
 def upper_keyPressed(app,event):
     rows, cols = app.upperRows, app.upperCols
@@ -726,13 +737,14 @@ def drawUpper(app,canvas):
                 canvas.create_rectangle(x0, y0, x1, y1,fill='burlywood')
             canvas.create_text(x0+roomWidth//2,y0+roomHeight//2,text=room,fill=color)
 
-def currentPlayerText(app,canvas):
+def informationText(app,canvas):
     font = 'Arial 18 bold'
     color = 'white'
     #canvas.create_text(20, app.height-25, text=f"CURRENT PLAYER: {app.currentPlayer['number']}, CHARACTER: {app.currentPlayer['character'].name}, PLAYER SPEED: {app.currentPlayer['character'].speed}", 
     #        font=font, fill=color, anchor='w')
-    canvas.create_text(app.width//2, app.height-25, text=f"CURRENT PLAYER: {app.currentPlayer['number']}, CHARACTER: {app.currentPlayer['character'].name}, PLAYER SPEED: {app.currentPlayer['character'].speed}", 
+    canvas.create_text(app.width//2, app.height-25, text=f"CURRENT PLAYER: Player {app.currentPlayer['number']}, CHARACTER: {app.currentPlayer['character'].name}, Player SPEED: {app.currentPlayer['character'].speed}", 
             font=font, fill=color)
     canvas.create_text(app.width-20, 25, text='Red denotes invalid moves, while green denotes valid moves. To confirm position, press "C".',font=font, fill=color, anchor='e')
-
+    if not app.haunt:
+        canvas.create_text(app.width-20, 50, text=f'Omen Counter: {app.omenCount}, Haunt Counter: {app.hauntCount}',font=font,fill=color,anchor='e')
 runApp(width=1440, height=775)
