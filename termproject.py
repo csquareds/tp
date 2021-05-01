@@ -209,7 +209,6 @@ def appStarted(app):
     app.image = app.loadImage('bahoth.jpeg') # start screen image
     app.hauntCount = 0 # haunt count
     app.omenCount = 0
-    app.hauntDie = [0, 0, 1, 1, 2, 2] # 8 dice
     app.haunt = False # haunt phase
     setFloors(app)
     setRooms(app)
@@ -223,6 +222,7 @@ def appStarted(app):
     setGround(app)
     setBasement(app)
     setUpper(app)
+    setDiceRoll(app)
     app.gameOver = False
 
 def setCharacters(app):
@@ -282,6 +282,14 @@ def setUpper(app):
     app.upperSelected = None # selected room instance
     #print(app.upperList)
 
+def setDiceRoll(app):
+    app.roll = None
+    app.die = [0, 0, 1, 1, 2, 2] # 8 dice
+    app.dice = [app.roll, app.roll, app.roll, app.roll, app.roll, app.roll, app.roll, app.roll]
+    app.rollType = None
+    app.result = 0
+    app.target = 0
+
 def currentPlayer(app):
     total = app.players
     current = app.index
@@ -311,21 +319,28 @@ def validMove(app, floor, player, rows, cols, row, col):
 
 def rollDice(app, player, trait, target): # for example, trait = self.might
     attempt = trait
-    result = 0
+    app.result = 0
 
     for i in range(attempt):
-        result += app.hauntDie[random.randint(0,5)]
-    if result < target:
+        app.roll = app.die[random.randint(0,5)]
+        app.dice[i] = app.roll
+        app.result += app.roll
+    if app.result < target:
         return False
     else:
         return True
+    app.mode = app.currentPlayer['current']
 
 def hauntRoll(app):
-    result = 0
+    app.mode = 'rollDice'
+    app.result = 0
+    app.target = app.hauntCount
     app.omenCount += 1
     for i in range(6):
-        result += app.hauntDie[random.randint(0,5)]
-    if result < app.hauntCount:
+        app.roll = app.die[random.randint(0,5)]
+        app.dice[i] = app.roll
+        app.result += app.roll
+    if app.result < app.hauntCount:
         app.haunt = True
     else:
         app.hauntCount += 1
@@ -495,7 +510,9 @@ def ground_keyPressed(app,event):
             app.groundList[selectedRow][selectedCol] = app.rooms[num].name # set new room name / discover new room!
             if app.rooms[num].omen:
                 if not app.haunt:
-                    hauntRoll(app)
+                    app.rollType = 'omen'
+                    app.mode = 'rollDice'
+                    #hauntRoll(app)
             elif app.rooms[num].event:
                 print(app.rooms[num].name)
             elif app.rooms[num].item:
@@ -618,6 +635,18 @@ def upper_mousePressed(app,event):
             app.upperSelected = None # since it would be set to last value
         else:
             app.upperSelected = app.upperList[row][col]
+
+def rollDice_redrawAll(app,canvas):
+    drawDice(app,canvas)
+
+def rollDice_mousePressed(app,event):
+    if app.rollType == 'omen':
+        hauntRoll(app)
+
+def rollDice_keyPressed(app,event):
+    if event.key == 'r':
+        app.mode = 'start'
+        appStarted(app)
 
 # cell bounds for grids
 def getCellBounds(app, row, col, rows, cols, marginX, marginY):
@@ -747,4 +776,30 @@ def informationText(app,canvas):
     canvas.create_text(app.width-20, 25, text='Red denotes invalid moves, while green denotes valid moves. To confirm position, press "C".',font=font, fill=color, anchor='e')
     if not app.haunt:
         canvas.create_text(app.width-20, 50, text=f'Omen Counter: {app.omenCount}, Haunt Counter: {app.hauntCount}',font=font,fill=color,anchor='e')
+
+def drawDice(app,canvas):
+    canvas.create_rectangle(0,0,app.width,app.height,fill='black')
+    canvas.create_text(app.width//2, 50, text=f'Roll Total: {app.result}, Target (what you need to roll): {app.target}',font='Arial 24 bold',fill='white')
+
+    y0 = app.height//10
+    y1 = app.height * 9//10
+    lines = 4 # numbers per line
+    line = 2 # how many lines
+
+    for i in range(8):
+        dice = app.dice
+        if i < lines:
+            currentLine = 0
+        else:
+            currentLine = 1
+        letterInLine = i % lines
+        cx = (app.width//lines)*(letterInLine + 1/2)
+        cy = y0 + (y1 - y0)//line * (currentLine + 1/2)
+
+        r = 100
+        canvas.create_rectangle(cx-r,cy-r,cx+r,cy+r, fill='white')
+        
+        if dice[i] != None:
+            canvas.create_text(cx,cy,text=dice[i],font="Arial 30")
+
 runApp(width=1440, height=775)
