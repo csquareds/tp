@@ -185,23 +185,7 @@ def setItems(app):
     app.Amulet = Item("Amulet of the Ages", "Ancient silver and inlaid gems, inscribed with blessings.")
     app.Adrenaline = Item("Adrenaline Shot", "A syringe containing a strange fluorescent liquid.")
 
-def appStarted(app):
-    app.mode = 'start'
-    app.image = app.loadImage('bahoth.jpeg') # start screen image
-    app.haunt = 0 # haunt count
-    app.hauntDie = [0, 0, 1, 1, 2, 2] # 8 dice
-    setFloors(app)
-    setRooms(app)
-    setOmens(app)
-    setEvents(app)
-    setItems(app)
-    setPlayers(app)
-    setCharacters(app)
-    setCharacter(app)
-    setGround(app)
-    setBasement(app)
-    setUpper(app)
-    app.haunt = False # haunt phase
+def setUp(app): # general setup: rooms, omens, events, items
     app.rooms = [app.Abandoned, app.Attic, app.Balcony, app.Ballroom, app.Bedroom, app.Bloody, app.Catacombs, 
         app.Chapel, app.Charred, app.Chasm, app.Coal, app.Collapsed, app.Conservatory, app.Creaky, app.Crypt, 
         app.Dining, app.Dusty, app.Furnace, app.Gallery, app.Game, app.Gardens, app.Graveyard, app.Gym, app.Junk, 
@@ -219,18 +203,37 @@ def appStarted(app):
     app.items = [app.Revolver, app.Salts, app.Sacrificial_Dagger, app.Rabbit, app.Puzzle, app.Gloves, 
                 app.Music, app.Medical, app.Lucky, app.Idol, app.Healing, app.Dynamite, app.Dice, app.Candle, 
             app.Bottle, app.Blood_Dagger, app.Bell, app.Axe, app.Armor, app.Angel, app.Amulet, app.Adrenaline]
+
+def appStarted(app):
+    app.mode = 'start'
+    app.image = app.loadImage('bahoth.jpeg') # start screen image
+    app.haunt = 0 # haunt count
+    app.hauntDie = [0, 0, 1, 1, 2, 2] # 8 dice
+    setFloors(app)
+    setRooms(app)
+    setOmens(app)
+    setEvents(app)
+    setItems(app)
+    setPlayers(app)
+    setCharacters(app)
+    setCharacter(app)
+    setUp(app)
+    playerPositions(app)
+    setGround(app)
+    setBasement(app)
+    setUpper(app)
+    app.haunt = False # haunt phase
     app.gameOver = False
 
 def setCharacters(app):
     app.message = None
     app.players = 0 # total number of players
-    app.player1 = {'number': 1, 'character': None}
-    app.player2 = {'number': 2, 'character': None}
-    app.player3 = {'number': 3, 'character': None}
-    app.player4 = {'number': 4, 'character': None}
-    app.player5 = {'number': 5, 'character': None}
-    app.player6 = {'number': 6, 'character': None}
-    #print(app.player1['number'])
+    app.player1 = {'number': 1, 'character': None, 'ground': (2,0), 'upper': (0,0), 'basement': (0,0)} # player 1 floor positions
+    app.player2 = {'number': 2, 'character': None, 'ground': (2,0), 'upper': (0,0), 'basement': (0,0)} # player 2 floor positions
+    app.player3 = {'number': 3, 'character': None, 'ground': (2,0), 'upper': (0,0), 'basement': (0,0)} # player 3 floor positions
+    app.player4 = {'number': 4, 'character': None, 'ground': (2,0), 'upper': (0,0), 'basement': (0,0)} # player 4 floor positions
+    app.player5 = {'number': 5, 'character': None, 'ground': (2,0), 'upper': (0,0), 'basement': (0,0)} # player 5 floor positions
+    app.player6 = {'number': 6, 'character': None, 'ground': (2,0), 'upper': (0,0), 'basement': (0,0)} # player 6 floor positions
     app.playerList = [app.player1, app.player2, app.player3, app.player4, app.player5, app.player6]
     #app.playerListCopy = [app.player1, app.player2, app.player3, app.player4, app.player5, app.player6]
     app.index = 0
@@ -242,10 +245,18 @@ def setCharacter(app):
     app.marginX = 50
     app.marginY = 200
     app.characters = [ [app.Brandon, app.Flash, app.Heather, app.Jenny], [app.Longfellow, app.Missy, app.Ox, app.Peter], [app.Rhinehardt, app.Vivian, app.Zoe, app.Zostra] ] # 4 by 3
-    #app.characters = [ [Brandon, Flash, Heather], [Jenny, Longfellow, Missy], [Ox, Peter, Rhinehardt], [Vivian, Zoe, Zostra] ] # 3 by 4
-    #app.characterList = [Zoe, Zostra, Longfellow, Flash, Jenny, Brandon, Ox, Vivian, Missy, Rhinehardt, Vivian, Heather, Peter]
+    #app.characters = [ [app.Brandon, app.Flash, app.Heather], [app.Jenny, app.Longfellow, app.Missy], [app.Ox, app.Peter, app.Rhinehardt], [app.Vivian, app.Zoe, app.Zostra] ] # 3 by 4
+    #app.characterList = [app.Zoe, app.Zostra, app.Longfellow, app.Flash, app.Jenny, app.Brandon, app.Ox, app.Vivian, app.Missy, app.Rhinehardt, app.Vivian, app.Heather, app.Peter]
     app.characterSelection = (-1,-1) # row and col of character grid
     app.characterSelected = None # actual character/player instance
+
+def playerPositions(app):
+    app.position1 = {'ground': (2,0), 'upper': (2,4), 'basement': (2,3)} # player 1 position
+    app.position2 = {'ground': (2,0), 'upper': (2,4), 'basement': (2,3)} # player 2 position
+    app.position3 = {'ground': (2,0), 'upper': (2,4), 'basement': (2,3)} # player 3 position
+    app.position4 = {'ground': (2,0), 'upper': (2,4), 'basement': (2,3)} # player 4 position
+    app.position5 = {'ground': (2,0), 'upper': (2,4), 'basement': (2,3)} # player 5 position
+    app.position6 = {'ground': (2,0), 'upper': (2,4), 'basement': (2,3)} # player 6 position
 
 def setGround(app):
     app.groundRows = 5
@@ -256,13 +267,8 @@ def setGround(app):
     app.groundList[2][0] = 'Entrance Hall'
     app.groundList[2][1] = 'Foyer'
     app.groundList[2][2] = 'Grand Staircase'
-    app.player1position = (0,0)
-    app.player2position = (0,0)
-    app.player3position = (0,0)
-    app.player4position = (0,0)
-    app.player5position = (0,0)
-    app.player6position = (0,0)
-
+    app.groundSelection = (-1,-1) # row and col of ground grid
+    app.groundSelected = None # selected room instance
     #print(app.groundList)
 
 def setBasement(app):
@@ -272,6 +278,8 @@ def setBasement(app):
     app.basementY = 50 # basement marginY
     app.basementList = [ [app.Empty.name]*app.basementCols for row in range(app.basementRows)]
     app.basementList[2][3] = 'Basement Landing'
+    app.basementSelection = (-1,-1) # row and col of basement grid
+    app.basementSelected = None # selected room instance
     #print(app.basementList)
 
 def setUpper(app):
@@ -281,6 +289,8 @@ def setUpper(app):
     app.upperY = 50 # upper marginY
     app.upperList = [ [app.Empty.name]*app.upperCols for row in range(app.upperRows)]
     app.upperList[2][4] = 'Upper Landing'
+    app.upperSelection = (-1,-1) # row and col of upper grid
+    app.upperSelected = None # selected room instance
     #print(app.upperList)
 
 def currentPlayer(app):
@@ -293,6 +303,23 @@ def currentPlayer(app):
     else:
         app.index = 0
     return app.playerList[app.index]
+
+def validMove(app, floor, player, rows, cols, row, col):
+    currentPlayer = app.currentPlayer['character']
+    moves = currentPlayer.speed
+    currentRow,currentCol = app.currentPlayer[floor]
+    totalRows,totalCols = rows,cols
+    potentialRow,potentialCol = row, col
+    rowDifference = abs(potentialRow - currentRow)
+    colDifference = abs(potentialCol - currentCol)
+    totalMoves = rowDifference + colDifference
+    
+    if 0 <= potentialRow <= totalRows and 0 <= potentialCol <= totalCols and totalMoves <= moves:
+        return True
+    else:
+        return False
+
+    #print(currentPlayer.name, trait)
 
 def rollDice(app, player, trait):
     attempt = player.trait
@@ -403,6 +430,7 @@ def characters_mousePressed(app,event):
 def character_redrawAll(app,canvas):
     font = 'Arial 26 bold'
     canvas.create_rectangle(0,0,app.width,app.height,fill='black')
+
     # TRAITS
     color = 'white'
     canvas.create_text(app.width//2, 50, text=app.characterSelected.name, fill=app.characterSelected.color,font=font)
@@ -411,6 +439,7 @@ def character_redrawAll(app,canvas):
     canvas.create_text(app.width//10, 180, text=f'Knowledge: {app.characterSelected.knowledge}', font=font, fill=color,anchor='w')
     canvas.create_text(app.width//10, 220, text=f'Sanity: {app.characterSelected.sanity}', font=font, fill=color,anchor='w')
 
+    # OTHER
     canvas.create_text(9*app.width//10, app.height-100, text='To confirm selection, press "Y"', font=font, fill=color, anchor='e')
     canvas.create_text(20, app.height-25, text=f"CURRENT PLAYER: {app.currentPlayer['number']}", font=font, fill=color, anchor='w')
     canvas.create_text(app.width//2, app.height-25, text='Use the left or down arrow keys to go back.', font='Arial 20 bold',fill=color)
@@ -421,7 +450,7 @@ def character_keyPressed(app, event):
         appStarted(app)
     elif event.key == 'Down' or event.key == 'Left':
         app.mode = 'characters' # back to characters grid
-        app.characterSelection = (-1,-1) # reset selected row, col
+        app.characterSelection = (-1,-1)# reset selected row, col
         app.characterSelected = None # and selected character
     elif event.key == 'Right': # to debug rn
         app.mode = 'ground'
@@ -435,6 +464,8 @@ def character_keyPressed(app, event):
             app.mode = 'ground'
         app.currentPlayer['character'] = app.characterSelected
         app.currentPlayer = currentPlayer(app)
+        app.characterSelection = (-1,-1)# reset selected row, col
+        app.characterSelected = None # and selected character
 
 def character_mousePressed(app, event):
     pass
@@ -453,7 +484,20 @@ def ground_keyPressed(app,event):
         app.mode = 'basement'
 
 def ground_mousePressed(app,event):
-    pass
+    rows, cols = app.groundRows, app.groundCols
+    (row, col) = getCell(app, event.x, event.y, rows, cols, app.groundX, app.groundY)
+    if app.groundSelection == (row,col):
+        app.groundSelection = (-1,-1)
+        app.groundSelected = None
+    else:
+        app.groundSelection = (row,col)
+        if app.groundSelection == (-1,-1): # avoid indexing issues,
+            app.groundSelected = None # since it would be set to last value
+        else:
+            app.groundSelected = app.groundList[row][col]
+            #app.mode = 'character'
+    #print(app.groundSelection)
+    #print(app.groundSelected)
 
 #def ground_mouseReleased(app, event):
 #    print(f'mouseReleased at {(event.x, event.y)}')
@@ -474,16 +518,29 @@ def basement_keyPressed(app,event):
         appStarted(app)
 
 def basement_mousePressed(app,event):
-    print(f'mousePressed at {(event,x, event.y)}')
+    rows, cols = app.basementRows, app.basementCols
+    (row, col) = getCell(app, event.x, event.y, rows, cols, app.basementX, app.basementY)
+    if app.basementSelection == (row,col):
+        app.basementSelection = (-1,-1)
+        app.basementSelected = None
+    else:
+        app.basementSelection = (row,col)
+        if app.basementSelection == (-1,-1): # avoid indexing issues,
+            app.basementSelected = None # since it would be set to last value
+        else:
+            app.basementSelected = app.basementList[row][col]
 
 def basement_mouseReleased(app,event):
-    print(f'mouseReleased at {(event.x, event.y)}')
+    pass
+    #print(f'mouseReleased at {(event.x, event.y)}')
 
 def basement_mouseMoved(app,event):
-    print(f'mouseMoved at {(event.x, event.y)}')
+    pass
+    #print(f'mouseMoved at {(event.x, event.y)}')
 
 def basement_mouseDragged(app,event):
-    print(f'mouseDragged at {(event.x, event.y)}')
+    pass
+    #print(f'mouseDragged at {(event.x, event.y)}')
 
 # UPPER FLOOR FUNCTIONS
 def upper_redrawAll(app,canvas):
@@ -493,6 +550,19 @@ def upper_keyPressed(app,event):
     if event.key == 'r':
         app.mode = 'start'
         appStarted(app)
+
+def upper_mousePressed(app,event):
+    rows, cols = app.upperRows, app.upperCols
+    (row, col) = getCell(app, event.x, event.y, rows, cols, app.upperX, app.upperY)
+    if app.upperSelection == (row,col):
+        app.upperSelection = (-1,-1)
+        app.upperSelected = None
+    else:
+        app.upperSelection = (row,col)
+        if app.upperSelection == (-1,-1): # avoid indexing issues,
+            app.upperSelected = None # since it would be set to last value
+        else:
+            app.upperSelected = app.upperList[row][col]
 
 # cell bounds for grids
 def getCellBounds(app, row, col, rows, cols, marginX, marginY):
@@ -507,7 +577,7 @@ def getCellBounds(app, row, col, rows, cols, marginX, marginY):
     return x0, y0, x1, y1
 
 def getCell(app,x,y,rows,cols,marginX,marginY): # modeled after grid cell click, https://www.cs.cmu.edu/~112/notes/notes-animations-part2.html
-    if not inGrid(app, x, y, app.marginX, app.marginY):
+    if not inGrid(app, x, y, marginX, marginY):
         return (-1, -1)
     
     gridWidth = app.width - 2*marginX
@@ -526,8 +596,7 @@ def inGrid(app, x, y, marginX, marginY):
 
 # characters grid
 def drawCharacterGrid(app,canvas):
-    rows = app.characterRows
-    cols = app.characterCols
+    rows, cols = app.characterRows, app.characterCols
     for row in range(rows):
         for col in range(cols):
             x0,y0,x1,y1 = getCellBounds(app, row, col, rows, cols, app.marginX, app.marginY)
@@ -538,41 +607,79 @@ def drawCharacterGrid(app,canvas):
 
 # ground floor board
 def drawGround(app,canvas):
-    rows = app.groundRows
-    cols = app.groundCols
+    rows, cols = app.groundRows, app.groundCols
+    selectedRow, selectedCol = app.groundSelection
     canvas.create_rectangle(0,0,app.width,app.height,fill='black')
     for row in range(rows):
         for col in range(cols):
             x0,y0,x1,y1 = getCellBounds(app, row, col, rows, cols, app.groundX, app.groundY)
             roomWidth = x1-x0
             roomHeight = y1-y0
-            canvas.create_rectangle(x0, y0, x1, y1, fill='saddle brown')
-            canvas.create_text(x0+roomWidth//2,y0+roomHeight//2,text=app.groundList[row][col], fill='white')
+            room = app.groundList[row][col]
+            if room == 'Undiscovered':
+                color = 'white'
+            else:
+                color = 'black'
+            
+            if row == selectedRow and col == selectedCol:
+                if validMove(app, 'ground', app.currentPlayer, rows, cols, selectedRow, selectedCol):
+                    coloroom = 'green'
+                else:
+                    coloroom = 'red'
+                canvas.create_rectangle(x0, y0, x1, y1, fill=coloroom)
+            else:
+                canvas.create_rectangle(x0, y0, x1, y1, fill='saddle brown')
+            canvas.create_text(x0+roomWidth//2,y0+roomHeight//2,text=room, fill=color)
 
 # basement floor board
 def drawBasement(app,canvas):
-    rows = app.basementRows
-    cols = app.basementCols
+    rows, cols = app.basementRows, app.basementCols
+    selectedRow, selectedCol = app.basementSelection
     canvas.create_rectangle(0,0,app.width,app.height,fill='black')
     for row in range(rows):
         for col in range(cols):
             x0,y0,x1,y1 = getCellBounds(app, row, col, rows, cols, app.basementX, app.basementY)
             roomWidth = x1-x0
             roomHeight = y1-y0
-            canvas.create_rectangle(x0, y0, x1, y1)
-            canvas.create_text(x0+roomWidth//2,y0+roomHeight//2,text=app.basementList[row][col])
+            room = app.basementList[row][col]
+            if room == 'Undiscovered':
+                color = 'white'
+            else:
+                color = 'skyblue'
+
+            if row == selectedRow and col == selectedCol:
+                if validMove(app, 'basement', app.currentPlayer, rows, cols, selectedRow, selectedCol):
+                    coloroom = 'green'
+                else:
+                    coloroom = 'red'
+                canvas.create_rectangle(x0, y0, x1, y1, fill=coloroom)
+            else:
+                canvas.create_rectangle(x0, y0, x1, y1, fill='gray25')
+            canvas.create_text(x0+roomWidth//2,y0+roomHeight//2,text=room,fill=color)
 
 # upper floor board
 def drawUpper(app,canvas):
-    rows = app.upperRows
-    cols = app.upperCols
+    rows, cols = app.upperRows, app.upperCols
+    selectedRow, selectedCol = app.upperSelection
     canvas.create_rectangle(0,0,app.width,app.height,fill='black')
     for row in range(rows):
         for col in range(cols):
             x0,y0,x1,y1 = getCellBounds(app, row, col, rows, cols, app.upperX, app.upperY)
             roomWidth = x1-x0
             roomHeight = y1-y0
-            canvas.create_rectangle(x0, y0, x1, y1)
-            canvas.create_text(x0+roomWidth//2,y0+roomHeight//2,text=app.upperList[row][col])
+            room = app.upperList[row][col]
+            if room == 'Undiscovered':
+                color = 'white'
+            else:
+                color = 'blue'
+            if row == selectedRow and col == selectedCol:
+                if validMove(app, 'upper', app.currentPlayer, rows, cols, selectedRow, selectedCol):
+                    coloroom = 'green'
+                else:
+                    coloroom = 'red'
+                canvas.create_rectangle(x0, y0, x1, y1, fill=coloroom)
+            else:
+                canvas.create_rectangle(x0, y0, x1, y1,fill='burlywood')
+            canvas.create_text(x0+roomWidth//2,y0+roomHeight//2,text=room,fill=color)
 
 runApp(width=1440, height=775)
