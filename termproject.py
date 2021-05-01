@@ -228,18 +228,19 @@ def appStarted(app):
     setBasement(app)
     setUpper(app)
     setDiceRoll(app)
+    setCard(app)
     app.floorLists = {'ground':app.groundList, 'basement':app.basementList, 'upper':app.upperList}
     app.gameOver = False
 
 def setCharacters(app):
     app.message = None
     app.players = 0 # total number of players
-    app.player1 = {'number': 1, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'} # player 1 floor positions, current floor
-    app.player2 = {'number': 2, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'} # player 2 floor positions, current floor
-    app.player3 = {'number': 3, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'} # player 3 floor positions, current floor
-    app.player4 = {'number': 4, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'} # player 4 floor positions, current floor
-    app.player5 = {'number': 5, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'} # player 5 floor positions, current floor
-    app.player6 = {'number': 6, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'} # player 6 floor positions, current floor
+    app.player1 = {'number': 1, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'} # starting floor positions, current floor
+    app.player2 = {'number': 2, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'}
+    app.player3 = {'number': 3, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'}
+    app.player4 = {'number': 4, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'}
+    app.player5 = {'number': 5, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'}
+    app.player6 = {'number': 6, 'character': None, 'ground': (2,0), 'upper': (2,4), 'basement': (2,4), 'current': 'ground'}
     app.playerList = [app.player1, app.player2, app.player3, app.player4, app.player5, app.player6]
     app.index = 0
     app.currentPlayer = app.playerList[app.index]
@@ -248,7 +249,7 @@ def setCharacter(app):
     app.characterRows = 3
     app.characterCols = 4
     app.marginX = 50
-    app.marginY = 200
+    app.marginY = 150
     app.characters = [ [app.Brandon, app.Flash, app.Heather, app.Jenny], [app.Longfellow, app.Missy, app.Ox, app.Peter], [app.Rhinehardt, app.Vivian, app.Zoe, app.Zostra] ] # 4 by 3
     app.characterSelection = (-1,-1) # row and col of character grid
     app.characterSelected = None # actual character/player instance
@@ -297,6 +298,16 @@ def setDiceRoll(app):
     app.rollType = None
     app.result = 0
     app.target = 0
+
+def setCard(app):
+    app.type = None
+    app.currentCard = None
+    app.currentOmen = None
+    app.currentEvent = None
+    app.currentItem = None
+    app.omenSet = set()
+    app.eventSet = set()
+    app.itemSet = set()
 
 def currentPlayer(app):
     total = app.players
@@ -373,6 +384,7 @@ def hauntRoll(app):
         app.result += app.roll
     if app.result < app.hauntCount:
         app.haunt = True
+        app.mode = 'haunt'
     else:
         app.hauntCount += 1
         
@@ -494,7 +506,7 @@ def character_redrawAll(app,canvas):
     canvas.create_text(app.width//2, app.height-25, text='Use the left or down arrow keys to go back.', font='Arial 20 bold',fill=color)
 
     if app.invalidCharacterMessage != None:
-        canvas.create_text(app.width//2, app.height-125, text=app.invalidCharacterMessage,font=font,fill='red')
+        canvas.create_text(app.width//2, app.height-150, text=app.invalidCharacterMessage,font=font,fill='red')
 
 def character_keyPressed(app, event):
     if event.key == 'r':
@@ -520,9 +532,6 @@ def character_keyPressed(app, event):
         else:
             app.invalidCharacterMessage = 'Character has already been chosen, please go back and choose another character.'
 
-def character_mousePressed(app, event):
-    pass
-
 # GROUND FLOOR BOARD FUNCTIONS
 def ground_redrawAll(app,canvas):
     drawGround(app,canvas)
@@ -546,28 +555,34 @@ def ground_keyPressed(app,event):
         if validMove(app, 'ground', app.currentPlayer, rows, cols, selectedRow, selectedCol):
             if app.groundList[selectedRow][selectedCol] == 'Undiscovered':
                 room = random.choice(app.rooms)
-                while app.Ground not in room.floors:
+                while app.Ground not in room.floors and room not in app.Ground.rooms:
                     room = random.choice(app.rooms)
-                #if app.Ground not in room.floors:
-                #    pass
                 app.groundList[selectedRow][selectedCol] = room.name # set new room name / discover new room!
+                app.Ground.rooms.add(room)
                 if room.omen:
                     if not app.haunt:
                         app.rollType = 'omen'
-                        app.mode = 'rollDice'
-                        #hauntRoll(app)
+                        app.type = 'omen'
+                        app.mode = 'card'
+                        app.currentOmen = random.choice(app.omens)
+                        while app.currentOmen in app.omenSet:
+                            app.currentOmen = random.choice(app.omens)
+                            app.omenSet.add(app.currentOmen)
+                        app.currentCard = app.currentOmen
                 elif room.event:
+                    pass
                     print(room.name)
                 elif room.item:
+                    pass
                     print(room.name)
             elif app.groundList[selectedRow][selectedCol] == 'Grand Staircase':
                 app.currentPlayer['current'] = 'upper'
                 app.mode = 'upper'
             app.currentPlayer['ground'] = (selectedRow, selectedCol) # set player's new position
+            app.currentPlayer = currentPlayer(app) # next player's turn
             app.groundSelection = (-1,-1)
             app.groundSelected = None
-            app.currentPlayer = currentPlayer(app) # next player's turn
-            app.mode = app.currentPlayer['current']
+            #app.mode = app.currentPlayer['current']
 
 def ground_mousePressed(app,event):
     rows, cols = app.groundRows, app.groundCols
@@ -616,17 +631,17 @@ def basement_keyPressed(app,event):
                 if room.omen:
                     if not app.haunt:
                         app.rollType = 'omen'
-                        app.mode = 'rollDice'
+                        app.mode = 'card'
                         #hauntRoll(app)
                 elif room.event:
-                    print(room.name)
+                    pass
                 elif room.item:
-                    print(room.name)
+                    pass
             app.currentPlayer['basement'] = (selectedRow, selectedCol) # set player's new position
             app.basementSelection = (-1,-1)
             app.basementSelected = None
             app.currentPlayer = currentPlayer(app) # next player's turn
-            app.mode = app.currentPlayer['current']
+            #app.mode = app.currentPlayer['current']
 
 def basement_mousePressed(app,event):
     rows, cols = app.basementRows, app.basementCols
@@ -671,8 +686,11 @@ def upper_keyPressed(app,event):
                 if room.omen:
                     if not app.haunt:
                         app.rollType = 'omen'
-                        app.mode = 'rollDice'
+                        app.mode = 'card'
                         #hauntRoll(app)
+                    else:
+                        app.rollType = 'normal'
+                        app.mode = 'rollDice'
                 elif room.event:
                     print(room.name)
                 elif room.item:
@@ -684,7 +702,7 @@ def upper_keyPressed(app,event):
             app.upperSelection = (-1,-1)
             app.upperSelected = None
             app.currentPlayer = currentPlayer(app) # next player's turn
-            app.mode = app.currentPlayer['current']
+            #app.mode = app.currentPlayer['current']
 
 def upper_mousePressed(app,event):
     rows, cols = app.upperRows, app.upperCols
@@ -699,6 +717,7 @@ def upper_mousePressed(app,event):
         else:
             app.upperSelected = app.upperList[row][col]
 
+# ROLL DICE FUNCTIONS
 def rollDice_redrawAll(app,canvas):
     drawDice(app,canvas)
 
@@ -718,6 +737,57 @@ def rollDice_mousePressed(app,event):
         app.mode = app.currentPlayer['current']
 
 def rollDice_keyPressed(app,event):
+    if event.key == 'r':
+        app.mode = 'start'
+        appStarted(app)
+
+# CARD FUNCTIONS - OMENS, EVENTS, ITEMS
+def card_redrawAll(app,canvas):
+    drawCard(app,canvas)
+
+def card_mousePressed(app,canvas):
+    if app.type == 'omen':
+        app.mode = 'rollDice'
+
+def card_keyPressed(app,canvas):
+    if event.key == 'r':
+        app.mode = 'start'
+        appStarted(app)
+    else:
+        app.mode = 'rollDice'
+
+# HAUNT INTRO FUNCTIONS
+def hauntIntro_redrawAll(app,canvas):
+    drawHauntIntro(app,canvas)
+
+def hauntIntro_mousePressed(app,canvas):
+    app.mode = 'hauntTraitor'
+
+def hauntIntro_keyPressed(app,canvas):
+    if event.key == 'r':
+        app.mode = 'start'
+        appStarted(app)
+
+# HAUNT TRAITOR FUNCTIONS
+def hauntTraitor_redrawAll(app,canvas):
+    drawHauntTraitor(app,canvas)
+
+def hauntTraitor_mousePressed(app,canvas):
+    app.mode = 'hauntHeroes'
+
+def hauntTraitor_keyPressed(app,canvas):
+    if event.key == 'r':
+        app.mode = 'start'
+        appStarted(app)
+
+# HAUNT HEROES FUNCTIONS
+def hauntHeroes_redrawAll(app,canvas):
+    drawHauntHeroes(app,canvas)
+
+def hauntHeroes_mousePressed(app,canvas):
+    app.mode = app.currentPlayer['current']
+
+def hauntHeroes_keyPressed(app,canvas):
     if event.key == 'r':
         app.mode = 'start'
         appStarted(app)
@@ -878,6 +948,34 @@ def drawDice(app,canvas):
             canvas.create_text(cx,cy,text=dice[i],font="Arial 30")
 
 def drawCard(app,canvas): # omen, event, item
-    return 42
+    if app.type == 'omen':
+        text = 'OMEN'
+    elif app.type == 'event':
+        text = 'EVENT'
+    elif app.type == 'item':
+        text = 'ITEM'
+    canvas.create_rectangle(0,0,app.width,app.height,fill='black')
+    canvas.create_text(app.width//2, 50, text=text,font='Arial 30 bold',fill='white')
+    canvas.create_text(app.width//2, app.height//4, text=app.currentCard.name, font='Arial 26 bold', fill='white')
+    canvas.create_text(app.width//2, app.height//4+100, text=app.currentCard.description, font='Arial 20 bold', fill='white')
+    canvas.create_text(app.width//2, app.height-75, text='After you are finished reading, click to roll dice.',font='Arial 24 bold',fill='white')
+
+def drawHauntIntro(app,canvas):
+    canvas.create_rectangle(0,0,app.width,app.height,fill='black')
+    canvas.create_text(app.width//2, 50, text='Welcome to the Haunt Phase!',font='Arial 30 bold',fill='white')
+    canvas.create_text(app.width//2, app.height//4, text='One of you will become the traitor, while the rest will remain as heroes.', font='Arial 26 bold', fill='white')
+    canvas.create_text(app.width//2, app.height-75, text='Click to view the TRAITOR screen. ONLY the traitor may view this information.',font='Arial 24 bold',fill='white')
+
+def drawHauntTraitor(app,canvas):
+    canvas.create_rectangle(0,0,app.width,app.height,fill='black')
+    canvas.create_text(app.width//2, 50, text='You are the TRAITOR!',font='Arial 30 bold',fill='white')
+    canvas.create_text(app.width//2, app.height//4, text='You are trying to defeat the heroes.', font='Arial 26 bold', fill='white')
+    canvas.create_text(app.width//2, app.height-75, text='Click to view the HEROES screen. ONLY the heroes may view this information.',font='Arial 24 bold',fill='white')
+
+def drawHauntHeroes(app,canvas):
+    canvas.create_rectangle(0,0,app.width,app.height,fill='black')
+    canvas.create_text(app.width//2, 50, text='You are the HEROES!',font='Arial 30 bold',fill='white')
+    canvas.create_text(app.width//2, app.height//4, text='You are all trying to defeat the traitor.', font='Arial 26 bold', fill='white')
+    canvas.create_text(app.width//2, app.height-75, text="Click to return to the first player's current floor.",font='Arial 24 bold',fill='white')
 
 runApp(width=1440, height=775)
