@@ -61,7 +61,7 @@ class Floor(object):
     def __init__(self,name,floor):
         self.name = name
         self.floor = floor
-        self.rooms = []
+        self.rooms = set()
 
 class Omen(object):
     def __init__(self, name, description):
@@ -85,6 +85,12 @@ class Room(object):
         self.omen = omen # does it have omen? boolean
         self.event = event # does it have event? boolean
         self.item = item # does it have item? boolean
+
+class Haunt(object):
+    def __init__(self,name,description):
+        self.name = name
+        self.traitorDescription = description['traitor']
+        self.heroDescription = description['hero']
 
 # 'name', mightlist, mightIndex, speedlist, speedIndex, knowledgelist, knowledgeIndex, sanitylist, sanityIndex, color, age, birthday, hobbies
 #traits = {'mightList': [0,2,2,3,3,4,4,6,7], 'mightIndex': 4, 'speedList': [0,4,4,4,4,5,6,8,8], 'speedIndex': '4', 'knowledgeList': [0,1,2,3,4,4,5,5,5], 'knowledgeIndex': 3, 'sanityList': [0,3,4,5,5,6,6,7,8], 'sanityIndex': 3}
