@@ -1,3 +1,8 @@
+# CATHERINE CAI 15-112 TERM PROJECT
+# SPRING 2021
+
+# CLASS HELPER FILE
+
 from dataclasses import make_dataclass
 
 class Player(object):
@@ -34,13 +39,13 @@ class Player(object):
         self.status = True # alive, not dead
         self.role = True # explorer/hero, not traitor
     
-    def changeTrait(self, traitValue, trait, change):
+    def changeTrait(self, traitValue, trait, change, haunt):
         index = self.traitIndex[trait]
         index += change
-        if not app.haunt:
-            if 0 <= index <= 8:
+        if not haunt:
+            if 1 <= index <= 8:
                 self.traitIndex[trait] += change
-                traitValue = traitList[self.traitIndex[trait]]
+                traitValue = self.traitList[trait][self.traitIndex[trait]]
             else:
                 index -= change
         else:
@@ -48,13 +53,9 @@ class Player(object):
                 self.status = False
             elif index <= 8:
                 self.traitIndex[trait] += change
-                traitValue = traitList[self.traitIndex[trait]]
+                traitValue = self.traitList[trait][self.traitIndex[trait]]
             else:
                 index -= change
-
-    def attemptRole(self, trait):
-        if trait == "might":
-            dice = self.might
 
 class Floor(object):
     def __init__(self,name):
