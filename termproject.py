@@ -31,7 +31,7 @@ def setPlayers(app):
     app.Zoe = Player('Zoe Ingstrom', {'might': [0,2,2,3,3,4,4,6,7], 'speed': [0,4,4,4,4,5,6,8,8], 'knowledge': [0,1,2,3,4,4,5,5,5], 'sanity': [0,3,4,5,5,6,6,7,8]}, {'might': 4, 'speed': 4, 'knowledge': 3, 'sanity': 3}, 'yellow', 8, 'November 5th', 'Dolls, Music')
     app.Zostra = Player('Madame Zostra', {'might': [0,2,3,3,4,5,5,5,6], 'speed': [0,2,3,3,5,5,6,6,7], 'knowledge': [0,1,3,4,4,4,5,6,6], 'sanity': [0,4,4,4,5,6,7,8,8]}, {'might': 4, 'speed': 3, 'knowledge': 4, 'sanity': 3}, 'deep sky blue', 37, 'December 10th', 'Astrology, Cooking, Baseball')
     app.Longfellow = Player('Professor Longfellow', {'might': [0,1,2,3,4,5,5,6,6], 'speed': [0,2,2,4,4,5,5,6,6], 'knowledge': [0,4,5,5,5,5,6,7,8], 'sanity': [0,1,3,3,4,5,5,6,7]}, {'might': 3, 'speed': 4, 'knowledge': 5, 'sanity': 3}, 'white', 57, 'July 27th', 'Gaelic Music, Drama, Fine Wines')
-    app.Flash = Player('Darrin "Flash" Williams', {'might': [0,2,3,3,4,5,6,6,7], 'speed': [0,4,4,4,5,6,7,7,8], 'knowledge': [0,2,3,3,4,5,5,5,7], 'sanity': [0,1,2,3,4,5,5,5,7]}, {'might': 3, 'speed': 5, 'knowledge': 3, 'sanity': 3}, 'red', 20, 'June 6th', 'Track, Music, Shakespearean Literature')
+    app.Flash = Player('Darrin "Flash" Williams', {'might': [0,2,3,3,4,5,6,6,7], 'speed': [0,4,4,4,5,6,7,7,8], 'knowledge': [0,2,3,3,4,5,5,5,7], 'sanity': [0,1,2,3,4,5,5,5,7]}, {'might': 3, 'speed': 5, 'knowledge': 3, 'sanity': 3}, 'indian red', 20, 'June 6th', 'Track, Music, Shakespearean Literature')
     app.Jenny = Player('Jenny LeClerc', {'might': [0,3,4,4,4,4,5,6,8], 'speed': [0,2,3,4,4,4,5,6,8], 'knowledge': [0,2,3,3,4,4,5,6,8], 'sanity': [0,1,1,2,4,4,4,5,6]}, {'might': 3, 'speed': 4, 'knowledge': 3, 'sanity': 5}, 'purple1', 21, 'March 4th', 'Reading, Soccer')
     app.Brandon = Player('Brandon Jaspers', {'might': [0,2,3,3,4,5,6,6,7], 'speed': [0,3,4,4,4,5,6,7,8], 'knowledge': [0,1,3,3,5,5,6,6,7], 'sanity': [0,3,3,3,4,5,6,7,8]}, {'might': 4, 'speed': 3, 'knowledge': 3, 'sanity': 4}, 'green2', 12, 'May 21st', 'Computers, Camping, Hockey')
     app.Vivian = Player('Vivian Lopez', {'might': [0,2,2,2,4,4,5,6,6], 'speed': [0,3,4,4,4,4,6,7,8], 'knowledge': [0,4,5,5,5,5,6,6,7], 'sanity': [0,4,4,4,5,6,7,8,8]}, {'might': 3, 'speed': 4,  'knowledge': 4,  'sanity': 3}, 'deep sky blue', 42, 'January 11th', 'Old Movies, Horses')
@@ -39,7 +39,7 @@ def setPlayers(app):
     app.Rhinehardt = Player('Father Rhinehardt', {'might': [0,1,2,2,4,4,5,5,7], 'speed': [0,2,3,3,4,5,6,7,7], 'knowledge': [0,1,3,3,4,5,6,6,8], 'sanity': [0,3,4,5,5,6,7,7,8]}, {'might': 3, 'speed': 3, 'knowledge': 4, 'sanity': 5}, 'white', 62, 'April 29th', 'Fencing, Gardening')
     app.Heather = Player('Heather Granville', {'might': [0,3,3,3,4,5,6,7,8], 'speed': [0,3,3,4,5,6,6,7,8], 'knowledge': [0,2,3,3,4,5,6,7,8], 'sanity': [0,3,3,3,4,5,6,6,6]}, {'might': 3, 'speed': 3, 'knowledge': 5, 'sanity': 3}, 'purple1', 18, 'August 2nd', 'Television, Shopping')
     app.Peter = Player('Peter Akimoto', {'might': [0,2,3,3,4,5,5,6,8], 'speed': [0,3,3,3,4,6,6,7,7], 'knowledge': [0,3,4,4,5,6,7,7,8], 'sanity': [0,3,4,4,4,5,6,6,7]}, {'might': 3, 'speed': 4,  'knowledge': 3, 'sanity': 4}, 'green2', 13, 'September 3rd', 'Bugs, Basketball')
-    app.Ox = Player('Ox Bellows', {'might': [0,4,5,5,6,6,7,8,8], 'speed': [0,2,2,2,3,4,5,5,6], 'knowledge': [0,2,2,3,3,5,5,6,6], 'sanity': [0,2,2,3,4,5,5,6,7]}, {'might': 3,  'speed': 5,  'knowledge': 3, 'sanity': 3}, 'red', 23, 'October 18th', 'Football, Shiny Objects')
+    app.Ox = Player('Ox Bellows', {'might': [0,4,5,5,6,6,7,8,8], 'speed': [0,2,2,2,3,4,5,5,6], 'knowledge': [0,2,2,3,3,5,5,6,6], 'sanity': [0,2,2,3,4,5,5,6,7]}, {'might': 3,  'speed': 5,  'knowledge': 3, 'sanity': 3}, 'indian red', 23, 'October 18th', 'Football, Shiny Objects')
     app.Death = ('Death', {'might':[1,1,1,1,1,1,1,1,1], 'speed':[0,0,0,0,0,0,0,0,0],'knowledge':[0,1,2,3,4,5,6,7,8], 'sanity': [1,1,1,1,1,1,1,1,1]}, {'might': 8, 'speed': 8, 'knowledge': 8, 'sanity': 8}, 'gray25', 'Beginning of time', 'Chess')
 # Player template
 #Player = Player('name', {mightList, speedList, knowledgeList, sanityList}, {mightIndex, speedIndex, knowledgeIndex, sanityIndex}, color, age, birthday, hobbies)
@@ -211,7 +211,8 @@ def setUp(app): # general setup: rooms, omens, events, items
                 app.Music, app.Medical, app.Lucky, app.Idol, app.Healing, app.Dynamite, app.Dice, app.Candle, 
             app.Bottle, app.Blood_Dagger, app.Bell, app.Axe, app.Armor, app.Angel, app.Amulet, app.Adrenaline]
 
-def setHaunt(app): # maybe another file, especially for more haunts
+def setHaunt(app):
+    app.traitor = {'character': None, 'number': None}
     app.heroText1 = heroText1
     app.heroText2 = heroText2
     app.heroText3 = heroText3
@@ -406,13 +407,18 @@ def hauntRoll(app):
         app.playerList[app.players]['character'] = app.Death
         bestKnowledge = None
         bestPlayer = None
+        bestNumber = None
         for i in range(app.players):
             player = app.playerList[i]['character']
             knowledge = app.playerList[i]['character'].knowledge
             if bestKnowledge == None or knowledge > bestKnowledge:
                 bestKnowledge = knowledge
                 bestPlayer = player
-        bestPlayer['character'].role = False # player with highest knowledge is now traitor
+                bestNumber = app.playerList[i]['number']
+        bestPlayer.role = False # player with highest knowledge is now traitor
+        app.traitor['character'] = bestPlayer
+        app.traitor['number'] = bestNumber
+        app.mode = 'hauntInfo'
         # during haunt if rollDice for game with death is ever true, heroes win
         # if all players have at least one trait at zero, traitor wins
         # if rollDice:
@@ -479,10 +485,6 @@ def set_keyPressed(app,event):
         app.message = 'Not valid input'
     else:
         app.message = 'Not valid number of players, please choose again.'
-    
-    #if app.players != 0:
-    #    app.playerList = app.playerList[0:app.players]
-    #    print(app.playerList)
 
 # CHARACTER SELECTION FUNCTION
 def characters_redrawAll(app, canvas):
@@ -569,6 +571,7 @@ def ground_redrawAll(app,canvas):
     drawGround(app,canvas)
     canvas.create_text(20, 25, text='GROUND FLOOR',font='Arial 20 bold',fill='white', anchor='w')
     informationText(app,canvas)
+    drawPlayerPositions(app,canvas)
     
 def ground_keyPressed(app,event):
     rows, cols = app.groundRows, app.groundCols
@@ -578,24 +581,15 @@ def ground_keyPressed(app,event):
         app.mode = 'start'
         appStarted(app)
     elif event.key == 'Right':
-        #app.currentPlayer['current'] = app.Upper.floor
         app.mode = 'upper'
     elif event.key == 'Left':
-        #app.currentPlayer['current'] = app.Basement.floor
         app.mode = 'basement'
     elif event.key == 'c':
         if validMove(app, 'ground', app.currentPlayer, rows, cols, selectedRow, selectedCol):
             if app.groundList[selectedRow][selectedCol] == 'Undiscovered':
                 room = app.rooms[random.randrange(len(app.rooms))]
-                print(f'First Choice: {room.name}')
-                for c in room.floors:
-                    print(f'First Choice floor: {c.name}')
                 while app.Ground not in room.floors or room in app.Ground.rooms: # checking if room is a ground floor room and if already discovered (prevent repeat rooms)
-                    #while app.Ground not in room.floors and room in app.Ground.rooms:
                     room = app.rooms[random.randrange(len(app.rooms))]
-                    print(f'Reroll: {room.name}')
-                    for c in room.floors:
-                        print(f'Reroll Floor: {c.name}')
                 app.groundList[selectedRow][selectedCol] = room.name # set new room name / discover new room!
                 app.Ground.rooms.add(room)
                 app.rooms.remove(room)
@@ -605,9 +599,10 @@ def ground_keyPressed(app,event):
                         app.type = 'omen'
                         app.mode = 'card' # set screen to view omen information
                         app.currentOmen = random.choice(app.omens)
-                        while app.currentOmen in app.omenSet: # if omen already in set, choose another random omen
+                        while app.currentOmen in app.omenSet: # until omen not in set, choose another random omen
                             app.currentOmen = random.choice(app.omens)
-                        app.omenSet.add(app.currentOmen)
+                        app.omenSet.add(app.currentOmen) # add omen to set
+                        app.omens.remove(app.currentOmen) # remove from original list
                         app.currentCard = app.currentOmen
                     else:
                         app.rollType = 'normal' # set roll type to omen, in order for hauntroll
@@ -639,6 +634,9 @@ def ground_keyPressed(app,event):
             elif app.groundList[selectedRow][selectedCol] == 'Grand Staircase':
                 app.currentPlayer['current'] = 'upper'
                 app.mode = 'upper'
+            elif app.groundList[selectedRow][selectedCol] == 'Coal Chute':
+                app.currentPlayer['current'] = 'basement'
+                app.mode = 'basement'
             app.currentPlayer['ground'] = (selectedRow, selectedCol) # set player's new position
             app.currentPlayer = currentPlayer(app) # next player's turn
             app.groundSelection = (-1,-1)
@@ -734,6 +732,9 @@ def basement_keyPressed(app,event):
                         app.currentItem = random.choice(app.items)
                     app.itemSet.add(app.currentItem)
                     app.currentCard = app.currentItem
+            elif app.basementList[selectedRow][selectedCol] == 'Stairs from Basement':
+                app.currentPlayer['current'] = 'ground'
+                app.currentPlayer['ground'] = (2,1) # can use stairs go to foyer, but cannot go from foyer to basement
             app.currentPlayer['basement'] = (selectedRow, selectedCol) # set player's new position
             app.basementSelection = (-1,-1)
             app.basementSelected = None
@@ -769,7 +770,6 @@ def upper_keyPressed(app,event):
     #elif event.key == 'Right':
     #    app.mode = 'basement'
     elif event.key == 'Left':
-        #app.currentPlayer['current'] = app.Ground.floor
         app.mode = 'ground'
     elif event.key == 'c':
         if validMove(app, 'upper', app.currentPlayer, rows, cols, selectedRow, selectedCol):
@@ -779,7 +779,6 @@ def upper_keyPressed(app,event):
                 #for c in room.floors:
                 #    print(f'First Choice floor: {c.name}')
                 while app.Upper not in room.floors or room in app.Upper.rooms: # checking if room is a ground floor room and if already discovered (prevent repeat rooms)
-                    #while app.Ground not in room.floors and room in app.Ground.rooms:
                     room = app.rooms[random.randrange(len(app.rooms))]
                 #    print(f'Reroll: {room.name}')
                 #    for c in room.floors:
@@ -1060,11 +1059,38 @@ def drawUpper(app,canvas):
                 canvas.create_rectangle(x0, y0, x1, y1,fill='burlywood')
             canvas.create_text(x0+roomWidth//2,y0+roomHeight//2,text=room,fill=color)
 
+def drawPlayerPositions(app,canvas):
+    if app.currentPlayer['current'] == 'ground':
+        rows, cols = app.groundRows, app.groundCols
+        selectedRow, selectedCol = app.groundSelection
+        floorList = app.groundList
+    elif app.currentPlayer['current'] == 'basement':
+        rows, cols = app.basementRows, app.basementCols
+        selectedRow, selectedCol = app.basementSelection
+        floorList = app.basementList
+    else:
+        rows, cols = app.upperRows, app.upperCols
+        selectedRow, selectedCol = app.upperSelection
+        floorList = app.upperList
+
+    pos = {0: (10,10), 1: (75,10), 2: (145,10), 3: (10,105), 4: (75,105), 5: (145,105)}
+    
+    for row in range(rows):
+        for col in range(cols):
+            x0,y0,x1,y1 = getCellBounds(app, row, col, rows, cols, app.upperX, app.upperY)
+            roomWidth = x1-x0
+            roomHeight = y1-y0
+            room = floorList[row][col]
+            for i in range(app.players):
+                x, y = pos[i]
+                positionRow, positionCol = app.playerList[i][app.playerList[i]['current']]
+                if row == positionRow and col == positionCol:
+                    if app.playerList[i]['character'] != None: # only draw however many players there are
+                        canvas.create_text(x0+x, y0+y, text=app.playerList[i]['number'],fill=app.playerList[i]['character'].color)
+
 def informationText(app,canvas):
     font = 'Arial 18 bold'
     color = 'white'
-    #canvas.create_text(20, app.height-25, text=f"CURRENT PLAYER: {app.currentPlayer['number']}, CHARACTER: {app.currentPlayer['character'].name}, PLAYER SPEED: {app.currentPlayer['character'].speed}", 
-    #        font=font, fill=color, anchor='w')
     canvas.create_text(app.width//2, app.height-25, text=f"CURRENT PLAYER: Player {app.currentPlayer['number']}, CHARACTER: {app.currentPlayer['character'].name}, Player SPEED: {app.currentPlayer['character'].speed}", 
             font=font, fill=color)
     canvas.create_text(app.width-20, 25, text='Red denotes invalid moves, while green denotes valid moves. To confirm position, press "C".',font=font, fill=color, anchor='e')
@@ -1114,6 +1140,7 @@ def drawHauntIntro(app,canvas):
     canvas.create_rectangle(0,0,app.width,app.height,fill='black')
     canvas.create_text(app.width//2, 50, text='Welcome to the Haunt Phase!',font='Arial 30 bold',fill='white')
     canvas.create_text(app.width//2, app.height//4, text='One of you will become the traitor, while the rest will remain as heroes.', font='Arial 26 bold', fill='white')
+    canvas.create_text(app.width//2, app.height-125, text=f"Player {app.traitor['number']} is the TRAITOR.", font='Arial 26 bold', fill='white')
     canvas.create_text(app.width//2, app.height-75, text='Click to view the TRAITOR screen. ONLY the traitor may view this information.',font='Arial 24 bold',fill='white')
 
 def drawHauntTraitor(app,canvas):
@@ -1175,5 +1202,8 @@ def drawHauntHeroes(app,canvas):
     for i in range(len(app.heroText6)):
         canvas.create_text(app.width//2 + 60, app.height*(i+2)//35 + app.height*6//10, 
             text=app.heroText6[i], font="Arial 14 bold",fill='white', anchor='w')
+
+def drawHauntRoll(app,canvas):
+    return 42
 
 runApp(width=1440, height=775)
