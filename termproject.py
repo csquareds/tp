@@ -95,7 +95,7 @@ def setRooms(app):
     app.Gardens = Room('Gardens', [app.Ground], False, True, False)
     app.Library = Room('Library', [app.Upper, app.Ground], False, True, False)
     app.Master = Room('Master Bedroom', [app.Upper], True, False, False)
-    app.Mystic = Room('Mystic Elevator', [app.Upper, app.Ground, app.Basement], False, False, False)
+    app.Mystic = Room('Mystic Room', [app.Upper, app.Ground, app.Basement], False, False, False)
     app.Servant = Room("Servants' Quarters", [app.Upper, app.Basement], True, False, False)
     app.StairsBasement = Room('Stairs from Basement', [app.Basement], False, False, False)
     app.Statuary = Room('Statuary Corridor', [app.Upper, app.Ground, app.Basement], False, True, False)
@@ -231,7 +231,6 @@ def appStarted(app):
     app.mode = 'start'
     app.image = app.loadImage('bahoth.jpeg') # start screen image
     app.hauntCount = 0 # haunt count
-    app.omenCount = 0
     app.haunt = False # haunt phase
     setFloors(app)
     setRooms(app)
@@ -291,7 +290,7 @@ def setGround(app):
 
 def setBasement(app):
     app.basementRows = 5
-    app.basementCols = 9
+    app.basementCols = 8
     app.basementX = 100 # basement marginX
     app.basementY = 100 # basement marginY
     app.basementList = [ [app.Empty.name]*app.basementCols for row in range(app.basementRows)]
@@ -397,7 +396,6 @@ def hauntRoll(app):
     app.mode = 'rollDice'
     app.result = 0
     app.target = app.hauntCount
-    app.omenCount += 1
     for i in range(6):
         app.roll = app.die[random.randint(0,5)]
         app.dice[i] = app.roll
@@ -550,14 +548,12 @@ def character_keyPressed(app, event):
         app.mode = 'characters' # back to characters grid
         app.characterSelection = (-1,-1)# reset selected row, col
         app.characterSelected = None # and selected character
-    elif event.key == 'Right': # to debug rn
-        app.mode = 'ground'
     elif event.key == 'y':
         if app.characterSelected not in app.selectedCharacters:
             if app.currentPlayer['number'] < app.players:
                 app.mode = 'characters'
             else:
-                app.mode = 'ground'
+                app.mode = 'rules'
             app.selectedCharacters.add(app.characterSelected)
             app.currentPlayer['character'] = app.characterSelected
             app.currentPlayer = currentPlayer(app)
@@ -566,12 +562,24 @@ def character_keyPressed(app, event):
         else:
             app.invalidCharacterMessage = 'Character has already been chosen, please go back and choose another character.'
 
+# RULES FUNCTIONS
+def rules_redrawAll(app,canvas):
+    drawRules(app,canvas)
+
+def rules_keyPressed(app,event):
+    if event.key == 'r':
+        app.mode = 'start'
+        appStarted(app)
+
+def rules_mousePressed(app,event):
+    app.mode = 'ground'
+
 # GROUND FLOOR BOARD FUNCTIONS
 def ground_redrawAll(app,canvas):
     drawGround(app,canvas)
     canvas.create_text(20, 25, text='GROUND FLOOR',font='Arial 20 bold',fill='white', anchor='w')
     informationText(app,canvas)
-    drawPlayerPositions(app,canvas)
+    drawGroundPositions(app,canvas)
     
 def ground_keyPressed(app,event):
     rows, cols = app.groundRows, app.groundCols
@@ -593,50 +601,13 @@ def ground_keyPressed(app,event):
                 app.groundList[selectedRow][selectedCol] = room.name # set new room name / discover new room!
                 app.Ground.rooms.add(room)
                 app.rooms.remove(room)
-                if room.omen:
-                    if not app.haunt:
-                        app.rollType = 'omen' # set roll type to omen, in order for hauntroll
-                        app.type = 'omen'
-                        app.mode = 'card' # set screen to view omen information
-                        app.currentOmen = random.choice(app.omens)
-                        while app.currentOmen in app.omenSet: # until omen not in set, choose another random omen
-                            app.currentOmen = random.choice(app.omens)
-                        app.omenSet.add(app.currentOmen) # add omen to set
-                        app.omens.remove(app.currentOmen) # remove from original list
-                        app.currentCard = app.currentOmen
-                    else:
-                        app.rollType = 'normal' # set roll type to omen, in order for hauntroll
-                        app.type = 'omen'
-                        app.mode = 'card' # set screen to view omen information
-                        app.currentOmen = random.choice(app.omens)
-                        while app.currentOmen in app.omenSet:
-                            app.currentOmen = random.choice(app.omens)
-                        app.omenSet.add(app.currentOmen)
-                        app.currentCard = app.currentOmen
-                elif room.event:
-                    app.rollType = 'normal'
-                    app.type = 'event'
-                    app.mode = 'card' # set screen to view event information
-                    app.currentEvent = random.choice(app.events)
-                    while app.currentEvent in app.eventSet:
-                        app.currentEvent = random.choice(app.events)
-                    app.eventSet.add(app.currentEvent)
-                    app.currentCard = app.currentEvent
-                elif room.item:
-                    app.rollType = 'normal'
-                    app.type = 'item'
-                    app.mode = 'card' # set screen to view item information
-                    app.currentItem = random.choice(app.items)
-                    while app.currentItem in app.itemSet:
-                        app.currentItem = random.choice(app.items)
-                    app.itemSet.add(app.currentItem)
-                    app.currentCard = app.currentItem
+                cards(app,room)
             elif app.groundList[selectedRow][selectedCol] == 'Grand Staircase':
                 app.currentPlayer['current'] = 'upper'
-                app.mode = 'upper'
+                #app.mode = 'upper'
             elif app.groundList[selectedRow][selectedCol] == 'Coal Chute':
                 app.currentPlayer['current'] = 'basement'
-                app.mode = 'basement'
+                #app.mode = 'basement'
             app.currentPlayer['ground'] = (selectedRow, selectedCol) # set player's new position
             app.currentPlayer = currentPlayer(app) # next player's turn
             app.groundSelection = (-1,-1)
@@ -666,6 +637,7 @@ def basement_redrawAll(app,canvas):
     drawBasement(app,canvas)
     canvas.create_text(20, 25, text='BASEMENT',font='Arial 20 bold',fill='white', anchor='w')
     informationText(app,canvas)
+    drawBasementPositions(app,canvas)
     
 def basement_keyPressed(app,event):
     rows, cols = app.basementRows, app.basementCols
@@ -675,7 +647,6 @@ def basement_keyPressed(app,event):
         app.mode = 'start'
         appStarted(app)
     elif event.key == 'Right':
-        #app.currentPlayer['current'] = app.Ground.floor
         app.mode = 'ground'
     #elif event.key == 'Left':
     #    app.mode = 'upper'
@@ -683,55 +654,12 @@ def basement_keyPressed(app,event):
         if validMove(app, 'basement', app.currentPlayer, rows, cols, selectedRow, selectedCol):
             if app.basementList[selectedRow][selectedCol] == 'Undiscovered':
                 room = app.rooms[random.randrange(len(app.rooms))]
-                #print(f'First Choice: {room.name}')
-                #for c in room.floors:
-                #    print(f'First Choice floor: {c.name}')
                 while app.Basement not in room.floors or room in app.Basement.rooms: # checking if room is a ground floor room and if already discovered (prevent repeat rooms)
-                    #while app.Ground not in room.floors and room in app.Ground.rooms:
                     room = app.rooms[random.randrange(len(app.rooms))]
-                #    print(f'Reroll: {room.name}')
-                #    for c in room.floors:
-                #        print(f'Reroll Floor: {c.name}')
                 app.basementList[selectedRow][selectedCol] = room.name # set new room name / discover new room!
                 app.Basement.rooms.add(room)
                 app.rooms.remove(room)
-                if room.omen:
-                    if not app.haunt:
-                        app.rollType = 'omen' # set roll type to omen, in order for hauntroll
-                        app.type = 'omen'
-                        app.mode = 'card' # set screen to view omen information
-                        app.currentOmen = random.choice(app.omens)
-                        while app.currentOmen in app.omenSet: # if omen already in set, choose another random omen
-                            app.currentOmen = random.choice(app.omens)
-                        app.omenSet.add(app.currentOmen)
-                        app.currentCard = app.currentOmen
-                    else:
-                        app.rollType = 'normal' # set roll type to omen, in order for hauntroll
-                        app.type = 'omen'
-                        app.mode = 'card' # set screen to view omen information
-                        app.currentOmen = random.choice(app.omens)
-                        while app.currentOmen in app.omenSet:
-                            app.currentOmen = random.choice(app.omens)
-                        app.omenSet.add(app.currentOmen)
-                        app.currentCard = app.currentOmen
-                elif room.event:
-                    app.rollType = 'normal'
-                    app.type = 'event'
-                    app.mode = 'card' # set screen to view event information
-                    app.currentEvent = random.choice(app.events)
-                    while app.currentEvent in app.eventSet:
-                        app.currentEvent = random.choice(app.events)
-                    app.eventSet.add(app.currentEvent)
-                    app.currentCard = app.currentEvent
-                elif room.item:
-                    app.rollType = 'normal'
-                    app.type = 'item'
-                    app.mode = 'card' # set screen to view item information
-                    app.currentItem = random.choice(app.items)
-                    while app.currentItem in app.itemSet:
-                        app.currentItem = random.choice(app.items)
-                    app.itemSet.add(app.currentItem)
-                    app.currentCard = app.currentItem
+                cards(app,room)
             elif app.basementList[selectedRow][selectedCol] == 'Stairs from Basement':
                 app.currentPlayer['current'] = 'ground'
                 app.currentPlayer['ground'] = (2,1) # can use stairs go to foyer, but cannot go from foyer to basement
@@ -759,6 +687,7 @@ def upper_redrawAll(app,canvas):
     drawUpper(app,canvas)
     canvas.create_text(20, 25, text='UPPER FLOOR',font='Arial 20 bold',fill='white',anchor='w')
     informationText(app,canvas)
+    drawUpperPositions(app,canvas)
 
 def upper_keyPressed(app,event):
     rows, cols = app.upperRows, app.upperCols
@@ -767,65 +696,20 @@ def upper_keyPressed(app,event):
     if event.key == 'r':
         app.mode = 'start'
         appStarted(app)
-    #elif event.key == 'Right':
-    #    app.mode = 'basement'
     elif event.key == 'Left':
         app.mode = 'ground'
     elif event.key == 'c':
         if validMove(app, 'upper', app.currentPlayer, rows, cols, selectedRow, selectedCol):
             if app.upperList[selectedRow][selectedCol] == 'Undiscovered':
                 room = app.rooms[random.randrange(len(app.rooms))]
-                #print(f'First Choice: {room.name}')
-                #for c in room.floors:
-                #    print(f'First Choice floor: {c.name}')
                 while app.Upper not in room.floors or room in app.Upper.rooms: # checking if room is a ground floor room and if already discovered (prevent repeat rooms)
                     room = app.rooms[random.randrange(len(app.rooms))]
-                #    print(f'Reroll: {room.name}')
-                #    for c in room.floors:
-                #        print(f'Reroll Floor: {c.name}')
                 app.upperList[selectedRow][selectedCol] = room.name # set new room name / discover new room!
                 app.Upper.rooms.add(room)
                 app.rooms.remove(room)
-                if room.omen:
-                    if not app.haunt:
-                        app.rollType = 'omen' # set roll type to omen, in order for hauntroll
-                        app.type = 'omen'
-                        app.mode = 'card' # set screen to view omen information
-                        app.currentOmen = random.choice(app.omens)
-                        while app.currentOmen in app.omenSet: # if omen already in set, choose another random omen
-                            app.currentOmen = random.choice(app.omens)
-                        app.omenSet.add(app.currentOmen)
-                        app.currentCard = app.currentOmen
-                    else:
-                        app.rollType = 'normal' # set roll type to omen, in order for hauntroll
-                        app.type = 'omen'
-                        app.mode = 'card' # set screen to view omen information
-                        app.currentOmen = random.choice(app.omens)
-                        while app.currentOmen in app.omenSet:
-                            app.currentOmen = random.choice(app.omens)
-                        app.omenSet.add(app.currentOmen)
-                        app.currentCard = app.currentOmen
-                elif room.event:
-                    app.rollType = 'normal'
-                    app.type = 'event'
-                    app.mode = 'card' # set screen to view event information
-                    app.currentEvent = random.choice(app.events)
-                    while app.currentEvent in app.eventSet:
-                        app.currentEvent = random.choice(app.events)
-                    app.eventSet.add(app.currentEvent)
-                    app.currentCard = app.currentEvent
-                elif room.item:
-                    app.rollType = 'normal'
-                    app.type = 'item'
-                    app.mode = 'card' # set screen to view item information
-                    app.currentItem = random.choice(app.items)
-                    while app.currentItem in app.itemSet:
-                        app.currentItem = random.choice(app.items)
-                    app.itemSet.add(app.currentItem)
-                    app.currentCard = app.currentItem
+                cards(app,room)
             elif app.upperList[selectedRow][selectedCol] == 'Upper Landing':
                 app.currentPlayer['current'] = 'ground'
-                app.mode = 'ground'
             app.currentPlayer['upper'] = (selectedRow, selectedCol) # set player's new position
             app.upperSelection = (-1,-1)
             app.upperSelected = None
@@ -940,6 +824,49 @@ def hauntHeroes_keyPressed(app,event):
         appStarted(app)
     elif event.key == 'Left' or event.key == 'Down':
         app.mode = 'hauntTraitor'
+
+def cards(app,room):
+    if room.omen:
+        if app.omenSet != set():
+            if not app.haunt:
+                app.rollType = 'omen' # set roll type to omen, in order for hauntroll
+                app.type = 'omen'
+                app.mode = 'card' # set screen to view omen information
+                app.currentOmen = random.choice(app.omens)
+                while app.currentOmen in app.omenSet: # until omen not in set/seen before, choose another random omen
+                    app.currentOmen = random.choice(app.omens)
+                app.omenSet.add(app.currentOmen) # add omen to set
+                app.omens.remove(app.currentOmen) # remove from original list
+                app.currentCard = app.currentOmen
+            else:
+                app.rollType = 'normal' # set roll type to omen, in order for hauntroll
+                app.type = 'omen'
+                app.mode = 'card' # set screen to view omen information
+                app.currentOmen = random.choice(app.omens)
+                while app.currentOmen in app.omenSet:
+                    app.currentOmen = random.choice(app.omens)
+                app.omenSet.add(app.currentOmen)
+                app.currentCard = app.currentOmen
+    elif room.event:
+        if app.eventSet != set():
+            app.rollType = 'normal'
+            app.type = 'event'
+            app.mode = 'card' # set screen to view event information
+            app.currentEvent = random.choice(app.events)
+            while app.currentEvent in app.eventSet: # until event not in set/seen before, choose another random event
+                app.currentEvent = random.choice(app.events)
+            app.eventSet.add(app.currentEvent)
+            app.currentCard = app.currentEvent
+    elif room.item:
+        if app.itemSet != set():
+            app.rollType = 'normal'
+            app.type = 'item'
+            app.mode = 'card' # set screen to view item information
+            app.currentItem = random.choice(app.items)
+            while app.currentItem in app.itemSet: # until item not in set/seen before, choose another random item
+                app.currentItem = random.choice(app.items)
+            app.itemSet.add(app.currentItem)
+            app.currentCard = app.currentItem
 
 # cell bounds for grids
 def getCellBounds(app, row, col, rows, cols, marginX, marginY):
@@ -1059,43 +986,39 @@ def drawUpper(app,canvas):
                 canvas.create_rectangle(x0, y0, x1, y1,fill='burlywood')
             canvas.create_text(x0+roomWidth//2,y0+roomHeight//2,text=room,fill=color)
 
-def drawPlayerPositions(app,canvas):
-    if app.currentPlayer['current'] == 'ground':
-        rows, cols = app.groundRows, app.groundCols
-        selectedRow, selectedCol = app.groundSelection
-        floorList = app.groundList
-    elif app.currentPlayer['current'] == 'basement':
-        rows, cols = app.basementRows, app.basementCols
-        selectedRow, selectedCol = app.basementSelection
-        floorList = app.basementList
-    else:
-        rows, cols = app.upperRows, app.upperCols
-        selectedRow, selectedCol = app.upperSelection
-        floorList = app.upperList
+def drawGroundPositions(app,canvas):
+    rows, cols = app.groundRows, app.groundCols
+    drawPlayerPositions(app,canvas,'ground',rows,cols)
 
+def drawBasementPositions(app,canvas):
+    rows, cols = app.basementRows, app.basementCols
+    drawPlayerPositions(app,canvas,'basement',rows,cols)
+
+def drawUpperPositions(app,canvas):
+    rows, cols = app.upperRows, app.upperCols
+    drawPlayerPositions(app,canvas,'upper',rows,cols)
+
+def drawPlayerPositions(app,canvas,floor,rows,cols):
     pos = {0: (10,10), 1: (75,10), 2: (145,10), 3: (10,105), 4: (75,105), 5: (145,105)}
     
     for row in range(rows):
         for col in range(cols):
             x0,y0,x1,y1 = getCellBounds(app, row, col, rows, cols, app.upperX, app.upperY)
-            roomWidth = x1-x0
-            roomHeight = y1-y0
-            room = floorList[row][col]
             for i in range(app.players):
                 x, y = pos[i]
                 positionRow, positionCol = app.playerList[i][app.playerList[i]['current']]
                 if row == positionRow and col == positionCol:
-                    if app.playerList[i]['character'] != None: # only draw however many players there are
+                    if app.playerList[i]['character'] != None and app.playerList[i]['current'] == floor: # only draw however many players there are
                         canvas.create_text(x0+x, y0+y, text=app.playerList[i]['number'],fill=app.playerList[i]['character'].color)
 
 def informationText(app,canvas):
     font = 'Arial 18 bold'
     color = 'white'
-    canvas.create_text(app.width//2, app.height-25, text=f"CURRENT PLAYER: Player {app.currentPlayer['number']}, CHARACTER: {app.currentPlayer['character'].name}, Player SPEED: {app.currentPlayer['character'].speed}", 
+    canvas.create_text(app.width//2, app.height-25, text=f"CURRENT PLAYER: Player {app.currentPlayer['number']}, CHARACTER: {app.currentPlayer['character'].name}, Player SPEED: {app.currentPlayer['character'].speed}, Current FLOOR: {app.currentPlayer['current']}", 
             font=font, fill=color)
     canvas.create_text(app.width-20, 25, text='Red denotes invalid moves, while green denotes valid moves. To confirm position, press "C".',font=font, fill=color, anchor='e')
     if not app.haunt:
-        canvas.create_text(app.width-20, 50, text=f'Omen Counter: {app.omenCount}, Haunt Counter: {app.hauntCount}',font=font,fill=color,anchor='e')
+        canvas.create_text(app.width-20, 50, text=f'Haunt Counter: {app.hauntCount}',font=font,fill=color,anchor='e')
 
 def drawDice(app,canvas):
     canvas.create_rectangle(0,0,app.width,app.height,fill='black')
@@ -1203,7 +1126,21 @@ def drawHauntHeroes(app,canvas):
         canvas.create_text(app.width//2 + 60, app.height*(i+2)//35 + app.height*6//10, 
             text=app.heroText6[i], font="Arial 14 bold",fill='white', anchor='w')
 
+def drawRules(app,canvas):
+    canvas.create_rectangle(0,0,app.width,app.height,fill='black')
+    canvas.create_text(app.width//2, 50, text='Rules',font='Arial 30 bold',fill='white')
+    canvas.create_text(app.width//2, 90, text='Your character speed is how many floor tiles or blocks you may move in one turn.', font='Arial 26 bold', fill='white')
+    canvas.create_text(app.width//2, 120, text='You can either choose to move to an already discovered or set room or discover a new room.', font='Arial 26 bold', fill='white')
+    canvas.create_text(app.width//2, 150, text='Left arrow key to go from ground floor to basement and right arrow key to go from ground to upper floor.', font='Arial 26 bold', fill='white')
+    canvas.create_text(app.width//2, 180, text='There will be numbers that correspond to player number in the floor tiles that designate which room you are in.', font='Arial 26 bold', fill='white')
+    canvas.create_text(app.width//2, 210, text='When discovering new rooms, they may be omens, events, or items.', font='Arial 26 bold', fill='white')
+    canvas.create_text(app.width//2, 240, text='Everytime an omen appears, you must attempt a haunt roll. If the roll is less than the haunt count,', font='Arial 26 bold', fill='white')
+    canvas.create_text(app.width//2, 270, text='the haunt phase begins. One of the players will become a traitor, while the rest are heroes.', font='Arial 26 bold', fill='white')
+    canvas.create_text(app.width//2, 300, text='More information about the haunt will appear when it is triggered.', font='Arial 26 bold', fill='white')
+    canvas.create_text(app.width//2, app.height-50, text="Click to begin game!",font='Arial 24 bold',fill='white')
+
 def drawHauntRoll(app,canvas):
-    return 42
+    canvas.create_rectangle(0,0,app.width,app.height,fill='black')
+    canvas.create_text(app.width//2, 50, text='A Game of Chess with Death',font='Arial 30 bold',fill='white')
 
 runApp(width=1440, height=775)
