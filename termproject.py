@@ -40,7 +40,7 @@ def setPlayers(app):
     app.Heather = Player('Heather Granville', {'might': [0,3,3,3,4,5,6,7,8], 'speed': [0,3,3,4,5,6,6,7,8], 'knowledge': [0,2,3,3,4,5,6,7,8], 'sanity': [0,3,3,3,4,5,6,6,6]}, {'might': 3, 'speed': 3, 'knowledge': 5, 'sanity': 3}, 'purple1', 18, 'August 2nd', 'Television, Shopping')
     app.Peter = Player('Peter Akimoto', {'might': [0,2,3,3,4,5,5,6,8], 'speed': [0,3,3,3,4,6,6,7,7], 'knowledge': [0,3,4,4,5,6,7,7,8], 'sanity': [0,3,4,4,4,5,6,6,7]}, {'might': 3, 'speed': 4,  'knowledge': 3, 'sanity': 4}, 'green2', 13, 'September 3rd', 'Bugs, Basketball')
     app.Ox = Player('Ox Bellows', {'might': [0,4,5,5,6,6,7,8,8], 'speed': [0,2,2,2,3,4,5,5,6], 'knowledge': [0,2,2,3,3,5,5,6,6], 'sanity': [0,2,2,3,4,5,5,6,7]}, {'might': 3,  'speed': 5,  'knowledge': 3, 'sanity': 3}, 'indian red', 23, 'October 18th', 'Football, Shiny Objects')
-    app.Death = ('Death', {'might':[1,1,1,1,1,1,1,1,1], 'speed':[0,0,0,0,0,0,0,0,0],'knowledge':[0,1,2,3,4,5,6,7,8], 'sanity': [1,1,1,1,1,1,1,1,1]}, {'might': 8, 'speed': 8, 'knowledge': 8, 'sanity': 8}, 'gray25', 'Beginning of time', 'Chess')
+    app.Death = Player('Death', {'might':[1,1,1,1,1,1,1,1,1], 'speed':[8,8,8,8,8,8,8,8,8],'knowledge':[0,1,2,3,4,5,6,7,8], 'sanity': [1,1,1,1,1,1,1,1,1]}, {'might': 8, 'speed': 8, 'knowledge': 8, 'sanity': 8}, 'gray25', None, 'Beginning of time', 'Chess')
 # Player template
 #Player = Player('name', {mightList, speedList, knowledgeList, sanityList}, {mightIndex, speedIndex, knowledgeIndex, sanityIndex}, color, age, birthday, hobbies)
 
@@ -59,18 +59,18 @@ def setRooms(app):
     app.Upper_Landing = Room('Upper Landing', [app.Upper], False, False, False)
     app.Abandoned = Room('Abandoned Room', [app.Ground, app.Basement], True, False, False)
     app.Attic = Room('Attic', [app.Upper], False, True, False)
-    app.Balcony = Room('Balcony', [app.Ground], True, False, False)
-    app.Ballroom = Room('Ballroom', [app.Ground], False, True, False)
+    app.Balcony = Room('Balcony', [app.Ground, app.Upper], True, False, False)
+    app.Ballroom = Room('Ballroom', [app.Ground, app.Basement], False, True, False)
     app.Creaky = Room('Creaky Hallway', [app.Upper, app.Ground, app.Basement], False, False, False)
-    app.Crypt = Room('Crypt', [app.Basement], False, True, False)
-    app.Bloody = Room('Bloody Room', [app.Upper, app.Ground], False, False, True)
+    app.Crypt = Room('Crypt', [app.Basement, app.Ground], False, True, False)
+    app.Bloody = Room('Bloody Room', [app.Upper, app.Ground, app.Basement], False, False, True)
     app.Chapel = Room('Chapel', [app.Upper, app.Ground], False, True, False)
-    app.Vault = Room('Vault', [app.Upper, app.Basement], False, False, True)
-    app.Collapsed = Room('Collapsed Room', [app.Upper, app.Ground], False, False, False)
+    app.Vault = Room('Vault', [app.Upper, app.Basement, app.Ground], False, False, True)
+    app.Collapsed = Room('Collapsed Room', [app.Upper, app.Ground, app.Basement], True, False, False)
     app.Dining = Room('Dining Room', [app.Ground], True, False, False)
-    app.Furnace = Room('Furnace Room', [app.Basement], True, False, False)
+    app.Furnace = Room('Furnace Room', [app.Basement, app.Ground], True, False, False)
     app.Graveyard = Room('Graveyard', [app.Ground], False, True, False)
-    app.Gym = Room('Gymnasium', [app.Upper, app.Basement], True, False, False)
+    app.Gym = Room('Gymnasium', [app.Ground, app.Basement], True, False, False)
     app.Operating = Room('Operating Laboratory', [app.Upper, app.Basement], False, False, False)
     app.Organ = Room('Organ Room', [app.Upper, app.Ground, app.Basement], False, True, False)
     app.Store = Room('Storeroom', [app.Upper, app.Basement], False, False, True)
@@ -101,6 +101,10 @@ def setRooms(app):
     app.Statuary = Room('Statuary Corridor', [app.Upper, app.Ground, app.Basement], False, True, False)
     app.Wine = Room('Wine Cellar', [app.Basement], False, False, True)
     app.Bedroom = Room('Bedroom', [app.Upper], False, True, False)
+    app.Bathroom = Room('Bathroom', [app.Upper, app.Ground, app.Basement], False, False, False)
+    app.Hallway = Room('Hallway', [app.Upper, app.Ground, app.Basement], False, False, False)
+    app.Bedroom2 = Room('Old Bedroom', [app.Upper, app.Ground, app.Basement], False, False, False)
+    app.Movie = Room('Movie Room', [app.Upper, app.Ground, app.Basement], True, False, False)
     app.Empty = Room('Undiscovered', [app.Upper, app.Ground, app.Basement], False, False, False)
 
 # OMENS
@@ -151,7 +155,6 @@ def setEvents(app):
     app.Mirror = Event("Image in the Mirror", "There is an old mirror in this room") # not finished?
     app.OtherMirror = Event("Image in the Mirror", "You then hand an item through the mirror.") # not finished too, duality
     app.Shriek = Event("Hideous Shriek", "It starts like a whisper, but ends in a soul-rending shriek.")
-    app.Hanged = Event("Hanged Men", "A breeze chills the room. Before you, three men hang from frayed ropes. They stare at you with cold, dead eyes. The trio swing silently, then fade into dust that falls to the ground. You start to choke.")
     app.Groundskeeper = Event("Groundskeeper", "You turn to see a man in groundskeeper clothing. He raises his shovel and charges. Inches from your face, he disappears, leaving muddy footprints, and nothing more.")
     app.Grave = Event("Grave Dirt", "This room is covered in a thick layer of dirt. You cough as it gets on your skin and in your lungs.")
     app.Funeral = Event("Funeral", "You see an open coffin. You're inside it.")
@@ -198,13 +201,13 @@ def setUp(app): # general setup: rooms, omens, events, items
         app.Dining, app.Dusty, app.Furnace, app.Gallery, app.Game, app.Gardens, app.Graveyard, app.Gym, app.Junk, 
         app.Kitchen, app.Larder, app.Library, app.Master, app.Mystic, app.Operating, app.Organ, app.Patio, 
         app.Pentagram, app.Research, app.Servant, app.StairsBasement, app.Statuary, app.Store, app.Tower, 
-            app.Underground, app.Vault, app.Wine]
+            app.Underground, app.Vault, app.Wine, app.Bathroom, app.Hallway, app.Bedroom2, app.Movie]
     app.omens = [app.Skull, app.Bite, app.Book, app.Crystal, app.Dog, app.Girl, app.Holy, 
                 app.Madman, app.Mask, app.Medallion, app.Ring, app.Spear, app.Spirit]
     app.events = [app.Whoops, app.What, app.Webs, app.Walls, app.Voice, app.Lost, app.Beckoning, app.Spider, 
             app.Slimy, app.Hidden, app.Smoke, app.Skeletons, app.Silence, app.Wind, app.Stairs, app.Passage, 
             app.Rotten, app.Wall, app.Possession, app.Phone, app.Night, app.Slide, app.Mists, app.Safe, app.Lights, 
-            app.Jonah, app.Meant, app.Mirror, app.OtherMirror, app.Shriek, app.Hanged, app.Groundskeeper, 
+            app.Jonah, app.Meant, app.Mirror, app.OtherMirror, app.Shriek, 
             app.Grave, app.Funeral, app.Footsteps, app.Drip, app.Sounds, app.Debris, app.Puppet, app.Crawlies, 
                 app.Closet, app.Burning, app.Vision, app.Angry, app.Hope]
     app.items = [app.Revolver, app.Salts, app.Sacrificial_Dagger, app.Rabbit, app.Puzzle, app.Gloves, 
@@ -225,13 +228,12 @@ def setHaunt(app):
     app.traitorText4 = traitorText4
     app.traitorText5 = traitorText5
     app.traitorText6 = traitorText6
-    #app.Checkmate = Haunt('Checkmate',{'traitor': traitorText1, 'hero': heroText1}) # when multiple haunts
 
 def appStarted(app):
     app.mode = 'start'
     app.image = app.loadImage('bahoth.jpeg') # start screen image
     app.hauntCount = 0 # haunt count
-    app.haunt = False # haunt phase
+    app.haunt = False # NOT haunt phase
     setFloors(app)
     setRooms(app)
     setOmens(app)
@@ -248,7 +250,11 @@ def appStarted(app):
     setCard(app)
     setHaunt(app)
     app.floorLists = {'ground':app.groundList, 'basement':app.basementList, 'upper':app.upperList}
+    app.deathRoll = 0
+    app.deathKnowledge = 9
     app.gameOver = False
+    app.traitorWin = False
+    app.heroWin = False
 
 def setCharacters(app):
     app.message = None
@@ -332,9 +338,11 @@ def currentPlayer(app):
     total = app.players
     current = app.index
     nextPlayer = current + 1
-
+    
     if nextPlayer < total:
         app.index = nextPlayer
+    elif app.haunt and nextPlayer == total:
+        app.index = total
     else:
         app.index = 0
     return app.playerList[app.index]
@@ -416,12 +424,13 @@ def hauntRoll(app):
         bestPlayer.role = False # player with highest knowledge is now traitor
         app.traitor['character'] = bestPlayer
         app.traitor['number'] = bestNumber
-        app.mode = 'hauntInfo'
+        app.currentPlayer = app.playerList[0]
         # during haunt if rollDice for game with death is ever true, heroes win
         # if all players have at least one trait at zero, traitor wins
         # if rollDice:
         # app.gameOver = True
-
+        app.result = 0
+        app.dice = [None] * 8
         app.mode = 'hauntIntro'
     else:
         app.hauntCount += 1
@@ -440,7 +449,7 @@ def start_keyPressed(app, event):
     if event.key == 'r':
         app.mode = 'start'
         appStarted(app)
-    elif event.key == '1':
+    elif event.key == 'h':
         app.mode = 'hauntIntro'
     else:
         app.mode = 'set'
@@ -515,7 +524,6 @@ def characters_mousePressed(app,event):
         else:
             app.characterSelected = app.characters[row][col]
             app.invalidCharacterMessage = None
-            #print(app.selected.name)
             app.mode = 'character'
 
 # CHARACTER FUNCTIONS
@@ -592,6 +600,10 @@ def ground_keyPressed(app,event):
         app.mode = 'upper'
     elif event.key == 'Left':
         app.mode = 'basement'
+    elif event.key == 'h':
+        app.hauntCount = 13
+        hauntRoll(app)
+        app.mode = 'hauntIntro'
     elif event.key == 'c':
         if validMove(app, 'ground', app.currentPlayer, rows, cols, selectedRow, selectedCol):
             if app.groundList[selectedRow][selectedCol] == 'Undiscovered':
@@ -604,20 +616,17 @@ def ground_keyPressed(app,event):
                 cards(app,room)
             elif app.groundList[selectedRow][selectedCol] == 'Grand Staircase':
                 app.currentPlayer['current'] = 'upper'
-                #app.mode = 'upper'
             elif app.groundList[selectedRow][selectedCol] == 'Coal Chute':
                 app.currentPlayer['current'] = 'basement'
-                #app.mode = 'basement'
             app.currentPlayer['ground'] = (selectedRow, selectedCol) # set player's new position
             app.currentPlayer = currentPlayer(app) # next player's turn
             app.groundSelection = (-1,-1)
             app.groundSelected = None
-        elif not app.haunt:
+        elif app.haunt: # if haunt phase has started
             if app.currentPlayer['character'] == app.Death:
                 if app.currentPlayer['ground'] == (0,2) and app.currentPlayer['basement'] == (2,4) and app.currentPlayer['upper'] == (2,4): # if death's room has not been set and
                     if app.groundList[selectedRow][selectedCol] not in ['Entrance Hall','Foyer','Grand Staircase']: # if position is not one of the setup rooms, set
                         app.groundList[selectedRow][selectedCol] == "Death's Chess Room" # selected row and col position to death's chess room
-            #app.mode = app.currentPlayer['current']
 
 def ground_mousePressed(app,event):
     rows, cols = app.groundRows, app.groundCols
@@ -648,8 +657,6 @@ def basement_keyPressed(app,event):
         appStarted(app)
     elif event.key == 'Right':
         app.mode = 'ground'
-    #elif event.key == 'Left':
-    #    app.mode = 'upper'
     elif event.key == 'c':
         if validMove(app, 'basement', app.currentPlayer, rows, cols, selectedRow, selectedCol):
             if app.basementList[selectedRow][selectedCol] == 'Undiscovered':
@@ -667,8 +674,7 @@ def basement_keyPressed(app,event):
             app.basementSelection = (-1,-1)
             app.basementSelected = None
             app.currentPlayer = currentPlayer(app) # next player's turn
-            #app.mode = app.currentPlayer['current']
-
+            
 def basement_mousePressed(app,event):
     rows, cols = app.basementRows, app.basementCols
     (row, col) = getCell(app, event.x, event.y, rows, cols, app.basementX, app.basementY)
@@ -714,8 +720,7 @@ def upper_keyPressed(app,event):
             app.upperSelection = (-1,-1)
             app.upperSelected = None
             app.currentPlayer = currentPlayer(app) # next player's turn
-            #app.mode = app.currentPlayer['current']
-
+            
 def upper_mousePressed(app,event):
     rows, cols = app.upperRows, app.upperCols
     (row, col) = getCell(app, event.x, event.y, rows, cols, app.upperX, app.upperY)
@@ -810,13 +815,15 @@ def hauntTraitor_keyPressed(app,event):
         appStarted(app)
     elif event.key == 'Right' or event.key == 'Up':
         app.mode = 'hauntHeroes'
+    elif event.key == 'Left' or event.key == 'Down':
+        app.mode = 'hauntIntro'
 
 # HAUNT HEROES FUNCTIONS
 def hauntHeroes_redrawAll(app,canvas):
     drawHauntHeroes(app,canvas)
 
 def hauntHeroes_mousePressed(app,event):
-    app.mode = app.currentPlayer['current']
+    app.mode = 'chessRoll'
 
 def hauntHeroes_keyPressed(app,event):
     if event.key == 'r':
@@ -825,9 +832,75 @@ def hauntHeroes_keyPressed(app,event):
     elif event.key == 'Left' or event.key == 'Down':
         app.mode = 'hauntTraitor'
 
+def chessRoll(app):
+    app.dice = [None] * 8
+    app.result = 0
+    app.deathRoll = 0
+    roll = 0
+    difference = 0
+    current = app.currentPlayer['character']
+    count = 0 # death counter
+
+    for i in range(app.players+1):
+        if app.playerList[i]['character'].status == False: # if player is dead
+            print(app.playerList[i]['character'].name, app.playerList[i]['character'].status)
+            count += 1
+    if count > app.players - 2:
+        print('heroes died')
+        app.gameOver = True
+        app.traitorWin = True
+        app.mode = 'gameOver'
+
+    if app.deathKnowledge < 2:
+        print('death less than 1 dice')
+        app.heroWin = True
+        app.gameOver = True
+        app.mode = 'gameOver'
+    else:
+        for i in range(app.deathKnowledge):
+            roll = app.die[random.randint(0,5)]
+            app.deathRoll += roll
+
+        for i in range(current.knowledge):
+            app.roll = app.die[random.randint(0,5)]
+            app.dice[i] = app.roll
+            app.result += app.roll
+        
+        difference = app.deathRoll - app.result
+        if difference < 3:
+            app.deathKnowledge -= 1
+        else:
+            current.changeTrait(current.knowledge, 'knowledge',-1, app.haunt)
+    
+    if app.result > app.deathRoll:
+        print(app.result, app.deathRoll, 'hero higher')
+        app.heroWin = True
+        app.gameOver = True
+        app.mode = 'gameOver'
+
+    app.currentPlayer = currentPlayer(app)
+    while app.currentPlayer['character'] == app.Death or app.currentPlayer == app.traitor['character']:
+        app.currentPlayer = currentPlayer(app)
+        
+# HAUNT ROLL SCREEN FUNCTIONS
+def chessRoll_redrawAll(app,canvas):
+    drawHauntRoll(app,canvas)
+
+def chessRoll_mousePressed(app,event):
+    chessRoll(app)
+
+# GAME OVER FUNCTIONS
+def gameOver_redrawAll(app,canvas):
+    drawGameOver(app,canvas)
+
+def gameOver_keyPressed(app,event):
+    if event.key == 'r':
+        app.mode = 'start'
+        appStarted(app)
+
 def cards(app,room):
     if room.omen:
-        if app.omenSet != set():
+        if app.omens != []:
             if not app.haunt:
                 app.rollType = 'omen' # set roll type to omen, in order for hauntroll
                 app.type = 'omen'
@@ -848,7 +921,7 @@ def cards(app,room):
                 app.omenSet.add(app.currentOmen)
                 app.currentCard = app.currentOmen
     elif room.event:
-        if app.eventSet != set():
+        if app.events != []:
             app.rollType = 'normal'
             app.type = 'event'
             app.mode = 'card' # set screen to view event information
@@ -858,7 +931,7 @@ def cards(app,room):
             app.eventSet.add(app.currentEvent)
             app.currentCard = app.currentEvent
     elif room.item:
-        if app.itemSet != set():
+        if app.items != []:
             app.rollType = 'normal'
             app.type = 'item'
             app.mode = 'card' # set screen to view item information
@@ -1036,8 +1109,8 @@ def drawDice(app,canvas):
             currentLine = 0
         else:
             currentLine = 1
-        letterInLine = i % lines
-        cx = (app.width//lines)*(letterInLine + 1/2)
+        numberInLine = i % lines
+        cx = (app.width//lines)*(numberInLine + 1/2)
         cy = y0 + (y1 - y0)//line * (currentLine + 1/2)
 
         r = 100
@@ -1100,7 +1173,8 @@ def drawHauntHeroes(app,canvas):
     canvas.create_rectangle(0,0,app.width,app.height,fill='black')
     canvas.create_text(app.width//2, 50, text='You are the HEROES!',font='Arial 30 bold',fill='white')
     canvas.create_text(app.width//2, 80, text='You are all trying to defeat the traitor.', font='Arial 26 bold', fill='white')
-    canvas.create_text(app.width//2, app.height-50, text="Click to return to the first player's current floor.",font='Arial 24 bold',fill='white')
+    #canvas.create_text(app.width//2, app.height-50, text="Click to return to the first player's current floor.",font='Arial 24 bold',fill='white')
+    canvas.create_text(app.width//2, app.height-50, text="Click to begin chess game.",font='Arial 24 bold',fill='white')
     
     for i in range(len(app.heroText1)):
         canvas.create_text(40, app.height*(i+2)//35 + app.height//10, 
@@ -1142,5 +1216,39 @@ def drawRules(app,canvas):
 def drawHauntRoll(app,canvas):
     canvas.create_rectangle(0,0,app.width,app.height,fill='black')
     canvas.create_text(app.width//2, 50, text='A Game of Chess with Death',font='Arial 30 bold',fill='white')
+    canvas.create_text(app.width//2, 80, text=f'Roll Total: {app.result}, Death Roll: {app.deathRoll}',font='Arial 24 bold',fill='white')
+    canvas.create_text(app.width//2, app.height-75, text='Click anywhere to roll.',font='Arial 24 bold',fill='white')
+    canvas.create_text(app.width//2, app.height-25, text=f"CURRENT PLAYER: Player {app.currentPlayer['number']}, CHARACTER: {app.currentPlayer['character'].name}, Player KNOWLEDGE: {app.currentPlayer['character'].knowledge}", 
+            font='Arial 26 bold', fill='white')
+        
+    y0 = app.height//10
+    y1 = app.height * 9//10
+    lines = 4 # numbers per line
+    line = 2 # how many lines
 
+    for i in range(8):
+        dice = app.dice
+        if i < lines:
+            currentLine = 0
+        else:
+            currentLine = 1
+        numberInLine = i % lines
+        cx = (app.width//lines)*(numberInLine + 1/2)
+        cy = y0 + (y1 - y0)//line * (currentLine + 1/2)
+
+        r = 100
+        canvas.create_rectangle(cx-r,cy-r,cx+r,cy+r, fill='white')
+        
+        if dice[i] != None:
+            canvas.create_text(cx,cy,text=dice[i],font="Arial 30")
+
+def drawGameOver(app,canvas):
+    canvas.create_rectangle(0,0,app.width,app.height,fill='black')
+    canvas.create_text(app.width//2, 50, text='GAME OVER!',font='Arial 30 bold',fill='white')
+    if app.traitorWin:
+        canvas.create_text(app.width//2, 100, text='The traitor has won!',font='Arial 30 bold',fill='white')
+    elif app.heroWin:
+        canvas.create_text(app.width//2, 100, text='You rolled higher than death. The heroes have won!',font='Arial 30 bold',fill='white')
+    canvas.create_text(app.width//2, app.height-50, text='Click "r" to play again!',font='Arial 30 bold',fill='white')
+    
 runApp(width=1440, height=775)
