@@ -6,11 +6,10 @@
 
 # Players all begin as allies exploring a haunted house filled 
 # with dangers, traps, items, and omens. As players journey to new parts of the 
-# mansion, room tiles are chosen at random and placed on the game board; this 
-# means that the game is different each session. Eventually the "haunt" begins,
-# with the nature and plot of this session's ghost story revealed; one player 
-# usually "betrays" the others and takes the side of the ghosts, monsters, or 
-# other enemies, while the remaining players collaborate to defeat them.
+# mansion, room tiles are chosen at random and placed on the game board.
+# Eventually the "haunt" begins, with the nature and plot of this session's ghost 
+# story revealed; one player usually "betrays" the others and takes the side of 
+# the ghosts, monsters, or other enemies, while the remaining players collaborate to defeat them.
 
 # Helpful links
 # https://en.wikipedia.org/wiki/Betrayal_at_House_on_the_Hill
@@ -155,7 +154,7 @@ def setEvents(app):
     app.Mirror = Event("Image in the Mirror", "There is an old mirror in this room") # not finished?
     app.OtherMirror = Event("Image in the Mirror", "You then hand an item through the mirror.") # not finished too, duality
     app.Shriek = Event("Hideous Shriek", "It starts like a whisper, but ends in a soul-rending shriek.")
-    app.Groundskeeper = Event("Groundskeeper", "You turn to see a man in groundskeeper clothing. He raises his shovel and charges. Inches from your face, he disappears, leaving muddy footprints, and nothing more.")
+    #app.Groundskeeper = Event("Groundskeeper", "You turn to see a man in groundskeeper clothing. He raises his shovel and charges. Inches from your face, he disappears, leaving muddy footprints, and nothing more.")
     app.Grave = Event("Grave Dirt", "This room is covered in a thick layer of dirt. You cough as it gets on your skin and in your lungs.")
     app.Funeral = Event("Funeral", "You see an open coffin. You're inside it.")
     app.Footsteps = Event("Footsteps", "The floorboards slowly creak. Dust rises. Footprints appear on the dirty floor. And then, as they reach you, they are gone.")
@@ -215,19 +214,12 @@ def setUp(app): # general setup: rooms, omens, events, items
             app.Bottle, app.Blood_Dagger, app.Bell, app.Axe, app.Armor, app.Angel, app.Amulet, app.Adrenaline]
 
 def setHaunt(app):
-    app.traitor = {'character': None, 'number': None}
     app.heroText1 = heroText1
     app.heroText2 = heroText2
     app.heroText3 = heroText3
     app.heroText4 = heroText4
     app.heroText5 = heroText5
     app.heroText6 = heroText6
-    app.traitorText1 = traitorText1
-    app.traitorText2 = traitorText2
-    app.traitorText3 = traitorText3
-    app.traitorText4 = traitorText4
-    app.traitorText5 = traitorText5
-    app.traitorText6 = traitorText6
 
 def appStarted(app):
     app.mode = 'start'
@@ -253,7 +245,7 @@ def appStarted(app):
     app.deathRoll = 0
     app.deathKnowledge = 9
     app.gameOver = False
-    app.traitorWin = False
+    app.deathWin = False
     app.heroWin = False
 
 def setCharacters(app):
@@ -292,7 +284,6 @@ def setGround(app):
     app.groundList[2][2] = 'Grand Staircase'
     app.groundSelection = (-1,-1) # row and col of ground grid
     app.groundSelected = None # selected room instance
-    #print(app.groundList)
 
 def setBasement(app):
     app.basementRows = 5
@@ -303,7 +294,6 @@ def setBasement(app):
     app.basementList[2][4] = 'Basement Landing'
     app.basementSelection = (-1,-1) # row and col of basement grid
     app.basementSelected = None # selected room instance
-    #print(app.basementList)
 
 def setUpper(app):
     app.upperRows = 5
@@ -314,7 +304,6 @@ def setUpper(app):
     app.upperList[2][4] = 'Upper Landing'
     app.upperSelection = (-1,-1) # row and col of upper grid
     app.upperSelected = None # selected room instance
-    #print(app.upperList)
 
 def setDiceRoll(app):
     app.roll = None
@@ -338,13 +327,29 @@ def currentPlayer(app):
     total = app.players
     current = app.index
     nextPlayer = current + 1
+    count = 0 # death counter
     
     if nextPlayer < total:
         app.index = nextPlayer
-    elif app.haunt and nextPlayer == total:
-        app.index = total
     else:
         app.index = 0
+    
+    if app.haunt:
+        for i in range(total):
+            if not app.playerList[i]['character'].status: # if player is dead
+                print(app.playerList[i]['character'].name, app.playerList[i]['character'].status)
+                count += 1
+        if count >= app.players:
+            print('all heroes died')
+            app.gameOver = True
+            app.deathWin = True
+            app.mode = 'gameOver'
+        else:
+            while not app.playerList[app.index]['character'].status: # while player not dead
+                if app.index + 1 < total:
+                    app.index += 1
+                else:
+                    app.index = 0
     return app.playerList[app.index]
 
 def validMoveHelper(app, floor, player, rows, cols, row, col):
@@ -410,28 +415,10 @@ def hauntRoll(app):
         app.result += app.roll
     if app.result < app.hauntCount:
         app.haunt = True
-        app.playerList[app.players]['character'] = app.Death
-        bestKnowledge = None
-        bestPlayer = None
-        bestNumber = None
-        for i in range(app.players):
-            player = app.playerList[i]['character']
-            knowledge = app.playerList[i]['character'].knowledge
-            if bestKnowledge == None or knowledge > bestKnowledge:
-                bestKnowledge = knowledge
-                bestPlayer = player
-                bestNumber = app.playerList[i]['number']
-        bestPlayer.role = False # player with highest knowledge is now traitor
-        app.traitor['character'] = bestPlayer
-        app.traitor['number'] = bestNumber
         app.currentPlayer = app.playerList[0]
-        # during haunt if rollDice for game with death is ever true, heroes win
-        # if all players have at least one trait at zero, traitor wins
-        # if rollDice:
-        # app.gameOver = True
-        app.result = 0
-        app.dice = [None] * 8
-        app.mode = 'hauntIntro'
+        #app.result = 0
+        #app.dice = [None] * 8
+        app.mode = 'hauntHeroes'
     else:
         app.hauntCount += 1
         
@@ -450,7 +437,7 @@ def start_keyPressed(app, event):
         app.mode = 'start'
         appStarted(app)
     elif event.key == 'h':
-        app.mode = 'hauntIntro'
+        app.mode = 'hauntHeroes'
     else:
         app.mode = 'set'
 
@@ -538,9 +525,14 @@ def character_redrawAll(app,canvas):
     canvas.create_text(app.width//10, 140, text=f'Speed: {app.characterSelected.speed}', font=font, fill=color,anchor='w')
     canvas.create_text(app.width//10, 180, text=f'Knowledge: {app.characterSelected.knowledge}', font=font, fill=color,anchor='w')
     canvas.create_text(app.width//10, 220, text=f'Sanity: {app.characterSelected.sanity}', font=font, fill=color,anchor='w')
+    canvas.create_text(app.width//10, 300, text=f'Might List: {app.characterSelected.traitList["might"]}', font=font, fill=color,anchor='w')
+    canvas.create_text(app.width//10, 350, text=f'Speed List: {app.characterSelected.traitList["speed"]}', font=font, fill=color,anchor='w')
+    canvas.create_text(app.width//10, 400, text=f'Knowledge List: {app.characterSelected.traitList["knowledge"]}', font=font, fill=color,anchor='w')
+    canvas.create_text(app.width//10, 450, text=f'Sanity List: {app.characterSelected.traitList["sanity"]}', font=font, fill=color,anchor='w')
+    canvas.create_text(app.width//10, 520, text=f'Age: {app.characterSelected.age}, Birthday: {app.characterSelected.birthday}, Hobbies: {app.characterSelected.hobbies}', font=font, fill=color,anchor='w')
     
     # OTHER
-    canvas.create_text(app.width//2, app.height-200, text="Note: SPEED is how many floor tiles you may move.", font=font, fill=color)
+    canvas.create_text(app.width//2, app.height-150, text="Note: SPEED is how many floor tiles you may move.", font=font, fill=color)
     canvas.create_text(9*app.width//10, app.height-100, text='To confirm selection, press "Y"', font=font, fill=color, anchor='e')
     canvas.create_text(20, app.height-25, text=f"CURRENT PLAYER: {app.currentPlayer['number']}", font=font, fill=color, anchor='w')
     canvas.create_text(app.width//2, app.height-25, text='Use the left or down arrow keys to go back.', font='Arial 20 bold',fill=color)
@@ -562,11 +554,13 @@ def character_keyPressed(app, event):
                 app.mode = 'characters'
             else:
                 app.mode = 'rules'
+                print(app.playerList)
             app.selectedCharacters.add(app.characterSelected)
             app.currentPlayer['character'] = app.characterSelected
             app.currentPlayer = currentPlayer(app)
             app.characterSelection = (-1,-1)# reset selected row, col
             app.characterSelected = None # and selected character
+            print(app.playerList)
         else:
             app.invalidCharacterMessage = 'Character has already been chosen, please go back and choose another character.'
 
@@ -603,7 +597,9 @@ def ground_keyPressed(app,event):
     elif event.key == 'h':
         app.hauntCount = 13
         hauntRoll(app)
-        app.mode = 'hauntIntro'
+        app.result = 0
+        app.dice = [None] * 8
+        app.mode = 'hauntHeroes'
     elif event.key == 'c':
         if validMove(app, 'ground', app.currentPlayer, rows, cols, selectedRow, selectedCol):
             if app.groundList[selectedRow][selectedCol] == 'Undiscovered':
@@ -622,11 +618,6 @@ def ground_keyPressed(app,event):
             app.currentPlayer = currentPlayer(app) # next player's turn
             app.groundSelection = (-1,-1)
             app.groundSelected = None
-        elif app.haunt: # if haunt phase has started
-            if app.currentPlayer['character'] == app.Death:
-                if app.currentPlayer['ground'] == (0,2) and app.currentPlayer['basement'] == (2,4) and app.currentPlayer['upper'] == (2,4): # if death's room has not been set and
-                    if app.groundList[selectedRow][selectedCol] not in ['Entrance Hall','Foyer','Grand Staircase']: # if position is not one of the setup rooms, set
-                        app.groundList[selectedRow][selectedCol] == "Death's Chess Room" # selected row and col position to death's chess room
 
 def ground_mousePressed(app,event):
     rows, cols = app.groundRows, app.groundCols
@@ -790,34 +781,6 @@ def card_keyPressed(app,event):
     else:
         app.mode = 'rollDice'
 
-# HAUNT INTRO FUNCTIONS
-def hauntIntro_redrawAll(app,canvas):
-    drawHauntIntro(app,canvas)
-
-def hauntIntro_mousePressed(app,event):
-    app.mode = 'hauntTraitor'
-
-def hauntIntro_keyPressed(app,event):
-    if event.key == 'r':
-        app.mode = 'start'
-        appStarted(app)
-
-# HAUNT TRAITOR FUNCTIONS
-def hauntTraitor_redrawAll(app,canvas):
-    drawHauntTraitor(app,canvas)
-
-def hauntTraitor_mousePressed(app,event):
-    app.mode = 'hauntHeroes'
-
-def hauntTraitor_keyPressed(app,event):
-    if event.key == 'r':
-        app.mode = 'start'
-        appStarted(app)
-    elif event.key == 'Right' or event.key == 'Up':
-        app.mode = 'hauntHeroes'
-    elif event.key == 'Left' or event.key == 'Down':
-        app.mode = 'hauntIntro'
-
 # HAUNT HEROES FUNCTIONS
 def hauntHeroes_redrawAll(app,canvas):
     drawHauntHeroes(app,canvas)
@@ -829,8 +792,6 @@ def hauntHeroes_keyPressed(app,event):
     if event.key == 'r':
         app.mode = 'start'
         appStarted(app)
-    elif event.key == 'Left' or event.key == 'Down':
-        app.mode = 'hauntTraitor'
 
 def chessRoll(app):
     app.dice = [None] * 8
@@ -839,17 +800,6 @@ def chessRoll(app):
     roll = 0
     difference = 0
     current = app.currentPlayer['character']
-    count = 0 # death counter
-
-    for i in range(app.players+1):
-        if app.playerList[i]['character'].status == False: # if player is dead
-            print(app.playerList[i]['character'].name, app.playerList[i]['character'].status)
-            count += 1
-    if count > app.players - 2:
-        print('heroes died')
-        app.gameOver = True
-        app.traitorWin = True
-        app.mode = 'gameOver'
 
     if app.deathKnowledge < 2:
         print('death less than 1 dice')
@@ -870,7 +820,7 @@ def chessRoll(app):
         if difference < 3:
             app.deathKnowledge -= 1
         else:
-            current.changeTrait(current.knowledge, 'knowledge',-1, app.haunt)
+            current.knowledge = current.changeTrait(current.knowledge, 'knowledge',-1, app.haunt)
     
     if app.result > app.deathRoll:
         print(app.result, app.deathRoll, 'hero higher')
@@ -879,8 +829,6 @@ def chessRoll(app):
         app.mode = 'gameOver'
 
     app.currentPlayer = currentPlayer(app)
-    while app.currentPlayer['character'] == app.Death or app.currentPlayer == app.traitor['character']:
-        app.currentPlayer = currentPlayer(app)
         
 # HAUNT ROLL SCREEN FUNCTIONS
 def chessRoll_redrawAll(app,canvas):
@@ -1132,48 +1080,10 @@ def drawCard(app,canvas): # omen, event, item
     canvas.create_text(app.width//2, app.height//4+100, text=app.currentCard.description, font='Arial 20 bold', fill='white')
     canvas.create_text(app.width//2, app.height-75, text='After you are finished reading, click to roll dice if applicable. Else, click to return to board.',font='Arial 24 bold',fill='white')
 
-def drawHauntIntro(app,canvas):
-    canvas.create_rectangle(0,0,app.width,app.height,fill='black')
-    canvas.create_text(app.width//2, 50, text='Welcome to the Haunt Phase!',font='Arial 30 bold',fill='white')
-    canvas.create_text(app.width//2, app.height//4, text='One of you will become the traitor, while the rest will remain as heroes.', font='Arial 26 bold', fill='white')
-    canvas.create_text(app.width//2, app.height-125, text=f"Player {app.traitor['number']} is the TRAITOR.", font='Arial 26 bold', fill='white')
-    canvas.create_text(app.width//2, app.height-75, text='Click to view the TRAITOR screen. ONLY the traitor may view this information.',font='Arial 24 bold',fill='white')
-
-def drawHauntTraitor(app,canvas):
-    canvas.create_rectangle(0,0,app.width,app.height,fill='black')
-    canvas.create_text(app.width//2, 50, text='You are the TRAITOR!',font='Arial 30 bold',fill='white')
-    canvas.create_text(app.width//2, 80, text='You are trying to defeat the heroes.', font='Arial 26 bold', fill='white')
-    canvas.create_text(app.width//2, app.height-50, text='Click to view the HEROES screen. ONLY the heroes may view this information.',font='Arial 24 bold',fill='white')
-
-    for i in range(len(app.traitorText1)):
-        canvas.create_text(40, app.height*(i+2)//35 + app.height//10, 
-            text=app.traitorText1[i], font="Arial 14 bold",fill='white', anchor='w')
-
-    for i in range(len(app.traitorText2)):
-        canvas.create_text(40, app.height*(i+2)//35 + app.height*4//10, 
-            text=app.traitorText2[i], font="Arial 14 bold",fill='white', anchor='w')
-    
-    for i in range(len(app.traitorText3)):
-        canvas.create_text(40, app.height*(i+2)//35 + app.height*6//10, 
-            text=app.traitorText3[i], font="Arial 14 bold",fill='white', anchor='w')
-    
-    for i in range(len(app.traitorText4)):
-        canvas.create_text(app.width-20, app.height*(i+2)//35 + app.height//10, 
-            text=app.traitorText4[i], font="Arial 14 bold",fill='white', anchor='e')
-    
-    for i in range(len(app.traitorText5)):
-        canvas.create_text(app.width//2 + 60, app.height*(i+2)//35 + app.height*4//10, 
-            text=app.traitorText5[i], font="Arial 14 bold",fill='white', anchor='w')
-    
-    for i in range(len(app.traitorText6)):
-        canvas.create_text(app.width//2 + 60, app.height*(i+2)//35 + app.height*6//10, 
-            text=app.traitorText6[i], font="Arial 14 bold",fill='white', anchor='w')
-
 def drawHauntHeroes(app,canvas):
     canvas.create_rectangle(0,0,app.width,app.height,fill='black')
     canvas.create_text(app.width//2, 50, text='You are the HEROES!',font='Arial 30 bold',fill='white')
-    canvas.create_text(app.width//2, 80, text='You are all trying to defeat the traitor.', font='Arial 26 bold', fill='white')
-    #canvas.create_text(app.width//2, app.height-50, text="Click to return to the first player's current floor.",font='Arial 24 bold',fill='white')
+    canvas.create_text(app.width//2, 80, text='You are all trying to defeat Death at chess.', font='Arial 26 bold', fill='white')
     canvas.create_text(app.width//2, app.height-50, text="Click to begin chess game.",font='Arial 24 bold',fill='white')
     
     for i in range(len(app.heroText1)):
@@ -1244,11 +1154,12 @@ def drawHauntRoll(app,canvas):
 
 def drawGameOver(app,canvas):
     canvas.create_rectangle(0,0,app.width,app.height,fill='black')
-    canvas.create_text(app.width//2, 50, text='GAME OVER!',font='Arial 30 bold',fill='white')
-    if app.traitorWin:
-        canvas.create_text(app.width//2, 100, text='The traitor has won!',font='Arial 30 bold',fill='white')
+    canvas.create_text(app.width//2, 70, text='GAME OVER!',font='Arial 40 bold',fill='white')
+    canvas.create_text(app.width//2, 100, text=f'Roll Total: {app.result}, Death Roll: {app.deathRoll}',font='Arial 24 bold',fill='white')
+    if app.deathWin:
+        canvas.create_text(app.width//2, 150, text='Death has won, try again next time!',font='Arial 30 bold',fill='white')
     elif app.heroWin:
-        canvas.create_text(app.width//2, 100, text='You rolled higher than death. The heroes have won!',font='Arial 30 bold',fill='white')
+        canvas.create_text(app.width//2, 150, text='Your team, the heroes, have won!',font='Arial 30 bold',fill='white')
     canvas.create_text(app.width//2, app.height-50, text='Click "r" to play again!',font='Arial 30 bold',fill='white')
     
 runApp(width=1440, height=775)
