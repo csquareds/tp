@@ -39,7 +39,7 @@ class Player(object):
         self.status = True # alive, not dead
         self.role = True # explorer/hero, not traitor
     
-    def changeTrait(self, traitValue, trait, change, haunt):
+    def changeTrait(self, traitValue, trait, change, haunt): # traitValue self.trait, trait = 'trait'
         index = self.traitIndex[trait]
         index += change
         if not haunt:
@@ -56,6 +56,7 @@ class Player(object):
                 traitValue = self.traitList[trait][self.traitIndex[trait]]
             else:
                 index -= change
+        return traitValue
 
 class Floor(object):
     def __init__(self,name,floor):
@@ -86,7 +87,7 @@ class Room(object):
         self.event = event # does it have event? boolean
         self.item = item # does it have item? boolean
 
-class Haunt(object):
+class Haunt(object): # for multiple haunts
     def __init__(self,name,description):
         self.name = name
         self.traitorDescription = description['traitor']
