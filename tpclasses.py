@@ -53,20 +53,15 @@ class Omen(object):
         self.name = name
         self.description = description
 
-class Event(object):
-    def __init__(self, name, description):
-        self.name = name
-        self.description = description
-
 class Item(object):
-    def __init__(self, name, description):
+    def __init__(self, name, description,change):
         self.name = name
         self.description = description
+        self.change = change
 
 class Room(object):
-    def __init__(self, name, floors, omen, event, item):
+    def __init__(self, name, floors, omen, item):
         self.name = name
         self.floors = floors # eligible floors to place, list
         self.omen = omen # does it have omen? boolean
-        self.event = event # does it have event? boolean
         self.item = item # does it have item? boolean

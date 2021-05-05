@@ -37,62 +37,62 @@ def setFloors(app):
     app.Basement = Floor('Basement','basement')
     app.Upper = Floor('Upper Level','upper')
 
-# ROOMS, does it have: omen event item
+# ROOMS, does it have: omen item
 def setRooms(app):
-    app.Entrance = Room('Entrance Hall', [app.Ground], False, False, False)
-    app.Foyer = Room('Foyer', [app.Ground], False, False, False)
-    app.Grand = Room('Grand Stairs', [app.Ground], False, False, False)
-    app.Basement_Landing = Room('Basement Landing', [app.Basement], False, False, False)
-    app.Upper_Landing = Room('Upper Landing', [app.Upper], False, False, False)
-    app.Abandoned = Room('Abandoned Room', [app.Ground, app.Basement], True, False, False)
-    app.Attic = Room('Attic', [app.Upper], False, True, False)
-    app.Balcony = Room('Balcony', [app.Ground, app.Upper], True, False, False)
-    app.Ballroom = Room('Ballroom', [app.Ground, app.Basement], False, True, False)
-    app.Creaky = Room('Creaky Hallway', [app.Upper, app.Ground, app.Basement], False, False, False)
-    app.Crypt = Room('Crypt', [app.Basement, app.Ground], False, True, False)
-    app.Bloody = Room('Bloody Room', [app.Upper, app.Ground, app.Basement], False, False, True)
-    app.Chapel = Room('Chapel', [app.Upper, app.Ground], False, True, False)
-    app.Vault = Room('Vault', [app.Upper, app.Basement, app.Ground], False, False, True)
-    app.Collapsed = Room('Collapsed Room', [app.Upper, app.Ground, app.Basement], True, False, False)
-    app.Dining = Room('Dining Room', [app.Ground], True, False, False)
-    app.Furnace = Room('Furnace Room', [app.Basement, app.Ground], True, False, False)
-    app.Graveyard = Room('Graveyard', [app.Ground], False, True, False)
-    app.Gym = Room('Gymnasium', [app.Ground, app.Basement], True, False, False)
-    app.Operating = Room('Operating Laboratory', [app.Upper, app.Basement], False, False, False)
-    app.Organ = Room('Organ Room', [app.Upper, app.Ground, app.Basement], False, True, False)
-    app.Store = Room('Storeroom', [app.Upper, app.Basement], False, False, True)
-    app.Tower = Room('Tower', [app.Upper], False, True, False)
-    app.Catacombs = Room('Catacombs', [app.Basement], True, False, False)
-    app.Dusty = Room('Dusty Hallway', [app.Upper, app.Ground, app.Basement], False, False, False)
-    app.Kitchen = Room('Kitchen', [app.Ground, app.Basement], True, False, False)
-    app.Junk = Room('Junk', [app.Upper, app.Ground, app.Basement], True, False, False)
-    app.Larder = Room('Larder', [app.Basement], False, False, True)
-    app.Patio = Room('Patio', [app.Ground], False, True, False)
-    app.Pentagram = Room('Pentagram Chamber', [app.Basement], True, False, False)
-    app.Research = Room('Research Laboratory', [app.Upper, app.Basement], False, True, False)
-    app.Underground = Room('Underground Lake', [app.Basement], False, True, False)
-    app.Vault = Room('Vault', [app.Upper, app.Basement], False, False, True) # two items
-    app.Chasm = Room('Chasm', [app.Basement], False, False, False)
-    app.Coal = Room('Coal Chute', [app.Ground], False, False, False)
-    app.Collapsed = Room('Collapsed Room', [app.Upper, app.Ground], False, False, False)
-    app.Charred = Room('Charred Room', [app.Upper, app.Ground], True, False, False)
-    app.Conservatory = Room('Conservatory', [app.Upper, app.Ground], False, True, False)
-    app.Gallery = Room('Gallery', [app.Upper], True, False, False)
-    app.Game = Room('Game Room', [app.Upper, app.Ground, app.Basement], False, True, False)
-    app.Gardens = Room('Gardens', [app.Ground], False, True, False)
-    app.Library = Room('Library', [app.Upper, app.Ground], False, True, False)
-    app.Master = Room('Master Bedroom', [app.Upper], True, False, False)
-    app.Mystic = Room('Mystic Room', [app.Upper, app.Ground, app.Basement], False, False, False)
-    app.Servant = Room("Servants' Quarters", [app.Upper, app.Basement], True, False, False)
-    app.StairsBasement = Room('Stairs from Basement', [app.Basement], False, False, False)
-    app.Statuary = Room('Statuary Corridor', [app.Upper, app.Ground, app.Basement], False, True, False)
-    app.Wine = Room('Wine Cellar', [app.Basement], False, False, True)
-    app.Bedroom = Room('Bedroom', [app.Upper], False, True, False)
-    app.Bathroom = Room('Bathroom', [app.Upper, app.Ground, app.Basement], False, False, False)
-    app.Hallway = Room('Hallway', [app.Upper, app.Ground, app.Basement], False, False, False)
-    app.Bedroom2 = Room('Old Bedroom', [app.Upper, app.Ground, app.Basement], False, False, False)
-    app.Movie = Room('Movie Room', [app.Upper, app.Ground, app.Basement], True, False, False)
-    app.Empty = Room('Undiscovered', [app.Upper, app.Ground, app.Basement], False, False, False)
+    app.Entrance = Room('Entrance Hall', [app.Ground], False, False)
+    app.Foyer = Room('Foyer', [app.Ground], False, False)
+    app.Grand = Room('Grand Stairs', [app.Ground], False, False)
+    app.Basement_Landing = Room('Basement Landing', [app.Basement], False, False)
+    app.Upper_Landing = Room('Upper Landing', [app.Upper], False, False)
+    app.Abandoned = Room('Abandoned Room', [app.Ground, app.Basement], True, False)
+    app.Attic = Room('Attic', [app.Upper], False, True)
+    app.Balcony = Room('Balcony', [app.Ground, app.Upper], True, False)
+    app.Ballroom = Room('Ballroom', [app.Ground, app.Basement], False, True)
+    app.Creaky = Room('Creaky Hallway', [app.Upper, app.Ground, app.Basement], False, False)
+    app.Crypt = Room('Crypt', [app.Basement, app.Ground], False, True)
+    app.Bloody = Room('Bloody Room', [app.Upper, app.Ground, app.Basement], False, True)
+    app.Chapel = Room('Chapel', [app.Upper, app.Ground], False, False)
+    app.Vault = Room('Vault', [app.Upper, app.Basement, app.Ground], False, True)
+    app.Collapsed = Room('Collapsed Room', [app.Upper, app.Ground, app.Basement], True, False)
+    app.Dining = Room('Dining Room', [app.Ground], True, False)
+    app.Furnace = Room('Furnace Room', [app.Basement, app.Ground], True, False)
+    app.Graveyard = Room('Graveyard', [app.Ground], False, False)
+    app.Gym = Room('Gymnasium', [app.Ground, app.Basement], True, False)
+    app.Operating = Room('Operating Laboratory', [app.Upper, app.Basement], False, False)
+    app.Organ = Room('Organ Room', [app.Upper, app.Ground, app.Basement], False, False)
+    app.Store = Room('Storeroom', [app.Upper, app.Basement], False, True)
+    app.Tower = Room('Tower', [app.Upper], False, False)
+    app.Catacombs = Room('Catacombs', [app.Basement], True, False)
+    app.Dusty = Room('Dusty Hallway', [app.Upper, app.Ground, app.Basement], False, False)
+    app.Kitchen = Room('Kitchen', [app.Ground, app.Basement], True, False)
+    app.Junk = Room('Junk', [app.Upper, app.Ground, app.Basement], True, False)
+    app.Larder = Room('Larder', [app.Basement], False, True)
+    app.Patio = Room('Patio', [app.Ground], False, False)
+    app.Pentagram = Room('Pentagram Chamber', [app.Basement], True, False)
+    app.Research = Room('Research Laboratory', [app.Upper, app.Basement], False, False)
+    app.Underground = Room('Underground Lake', [app.Basement], False, False)
+    app.Vault = Room('Vault', [app.Upper, app.Basement], False, True) 
+    app.Chasm = Room('Chasm', [app.Basement], False, False)
+    app.Coal = Room('Coal Chute', [app.Ground], False, False)
+    app.Collapsed = Room('Collapsed Room', [app.Upper, app.Ground], False, False)
+    app.Charred = Room('Charred Room', [app.Upper, app.Ground], True, False)
+    app.Conservatory = Room('Conservatory', [app.Upper, app.Ground], False, False)
+    app.Gallery = Room('Gallery', [app.Upper], True, False)
+    app.Game = Room('Game Room', [app.Upper, app.Ground, app.Basement], False, False)
+    app.Gardens = Room('Gardens', [app.Ground], False, False)
+    app.Library = Room('Library', [app.Upper, app.Ground], False, False)
+    app.Master = Room('Master Bedroom', [app.Upper], True, False)
+    app.Mystic = Room('Mystic Room', [app.Upper, app.Ground, app.Basement], False, False)
+    app.Servant = Room("Servants' Quarters", [app.Upper, app.Basement], True, False)
+    app.StairsBasement = Room('Stairs from Basement', [app.Basement], False, False)
+    app.Statuary = Room('Statuary Corridor', [app.Upper, app.Ground, app.Basement], False, False)
+    app.Wine = Room('Wine Cellar', [app.Basement], False, True)
+    app.Bedroom = Room('Bedroom', [app.Upper], False, False)
+    app.Bathroom = Room('Bathroom', [app.Upper, app.Ground, app.Basement], False, False)
+    app.Hallway = Room('Hallway', [app.Upper, app.Ground, app.Basement], False, False)
+    app.Bedroom2 = Room('Old Bedroom', [app.Upper, app.Ground, app.Basement], False, False)
+    app.Movie = Room('Movie Room', [app.Upper, app.Ground, app.Basement], True, False)
+    app.Empty = Room('Undiscovered', [app.Upper, app.Ground, app.Basement], False, False)
 
 # OMENS
 def setOmens(app):
@@ -110,73 +110,25 @@ def setOmens(app):
     app.Spear = Omen('Spear', 'WEAPON A weapon pulsing with power.')
     app.Spirit = Omen('Spirit Board', 'A board with letters and numbers to call the dead.')
 
-# EVENTS
-def setEvents(app):
-    app.What = Event("What the...?", "As you look back the way you came, you see... nothing. Just empty and mist where a room used to be.")
-    app.Webs = Event("Webs", "Casually, you reach up to brush some webs aside... but they won't brush away. They cling.")
-    app.Voice = Event("The Voice", '"I am under the floor, buried under the floor..." The voice whispers once, then is gone.')
-    app.Lost = Event("The Lost One", "A woman wearing a Civil War dress beckons to you. You fall into a trance.")
-    app.Beckoning = Event("The Beckoning", "Outside. You must get outside. Fly to freedom!")
-    app.Spider = Event("Spider", "A spider the size of a fist lands on your shoulder... and crawls into your hair.")
-    app.Slimy = Event("Something Slimy", "What's around your ankle? A bug? A tentacle? A dead hand clawing?")
-    app.Hidden = Event("Something Hidden", "There's something odd about this room, but what? It's tickling the back of your mind.")
-    app.Smoke = Event("Smoke", "Smoke billows around you. You cough, wiping away tears.")
-    app.Skeletons = Event("Skeletons", "Mother and child, still embracing.")
-    app.Silence = Event("Silence", "Underground, everything goes silent. Even the sound of breathing is gone.")
-    app.Wind = Event("Shrieking Wind", "The wind picks up, a slow crescendo to a screeching howl.")
-    app.Stairs = Event("Secret Stairs", "A horrible creaking sound echoes around you. You've discovered a secret stairwell.")
-    app.Passage = Event("Secret Passage", "A section of the wall slides away. Behind it, a moldy tunnel awaits.")
-    app.Rotten = Event("Rotten", "The smell in this room, it's horrible. Smells like death, like blood. A slaughterhouse smell.")
-    app.Wall = Event("Revolving Wall", "The wall spins to another place.")
-    app.Possession = Event("Possession", "A shadow separates from the wall. As you stand in shock, and shadow surrounds you and chills you to the core.")
-    app.Phone = Event("Phone Call", "A phone rings in the room. You feel compelled to answer it.")
-    app.Night = Event("Night View", "You see a vision of a ghostly couple walking the grounds, silently strolling in their wedding best.")
-    app.Slide = Event("Mystic Slide", "The floor falls from under you.")
-    app.Mists = Event("Mists from the Walls", "Mists pour out from the walls. There are faces in the mist, human and... inhuman.")
-    app.Safe = Event("Locked Safe", "Behind a portrait is a wall safe. It is trapped, of course.")
-    app.Lights = Event("Lights Out", "Your flashlight goes out. Don't worry, someone else has batteries.")
-    app.Jonah = Event("Jonah's Turn", "Two boys are playing with a wooden top.") # not finished
-    app.Meant = Event("It is Meant to Be", "You collapse to the floor, visions of future events pouring through your head.")
-    app.Mirror = Event("Image in the Mirror", "There is an old mirror in this room") # not finished?
-    app.OtherMirror = Event("Image in the Mirror", "You then hand an item through the mirror.") # not finished too, duality
-    app.Shriek = Event("Hideous Shriek", "It starts like a whisper, but ends in a soul-rending shriek.")
-    app.Grave = Event("Grave Dirt", "This room is covered in a thick layer of dirt. You cough as it gets on your skin and in your lungs.")
-    app.Funeral = Event("Funeral", "You see an open coffin. You're inside it.")
-    app.Footsteps = Event("Footsteps", "The floorboards slowly creak. Dust rises. Footprints appear on the dirty floor. And then, as they reach you, they are gone.")
-    app.Drip = Event("Drip... Drip... Drip...", "A rhythmic sound that needles at your brain.")
-    app.Sounds = Event("Disquieting Sounds", "A baby's cry, lost and abandoned. A scream. The crack of breaking glass. Then silence.")
-    app.Debris = Event("Debris", "Plaster falls from the walls and ceiling.")
-    app.Puppet = Event("Creepy Puppet", "You see one of those dolls that give you the willies. It jumps at you with a tiny spear.")
-    app.Crawlies = Event("Creepy Crawlies", "A thousand bugs spill out on your skin, under your clothes, and in your hair.")
-    app.Closet = Event("Closet Door", "That closet door is open... just a crack. There must be something inside.")
-    app.Angry = Event("Angry Being", "It emerges from the slime on the wall next to you.")
-    
 # ITEMS
 def setItems(app):
-    app.Revolver = Item("Revolver", "WEAPON An old potent looking weapon.")
-    app.Salts = Item("Smelling Salts", "Whew, that's a lungful.")
-    app.Sacrificial_Dagger = Item("Sacrificial Dagger", "WEAPON A twisted shard of iron covered in mysterious symbols and stained with blood.")
-    app.Rabbit = Item("Rabbit's Foot", "Not so lucky for the rabbit.")
-    app.Puzzle = Item("Puzzle Box", "There must be a way to open it.")
-    app.Gloves = Item("Pickpoket's Gloves", "Helping yourself has never seemed so easy.")
-    app.Music = Item("Music Box", "A hand-crafted antique. It plays a haunting melody that gets stuck in your head.")
-    app.Medical = Item("Medical Kit", "A doctor's bag, depleted in some critical resources.")
-    app.Lucky = Item("Lucky Stone", "A smooth, ordinary-looking rock. You sense it will bring you good fortune.")
-    app.Idol = Item("Idol", "Perhaps it's chosen you for some greater purpose. Like human sacrifice.")
-    app.Healing = Item("Healing Salve", "A sticky paste in a shallow bowl.")
-    app.Dynamite = Item("Dynamite", "The fuse isn't lit... yet")
-    app.Dice = Item("Dark Dice", "Are you feeling lucky?")
-    app.Candle = Item("Candle", "It makes the shadows move— at least, you hope it's doing that.")
-    app.Bottle = Item("Bottle", "An opaque vial containing a black liquid.")
-    app.Blood_Dagger = Item("Blood Dagger", "WEAPON A nasty weapon. Needles and tubes extend from the handle... and plunge right into your veins.")
-    app.Bell = Item("Bell", "A brass bell that makes a resonant clang.")
-    app.Axe = Item("Axe", "WEAPON Very sharp.")
-    app.Armor = Item("Armor", "It's just prop armor from a Renaissance fair, but it's still metal.")
-    app.Angel = Item("Angel Feather", "A perfect feather fluttering in your hand.")
-    app.Amulet = Item("Amulet of the Ages", "Ancient silver and inlaid gems, inscribed with blessings.")
-    app.Adrenaline = Item("Adrenaline Shot", "A syringe containing a strange fluorescent liquid.")
+    app.Puzzle = Item("Puzzle Box", "There must be a way to open it.", "Gain 1 knowledge.")
+    app.Music = Item("Music Box", "A hand-crafted antique. It plays a haunting melody that gets stuck in your head.", "Gain 1 knowledge.")
+    app.Medical = Item("Medical Kit", "A doctor's bag, depleted in some critical resources.", "Gain 1 knowledge.")
+    app.Idol = Item("Idol", "Perhaps it's chosen you for some greater purpose. Like human sacrifice.", "Lose 1 might.")
+    app.Healing = Item("Healing Salve", "A sticky paste in a shallow bowl.", "Gain 1 sanity.")
+    app.Dynamite = Item("Dynamite", "The fuse isn't lit... yet", "Gain 1 speed.")
+    app.Dice = Item("Dark Dice", "Are you feeling lucky?", "Gain 1 knowledge.")
+    app.Candle = Item("Candle", "It makes the shadows move— at least, you hope it's doing that.", "Gain 1 knowledge.")
+    app.Bottle = Item("Bottle", "An opaque vial containing a black liquid.", "Lose 1 sanity.")
+    app.Blood_Dagger = Item("Blood Dagger", "WEAPON A nasty weapon. Needles and tubes extend from the handle... and plunge right into your veins.", "Lose 1 might.")
+    app.Bell = Item("Bell", "A brass bell that makes a resonant clang.", "Gain 1 sanity.")
+    app.Axe = Item("Axe", "WEAPON Very sharp.", "Gain 1 might.")
+    app.Armor = Item("Armor", "It's just prop armor from a Renaissance fair, but it's still metal.", "Gain 1 might")
+    app.Amulet = Item("Amulet of the Ages", "Ancient silver and inlaid gems, inscribed with blessings.", "Gain 1 for every trait.")
+    app.Adrenaline = Item("Adrenaline Shot", "A syringe containing a strange fluorescent liquid.", "Gain 1 speed.")
 
-def setUp(app): # general setup: rooms, omens, events, items
+def setUp(app): # general setup: rooms, omens, items
     app.rooms = [app.Abandoned, app.Attic, app.Balcony, app.Ballroom, app.Bedroom, app.Bloody, app.Catacombs, 
         app.Chapel, app.Charred, app.Chasm, app.Coal, app.Collapsed, app.Conservatory, app.Creaky, app.Crypt, 
         app.Dining, app.Dusty, app.Furnace, app.Gallery, app.Game, app.Gardens, app.Graveyard, app.Gym, app.Junk, 
@@ -185,14 +137,8 @@ def setUp(app): # general setup: rooms, omens, events, items
             app.Underground, app.Vault, app.Wine, app.Bathroom, app.Hallway, app.Bedroom2, app.Movie]
     app.omens = [app.Skull, app.Bite, app.Book, app.Crystal, app.Dog, app.Girl, app.Holy, 
                 app.Madman, app.Mask, app.Medallion, app.Ring, app.Spear, app.Spirit]
-    app.events = [app.What, app.Webs, app.Voice, app.Lost, app.Beckoning, app.Spider, 
-            app.Slimy, app.Hidden, app.Smoke, app.Skeletons, app.Silence, app.Wind, app.Stairs, app.Passage, 
-            app.Rotten, app.Wall, app.Possession, app.Phone, app.Night, app.Slide, app.Mists, app.Safe, app.Lights, 
-            app.Jonah, app.Meant, app.Mirror, app.OtherMirror, app.Shriek, app.Grave, app.Funeral, app.Footsteps, 
-            app.Drip, app.Sounds, app.Debris, app.Puppet, app.Crawlies, app.Closet, app.Angry]
-    app.items = [app.Revolver, app.Salts, app.Sacrificial_Dagger, app.Rabbit, app.Puzzle, app.Gloves, 
-                app.Music, app.Medical, app.Lucky, app.Idol, app.Healing, app.Dynamite, app.Dice, app.Candle, 
-            app.Bottle, app.Blood_Dagger, app.Bell, app.Axe, app.Armor, app.Angel, app.Amulet, app.Adrenaline]
+    app.items = [app.Puzzle, app.Music, app.Medical, app.Idol, app.Healing, app.Dynamite, app.Dice, 
+        app.Candle, app.Bottle, app.Blood_Dagger, app.Bell, app.Axe, app.Armor, app.Amulet, app.Adrenaline]
 
 def setHaunt(app):
     app.heroText1 = heroText1
@@ -209,7 +155,6 @@ def appStarted(app):
     setFloors(app)
     setRooms(app)
     setOmens(app)
-    setEvents(app)
     setItems(app)
     setPlayers(app)
     setCharacters(app)
@@ -297,10 +242,8 @@ def setCard(app):
     app.type = None
     app.currentCard = None
     app.currentOmen = None
-    app.currentEvent = None
     app.currentItem = None
     app.omenSet = set()
-    app.eventSet = set()
     app.itemSet = set()
 
 def currentPlayer(app):
@@ -317,10 +260,8 @@ def currentPlayer(app):
     if app.haunt:
         for i in range(total):
             if not app.playerList[i]['character'].status: # if player is dead
-                print(app.playerList[i]['character'].name, app.playerList[i]['character'].status)
                 count += 1
         if count >= app.players:
-            print('all heroes died')
             app.gameOver = True
             app.deathWin = True
             app.mode = 'gameOver'
@@ -409,13 +350,12 @@ def chessRoll(app):
     current = app.currentPlayer['character']
 
     if app.deathKnowledge < 2:
-        print('death less than 1 dice')
         app.heroWin = True
         app.gameOver = True
         app.mode = 'gameOver'
     else:
         for i in range(app.deathKnowledge):
-            roll = app.die[random.randint(0,5)]
+            roll = app.die[random.randint(0,4)]
             app.deathRoll += roll
 
         for i in range(current.knowledge):
@@ -430,7 +370,6 @@ def chessRoll(app):
             current.knowledge = current.changeTrait(current.knowledge, 'knowledge',-1, app.haunt)
     
     if app.result > app.deathRoll:
-        print(app.result, app.deathRoll, 'hero higher')
         app.heroWin = True
         app.gameOver = True
         app.mode = 'gameOver'
@@ -776,11 +715,41 @@ def card_redrawAll(app,canvas):
     drawCard(app,canvas)
 
 def card_mousePressed(app,event):
+    current = app.currentPlayer['character']
     if app.type == 'omen':
         app.mode = 'rollDice'
-    elif app.type == 'event':
-        app.mode = 'rollDice'
     elif app.type == 'item':
+        if app.currentItem == app.Adrenaline:
+            current.speed = current.changeTrait(current.speed, 'speed',1, app.haunt)
+        elif app.currentItem == app.Amulet:
+            current.speed = current.changeTrait(current.speed, 'speed',1, app.haunt)
+            current.might = current.changeTrait(current.might, 'might',1, app.haunt)
+            current.knowledge = current.changeTrait(current.knowledge, 'knowledge',1, app.haunt)
+            current.sanity = current.changeTrait(current.sanity, 'sanity',1, app.haunt)
+        elif app.currentItem == app.Armor:
+            current.might = current.changeTrait(current.might, 'might',1, app.haunt)
+        elif app.currentItem == app.Axe:
+            current.might = current.changeTrait(current.might, 'might',1, app.haunt)
+        elif app.currentItem == app.Bell:
+            current.sanity = current.changeTrait(current.sanity, 'sanity',1, app.haunt)
+        elif app.currentItem == app.Blood_Dagger:
+            current.might = current.changeTrait(current.might, 'might',-1, app.haunt)
+        elif app.currentItem == app.Bottle:
+            current.sanity = current.changeTrait(current.sanity, 'sanity',1, app.haunt)
+        elif app.currentItem == app.Candle:
+            current.knowledge = current.changeTrait(current.knowledge, 'knowledge',1, app.haunt)
+        elif app.currentItem == app.Dice:
+            current.knowledge = current.changeTrait(current.knowledge, 'knowledge',1, app.haunt)
+        elif app.currentItem == app.Dynamite:
+            current.speed = current.changeTrait(current.speed, 'speed',1, app.haunt)
+        elif app.currentItem == app.Healing:
+            current.sanity = current.changeTrait(current.sanity, 'sanity',1, app.haunt)
+        elif app.currentItem == app.Idol:
+            current.might = current.changeTrait(current.might, 'might',-1, app.haunt)
+        elif app.currentItem == app.Medical:
+            current.knowledge = current.changeTrait(current.knowledge, 'knowledge',1, app.haunt)
+        elif app.currentItem == app.Music:
+            current.knowledge = current.changeTrait(current.knowledge, 'knowledge',1, app.haunt)
         app.mode = app.currentPlayer['current']
 
 def card_keyPressed(app,event):
@@ -846,16 +815,6 @@ def cards(app,room):
                     app.currentOmen = random.choice(app.omens)
                 app.omenSet.add(app.currentOmen)
                 app.currentCard = app.currentOmen
-    elif room.event:
-        if app.events != []:
-            app.rollType = 'normal'
-            app.type = 'event'
-            app.mode = 'card' # set screen to view event information
-            app.currentEvent = random.choice(app.events)
-            while app.currentEvent in app.eventSet: # until event not in set/seen before, choose another random event
-                app.currentEvent = random.choice(app.events)
-            app.eventSet.add(app.currentEvent)
-            app.currentCard = app.currentEvent
     elif room.item:
         if app.items != []:
             app.rollType = 'normal'
@@ -1045,16 +1004,13 @@ def drawDice(app,canvas):
         if dice[i] != None:
             canvas.create_text(cx,cy,text=dice[i],font="Arial 30")
 
-def drawCard(app,canvas): # omen, event, item
+def drawCard(app,canvas): # omen, item
+    canvas.create_rectangle(0,0,app.width,app.height,fill='black')
     if app.type == 'omen':
         text = 'OMEN'
-    elif app.type == 'event':
-        text = 'EVENT'
-        canvas.create_text(app.width//2, app.height-150, text=f"You must attempt a trait roll. If higher than {app.target}, add one to that trait's index.", font='Arial 20 bold', fill='white')
     elif app.type == 'item':
         text = 'ITEM'
-        canvas.create_text(app.width//2, app.height-150, text=f"You must attempt a trait roll. If higher than {app.target}, add one to that trait's index.", font='Arial 20 bold', fill='white')
-    canvas.create_rectangle(0,0,app.width,app.height,fill='black')
+        canvas.create_text(app.width//2, app.height-150, text=app.currentItem.change, font='Arial 20 bold', fill='white')
     canvas.create_text(app.width//2, 50, text=text,font='Arial 30 bold',fill='white')
     canvas.create_text(app.width//2, app.height//4, text=app.currentCard.name, font='Arial 26 bold', fill='white')
     canvas.create_text(app.width//2, app.height//4+100, text=app.currentCard.description, font='Arial 20 bold', fill='white')
@@ -1094,7 +1050,7 @@ def drawRules(app,canvas):
     canvas.create_text(app.width//2, 150, text='Left arrow key to go from ground floor to basement and right arrow key to go from ground to upper floor. You can', font='Arial 26 bold', fill='white')
     canvas.create_text(app.width//2, 180, text='only move on your current designated floor unless you move to the grand staircase or coal chute room.', font='Arial 26 bold', fill='white')
     canvas.create_text(app.width//2, 210, text='There will be numbers that correspond to player number in the floor tiles that designate which room you are in.', font='Arial 26 bold', fill='white')
-    canvas.create_text(app.width//2, 240, text='When discovering new rooms, there may be omens, events, or items.', font='Arial 26 bold', fill='white')
+    canvas.create_text(app.width//2, 240, text='When discovering new rooms, there may be omens or items.', font='Arial 26 bold', fill='white')
     canvas.create_text(app.width//2, 270, text='Everytime an omen appears, you must attempt a haunt roll. If the roll is less than the haunt count,', font='Arial 26 bold', fill='white')
     canvas.create_text(app.width//2, 300, text='the haunt phase begins. All players will then try to beat Death.', font='Arial 26 bold', fill='white')
     canvas.create_text(app.width//2, 330, text='More information about the haunt will appear when it is triggered.', font='Arial 26 bold', fill='white')
