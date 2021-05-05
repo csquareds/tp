@@ -14,14 +14,11 @@ heroText2 = ['What You Know About the Bad Guys: Death has challenged you to a ch
 heroText3 = ['You Win When ...',
     '... you checkmate Death by rolling a higher result',
     'than it does on a Knowledge roll.']
-heroText4 = ['How to Beat Death',
+heroText4 = ['Things to Take Note Of',
     "If the difference your roll and death is less than three, Death's knowledge decreases",
     "by one/one less dice. However, if the difference is 3 or greater, your player's knowledge",
     'decreases by one/one less dice. The least amount of dice anyone can have is one, but after',
-    'that, the player will die.']
-heroText5 = ['Special Attack Rules',
-    'Death can’t attack or be affected in any way other than by being beaten at chess.',
-    'Death does not slow your movement.']
+    'that, the player will die and their turn will be skipped. If no players remain, Death wins.']
 heroText6 = ['If You Win ...',
     '“Checkmate.” Death stares fixedly at his King, then starts',
     'crumbling into dust. Death smiles, and you feel your hair turn white.',
